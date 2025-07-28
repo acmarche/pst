@@ -43,7 +43,7 @@ final class AdminPanelProvider extends PanelProvider
             ->spa()
             ->profile()
             ->sidebarCollapsibleOnDesktop()
-//            ->topNavigation()
+          //  ->topNavigation()
             ->colors([
                 'primary' => Color::Slate,
                 'secondary' => Color::Pink,
@@ -79,7 +79,6 @@ final class AdminPanelProvider extends PanelProvider
                     ->icon('tabler-arrow-badge-left')
                     ->label('Volet interne')
                     ->url('/admin/internal'),
-                // ->url(StrategicObjectiveResource::getUrl('internal',panel: 'admin')),
             ])
             ->userMenuItems([
                 Action::make('view-ville')
