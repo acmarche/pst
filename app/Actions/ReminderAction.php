@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Actions;
 
-use App\Filament\Resources\ActionResource\Schemas\ActionForm;
+use App\Filament\Resources\ActionPst\Schemas\ActionForm;
 use App\Mail\ActionReminderMail;
 use App\Models\Action as ActionModel;
 use App\Repository\ActionRepository;

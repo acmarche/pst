@@ -6,5 +6,5 @@ use Filament\Infolists\Components\Entry;
 
 class ProgressEntry extends Entry
 {
-    protected string $view = 'infolists.components.progress-entry';
+    protected string $view = 'components.progress-entry';
 }

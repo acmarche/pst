@@ -4,8 +4,8 @@ namespace App\Filament\Resources\ActionPst\Pages;
 
 use App\Actions\CanPaginateViewRecordTrait;
 use App\Actions\ReminderAction;
+use App\Filament\Resources\ActionPst\Schemas\ActionInfolist;
 use App\Filament\Resources\ActionPstResource;
-use App\Filament\Resources\ActionResource\Schemas\ActionInfolist;
 use App\Filament\Resources\OperationalObjectiveResource;
 use App\Filament\Resources\StrategicObjectiveResource;
 use App\Models\Action as ActionModel;
@@ -72,8 +72,8 @@ class ViewAction extends ViewRecord
         ];
     }
 
-    public function infolist(Schema $infolist): Schema
+    public function infolist(Schema $schema): Schema
     {
-        return ActionInfolist::infolist($infolist);
+        return ActionInfolist::infolist($schema);
     }
 }
