@@ -6,13 +6,11 @@ namespace App\Filament\Resources\ActionPst\Schemas;
 
 use App\Constant\ActionStateEnum;
 use App\Filament\Components\ProgressEntry;
-use App\Filament\Resources\OddResource;
 use App\Models\Odd;
 use App\Models\Partner;
 use App\Models\Service;
 use App\Models\User;
 use DateTimeImmutable;
-use Filament\Infolists\Components\RepeatableEntry;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Schemas\Components\Component;
 use Filament\Schemas\Components\Fieldset;
@@ -119,21 +117,11 @@ final class ActionInfolist
             Fieldset::make('odd_tab')
                 ->label('Objectifs de développement durable')
                 ->schema([
-                    RepeatableEntry::make('odds')
+                    TextEntry::make('odds')
                         ->label(null)
-                        ->columnSpanFull()
-                        ->schema([
-                            TextEntry::make('name')
-                                ->label('Nom')
-                                ->color('secondary')
-                                ->columnSpanFull()
-                                ->url(
-                                    fn (Odd $record): string => OddResource::getUrl(
-                                        'view',
-                                        ['record' => $record]
-                                    )
-                                ),
-                        ]),
+                        ->formatStateUsing(fn (Odd $state): string => $state->name)
+                        ->color('secondary')
+                        ->badge(),
                 ]);
     }
 
