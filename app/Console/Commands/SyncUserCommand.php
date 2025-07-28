@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Console\Commands;
 
 use App\Constant\DepartmentEnum;
@@ -7,10 +9,12 @@ use App\Constant\RoleEnum;
 use App\Ldap\User as UserLdap;
 use App\Models\Role;
 use App\Models\User;
+use App\Models\UserIntranet;
 use Illuminate\Console\Command;
+use Str;
 use Symfony\Component\Console\Command\Command as SfCommand;
 
-class SyncUserCommand extends Command
+final class SyncUserCommand extends Command
 {
     /**
      * The name and signature of the console command.
@@ -36,17 +40,17 @@ class SyncUserCommand extends Command
         $this->agentRole = Role::where('name', RoleEnum::AGENT->value)->first();
 
         foreach (UserLdap::all() as $userLdap) {
-            if (!$userLdap->getFirstAttribute('mail')) {
+            if (! $userLdap->getFirstAttribute('mail')) {
                 continue;
             }
-            if (!$this->isActif($userLdap)) {
+            if (! $this->isActif($userLdap)) {
                 continue;
             }
             $username = $userLdap->getFirstAttribute('samaccountname');
-            if (!$user = User::where('username', $username)->first()) {
-                $this->addUser($username, $userLdap);
+            if (! $user = User::where('username', $username)->first()) {
+              //  $this->addUser($username, $userLdap);
             } else {
-                $this->updateUser($user, $userLdap, $username);
+                $this->updateUser($user, $userLdap);
             }
         }
 
@@ -59,7 +63,7 @@ class SyncUserCommand extends Command
     {
         $data = $this->data($userLdap, $username);
         $data['username'] = $username;
-        $data['password'] = \Str::password();
+        $data['password'] = Str::password();
         $user = User::create($data);
         $user->addRole($this->agentRole);
         $this->info('Add '.$user->first_name.' '.$user->last_name);
@@ -74,17 +78,17 @@ class SyncUserCommand extends Command
     private function data(UserLdap $userLdap, string $username): array
     {
         $email = $userLdap->getFirstAttribute('mail');
-        $department = match (true) {
+     /*   $department = match (true) {
             str_contains($email, 'cpas.marche') => DepartmentEnum::CPAS->value,
             str_contains($email, 'ac.marche') => DepartmentEnum::VILLE->value,
             default => DepartmentEnum::VILLE->value,
-        };
+        };*/
 
         return [
             'first_name' => $userLdap->getFirstAttribute('givenname'),
             'last_name' => $userLdap->getFirstAttribute('sn'),
             'email' => $email,
-            'departments' => [$department],
+           // 'departments' => [$department],
             'mobile' => $userLdap->getFirstAttribute('mobile'),
             'phone' => $userLdap->getFirstAttribute('telephoneNumber'),
             'extension' => $userLdap->getFirstAttribute('ipPhone'),
@@ -94,7 +98,7 @@ class SyncUserCommand extends Command
 
     private function getUuid(string $username): ?string
     {
-        $user = User::where('username', $username)->first();
+        $user = UserIntranet::query()->where('username', $username)->first();
 
         if ($user) {
             return $user->uuid;
@@ -118,7 +122,6 @@ class SyncUserCommand extends Command
 
     private function isActif(UserLdap $userLdap): bool
     {
-        return 66050 != $userLdap->getFirstAttribute('userAccountControl');
+        return $userLdap->getFirstAttribute('userAccountControl') !== 66050;
     }
-
 }

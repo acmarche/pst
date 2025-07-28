@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers;
 
 use App\Models\User;
@@ -10,7 +12,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
-class LoginLinkController extends Controller
+final class LoginLinkController extends Controller
 {
     public function __invoke(Request $request, string $uuid): RedirectResponse
     {
@@ -20,14 +22,14 @@ class LoginLinkController extends Controller
         }
         try {
             $user = User::query()->where('uuid', $uuid)->first();
-            if (!$user instanceof FilamentUser) {
-                Log::warning("user not found ".$uuid);
+            if (! $user instanceof FilamentUser) {
+                Log::warning('user not found '.$uuid);
 
                 return redirect('admin/login');
             }
             $guard->login($user, true);
         } catch (Exception $e) {
-            Log::warning("user fail ".$uuid." ".$e->getMessage());
+            Log::warning('user fail '.$uuid.' '.$e->getMessage());
 
             return redirect('login');
         }
