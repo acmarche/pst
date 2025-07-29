@@ -87,6 +87,7 @@ return new class extends Migration
             $table->string('color')->nullable();
             $table->string('image_name')->nullable();
             $table->text('description')->nullable();
+            $table->integer('position')->default(0);
             $table->timestamps();
         });
 

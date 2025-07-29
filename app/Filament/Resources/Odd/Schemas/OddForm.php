@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\Odd\Schemas;
 
 use Filament\Forms;
+use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 
 class OddForm
@@ -20,9 +21,14 @@ class OddForm
                     ->previewable(false)
                     ->maxFiles(1)
                     ->image(),
-                Forms\Components\ColorPicker::make('color')
-                    ->label('Couleur'),
-                Forms\Components\TextInput::make('description')
+                Section::make()->schema([
+                    Forms\Components\ColorPicker::make('color')
+                        ->label('Couleur'),
+                    Forms\Components\TextInput::make('position')
+                        ->required()
+                        ->numeric(),
+                ]),
+                Forms\Components\Textarea::make('description')
                     ->maxLength(255)
                     ->columnSpanFull(),
             ]);
