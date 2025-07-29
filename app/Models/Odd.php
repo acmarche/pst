@@ -21,6 +21,7 @@ class Odd extends Model
         'icon',
         'color',
         'description',
+        'position',
     ];
 
     /**

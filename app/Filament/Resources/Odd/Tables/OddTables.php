@@ -19,7 +19,7 @@ final class OddTables
     public static function configure(Table $table): Table
     {
         return $table
-            ->defaultSort('name')
+            ->defaultSort('position')
             ->defaultPaginationPageOption(50)
             ->recordUrl(fn (Odd $record) => OddResource::getUrl('view', [$record]))
             ->columns([
