@@ -2,7 +2,7 @@
 
 namespace App\Filament\Resources\OperationalObjective\RelationManagers;
 
-use App\Filament\Resources\ActionResource\Tables\ActionTables;
+use App\Filament\Resources\ActionPst\Tables\ActionTables;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Model;

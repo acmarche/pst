@@ -21,7 +21,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
 
-class ActionForm
+final class ActionForm
 {
     public static function createForm(Schema $schema, Model|OperationalObjective|null $owner): Schema
     {
@@ -59,16 +59,66 @@ class ActionForm
                 ])
                     ->skippable()
                     ->nextAction(
-                        fn(Action $action) => $action
+                        fn (Action $action) => $action
                             ->label('Suivant')
                             ->color('success'),
                     )->previousAction(
-                        fn(Action $action) => $action
+                        fn (Action $action) => $action
                             ->label('Précédent')
                             ->color('secondary'),
                     )
                     ->submitAction(view('components.btn_add', ['label' => 'Ajouter l\'action'])),
             ]);
+    }
+
+    public static function fieldsAttachment(): array
+    {
+        return
+            [
+                Forms\Components\Hidden::make('file_mime'),
+                Forms\Components\Hidden::make('file_size'),
+                Forms\Components\TextInput::make('file_name')
+                    ->label('Nom du média')
+                    ->required()
+                    ->maxLength(150),
+                FileUpload::make('media')
+                    ->label('Pièce jointe')
+                    ->required()
+                    ->maxFiles(1)
+                    ->disk('public')
+                    ->directory('uploads')
+                    // ->acceptedFileTypes(['image/jpeg', 'image/png', 'application/pdf'])
+                    // ->preserveFilenames()
+                    ->downloadable()
+                    ->maxSize(10240)
+                    ->afterStateUpdated(function ($state, Set $set) {
+                        if ($state instanceof TemporaryUploadedFile) {
+                            $set('file_mime', $state->getMimeType());
+                            $set('file_size', $state->getSize());
+                        }
+                    }),
+            ];
+    }
+
+    public static function fieldsReminder(): array
+    {
+        return
+            [
+                Forms\Components\TextInput::make('subject')
+                    ->label('Sujet')
+                    ->required(),
+                Forms\Components\Textarea::make('content')
+                    ->label('Contenu')
+                    ->required(),
+            ];
+    }
+
+    public static function fieldsExportPdf(): array
+    {
+        return
+            [
+
+            ];
     }
 
     private static function fieldsProject(Model|OperationalObjective|null $owner): array
@@ -80,7 +130,7 @@ class ActionForm
                 ->searchable(['name'])
                 ->preload()
                 ->required()
-                ->visible(fn() => $owner === null),
+                ->visible(fn () => $owner === null),
             Forms\Components\TextInput::make('name')
                 ->label('Intitulé')
                 ->required()
@@ -129,16 +179,16 @@ class ActionForm
                         ->label('Mandataires')
                         ->relationship(
                             name: 'mandataries',
-                            modifyQueryUsing: fn(Builder $query) => $query
+                            modifyQueryUsing: fn (Builder $query) => $query
                                 ->whereHas(
                                     'roles',
-                                    fn(Builder $query) => $query->where('name', RoleEnum::MANDATAIRE->value)
+                                    fn (Builder $query) => $query->where('name', RoleEnum::MANDATAIRE->value)
                                 )
                                 ->orderBy('last_name')
                                 ->orderBy('first_name'),
                         )
                         ->getOptionLabelFromRecordUsing(
-                            fn(Model $record) => "{$record->first_name} {$record->last_name}"
+                            fn (Model $record) => "{$record->first_name} {$record->last_name}"
                         )
                         ->searchable(['first_name', 'last_name'])
                         ->multiple()
@@ -147,11 +197,11 @@ class ActionForm
                         ->label('Agents pilotes')
                         ->relationship(
                             name: 'users',
-                            modifyQueryUsing: fn(Builder $query) => $query->orderBy('last_name')
+                            modifyQueryUsing: fn (Builder $query) => $query->orderBy('last_name')
                                 ->orderBy('first_name'),
                         )
                         ->getOptionLabelFromRecordUsing(
-                            fn(Model $record) => "{$record->first_name} {$record->last_name}"
+                            fn (Model $record) => "{$record->first_name} {$record->last_name}"
                         )
                         ->searchable(['first_name', 'last_name'])
                         ->multiple(),
@@ -163,19 +213,30 @@ class ActionForm
                         ->label('Services porteurs')
                         ->relationship(name: 'leaderServices', titleAttribute: 'name')
                         ->preload()
-                        ->multiple(),
+                        ->multiple()
+                        ->createOptionForm([
+                            Forms\Components\TextInput::make('name')
+                                ->required(),
+                        ]),
                     Forms\Components\Select::make('action_service_partner')
                         ->label('Services partenaires')
                         ->relationship(name: 'partnerServices', titleAttribute: 'name')
                         ->preload()
-                        ->multiple(),
-
+                        ->multiple()
+                        ->createOptionForm([
+                            Forms\Components\TextInput::make('name')
+                                ->required(),
+                        ]),
                 ])
                 ->columns(2),
             Forms\Components\Select::make('partners')
                 ->label('Partenaires externes')
                 ->relationship(name: 'partners', titleAttribute: 'name')
-                ->multiple(),
+                ->multiple()
+                ->createOptionForm([
+                    Forms\Components\TextInput::make('name')
+                        ->required(),
+                ]),
             Forms\Components\Select::make('action_related')
                 ->label('Actions liés')
                 ->relationship(
@@ -184,7 +245,7 @@ class ActionForm
                 )
                 ->searchable(['actions.id', 'actions.name'])
                 ->getOptionLabelFromRecordUsing(
-                    fn(Model $record) => "{$record->id}. {$record->name}"
+                    fn (Model $record) => "{$record->id}. {$record->name}"
                 )
                 ->multiple(),
         ];
@@ -220,55 +281,5 @@ class ActionForm
                 ->multiple()
                 ->preload(),
         ];
-    }
-
-    public static function fieldsAttachment(): array
-    {
-        return
-            [
-                Forms\Components\Hidden::make('file_mime'),
-                Forms\Components\Hidden::make('file_size'),
-                Forms\Components\TextInput::make('file_name')
-                    ->label('Nom du média')
-                    ->required()
-                    ->maxLength(150),
-                FileUpload::make('media')
-                    ->label('Pièce jointe')
-                    ->required()
-                    ->maxFiles(1)
-                    ->disk('public')
-                    ->directory('uploads')
-                    //->acceptedFileTypes(['image/jpeg', 'image/png', 'application/pdf'])
-                    //->preserveFilenames()
-                    ->downloadable()
-                    ->maxSize(10240)
-                    ->afterStateUpdated(function ($state, Set $set) {
-                        if ($state instanceof TemporaryUploadedFile) {
-                            $set('file_mime', $state->getMimeType());
-                            $set('file_size', $state->getSize());
-                        }
-                    }),
-            ];
-    }
-
-    public static function fieldsReminder(): array
-    {
-        return
-            [
-                Forms\Components\TextInput::make('subject')
-                    ->label('Sujet')
-                    ->required(),
-                Forms\Components\Textarea::make('content')
-                    ->label('Contenu')
-                    ->required(),
-            ];
-    }
-
-    public static function fieldsExportPdf(): array
-    {
-        return
-            [
-
-            ];
     }
 }
