@@ -42,8 +42,9 @@ final class AdminPanelProvider extends PanelProvider
             ->profile(EditProfile::class)
             ->spa()
             ->profile()
+            ->resourceCreatePageRedirect('view')
+            ->resourceEditPageRedirect('view')
             ->sidebarCollapsibleOnDesktop()
-          //  ->topNavigation()
             ->colors([
                 'primary' => Color::Slate,
                 'secondary' => Color::Pink,
