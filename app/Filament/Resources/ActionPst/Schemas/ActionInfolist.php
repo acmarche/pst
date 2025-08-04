@@ -121,7 +121,7 @@ final class ActionInfolist
                     TextEntry::make('odds')
                         ->label(null)
                         ->formatStateUsing(
-                            fn (Odd $state): string => '<span class="m-2 text-lg">'.$state->name.'</span>'
+                            fn (Odd $state): string => '<span class="p-2 text-lg">'.$state->name.'</span>'
                         )
                         ->html(true)
                         ->size(TextSize::Large)

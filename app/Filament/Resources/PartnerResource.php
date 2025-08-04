@@ -9,6 +9,7 @@ use App\Filament\Resources\Partner\Tables\PartnerTables;
 use App\Models\Partner;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
+use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
 use UnitEnum;
 
@@ -18,7 +19,7 @@ class PartnerResource extends Resource
 
     protected static ?string $recordTitleAttribute = 'name';
 
-    protected static string|null|\BackedEnum $navigationIcon = 'tabler-user-share';
+    protected static string|null|\BackedEnum $navigationIcon = Heroicon::OutlinedUserGroup;
 
     protected static string|UnitEnum|null $navigationGroup = NavigationGroupEnum::Settings;
 
