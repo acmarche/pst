@@ -6,6 +6,7 @@ namespace App\Filament\Resources\ActionPst\Schemas;
 
 use App\Constant\ActionStateEnum;
 use App\Filament\Components\ProgressEntry;
+use App\Filament\Resources\OddResource;
 use App\Models\Odd;
 use App\Models\Partner;
 use App\Models\Service;
@@ -17,6 +18,7 @@ use Filament\Schemas\Components\Fieldset;
 use Filament\Schemas\Components\Flex;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
+use Filament\Support\Enums\TextSize;
 
 final class ActionInfolist
 {
@@ -45,7 +47,7 @@ final class ActionInfolist
                 ->label(null)
                 ->html()
                 ->prose()
-                ->visible(fn ($state) => $state !== null && $state !== ''),
+                ->visible(fn($state) => $state !== null && $state !== ''),
             Fieldset::make('team')
                 ->label('Team')
                 ->schema([
@@ -53,26 +55,26 @@ final class ActionInfolist
                         ->label('Agents pilotes')
                         ->badge()
                         ->formatStateUsing(
-                            fn (User $state): string => $state->last_name.' '.$state->first_name
+                            fn(User $state): string => $state->last_name.' '.$state->first_name
                         ),
                     TextEntry::make('mandataries')
                         ->label('Mandataires')
                         ->badge()
                         ->formatStateUsing(
-                            fn (User $state): string => $state->last_name.' '.$state->first_name
+                            fn(User $state): string => $state->last_name.' '.$state->first_name
                         ),
                     TextEntry::make('leaderServices')
                         ->label('Services porteurs')
                         ->badge()
-                        ->formatStateUsing(fn (Service $state): string => $state->name),
+                        ->formatStateUsing(fn(Service $state): string => $state->name),
                     TextEntry::make('partnerServices')
                         ->label('Services partenaires')
                         ->badge()
-                        ->formatStateUsing(fn (Service $state): string => $state->name),
+                        ->formatStateUsing(fn(Service $state): string => $state->name),
                     TextEntry::make('partners')
                         ->label('Partenaires')
                         ->badge()
-                        ->formatStateUsing(fn (Partner $state): string => $state->name),
+                        ->formatStateUsing(fn(Partner $state): string => $state->name),
                 ]),
             self::odd(),
             self::budget(),
@@ -92,14 +94,14 @@ final class ActionInfolist
         return [
             TextEntry::make('state')
                 ->label('Etat d\'avancement')
-                ->formatStateUsing(fn (ActionStateEnum $state) => $state->getLabel())
-                ->icon(fn (ActionStateEnum $state) => $state->getIcon())
-                ->color(fn (ActionStateEnum $state) => $state->getColor()),
+                ->formatStateUsing(fn(ActionStateEnum $state) => $state->getLabel())
+                ->icon(fn(ActionStateEnum $state) => $state->getIcon())
+                ->color(fn(ActionStateEnum $state) => $state->getColor()),
             ProgressEntry::make('state_percentage')
                 ->label('Pourcentage d\'avancement'),
             TextEntry::make('due_date')
                 ->label('Date d\'échéance')
-                ->visible(fn (?DateTimeImmutable $date) => $date instanceof DateTimeImmutable)
+                ->visible(fn(?DateTimeImmutable $date) => $date instanceof DateTimeImmutable)
                 ->dateTime(),
             TextEntry::make('created_at')
                 ->label('Créé le')
@@ -119,7 +121,11 @@ final class ActionInfolist
                 ->schema([
                     TextEntry::make('odds')
                         ->label(null)
-                        ->formatStateUsing(fn (Odd $state): string => $state->name)
+                        ->formatStateUsing(
+                            fn(Odd $state): string => '<span class="m-2 text-lg">'.$state->name.'</span>'
+                        )
+                        ->html(true)
+                        ->size(TextSize::Large)
                         ->color('secondary')
                         ->badge(),
                 ]);
