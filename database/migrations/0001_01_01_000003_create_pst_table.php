@@ -17,8 +17,7 @@ use App\Models\User;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 
-return new class extends Migration
-{
+return new class extends Migration {
     public function up(): void
     {
         Schema::create('strategic_objectives', function (Blueprint $table) {
@@ -42,7 +41,9 @@ return new class extends Migration
 
         Schema::create('actions', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(OperationalObjective::class)->constrained('operational_objectives')->cascadeOnDelete();
+            $table->foreignIdFor(OperationalObjective::class)
+                ->constrained('operational_objectives')
+                ->cascadeOnDelete();
             $table->string('name');
             $table->enum('department', DepartmentEnum::toArray())
                 ->nullable(false);

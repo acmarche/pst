@@ -10,6 +10,7 @@ use App\Models\Service;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Tables\Table;
+use UnitEnum;
 
 class ServiceResource extends Resource
 {
@@ -17,10 +18,7 @@ class ServiceResource extends Resource
 
     protected static string|null|\BackedEnum $navigationIcon = 'tabler-users-group';
 
-    public static function getNavigationGroup(): ?string
-    {
-        return NavigationGroupEnum::Settings->getLabel();
-    }
+    protected static string|UnitEnum|null $navigationGroup = NavigationGroupEnum::Settings;
 
     public static function form(Schema $schema): Schema
     {

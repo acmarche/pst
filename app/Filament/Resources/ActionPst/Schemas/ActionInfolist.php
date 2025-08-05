@@ -4,7 +4,10 @@ declare(strict_types=1);
 
 namespace App\Filament\Resources\ActionPst\Schemas;
 
+use App\Constant\ActionRoadmapEnum;
 use App\Constant\ActionStateEnum;
+use App\Constant\ActionSynergyEnum;
+use App\Constant\ActionTypeEnum;
 use App\Filament\Components\ProgressEntry;
 use App\Models\Odd;
 use App\Models\Partner;
@@ -46,7 +49,12 @@ final class ActionInfolist
                 ->label(null)
                 ->html()
                 ->prose()
-                ->visible(fn ($state) => $state !== null && $state !== ''),
+                ->visible(fn (?string $state) => $state !== null && $state !== ''),
+            TextEntry::make('note')
+                ->label(null)
+                ->html()
+                ->prose()
+                ->visible(fn (?string $state) => $state !== null && $state !== ''),
             Fieldset::make('team')
                 ->label('Team')
                 ->schema([
@@ -91,6 +99,11 @@ final class ActionInfolist
     public static function etat(): array
     {
         return [
+            TextEntry::make('type')
+                ->label('Type')
+                ->formatStateUsing(fn (ActionTypeEnum $state) => $state->getLabel())
+                ->icon(fn (ActionTypeEnum $state) => $state->getIcon())
+                ->color(fn (ActionTypeEnum $state) => $state->getColor()),
             TextEntry::make('state')
                 ->label('Etat d\'avancement')
                 ->formatStateUsing(fn (ActionStateEnum $state) => $state->getLabel())
@@ -102,6 +115,12 @@ final class ActionInfolist
                 ->label('Date d\'échéance')
                 ->visible(fn (?DateTimeImmutable $date) => $date instanceof DateTimeImmutable)
                 ->dateTime(),
+            TextEntry::make('roadmap')
+                ->label('Feuille de route')
+                ->formatStateUsing(fn (ActionRoadmapEnum $state) => $state->getLabel()),
+            TextEntry::make('synergie')
+                ->label('Synergie Cpas / Ville')
+                ->formatStateUsing(fn (ActionSynergyEnum $state) => $state->getLabel()),
             TextEntry::make('created_at')
                 ->label('Créé le')
                 ->dateTime(),

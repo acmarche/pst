@@ -18,6 +18,7 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Tables\Table;
 use Illuminate\Support\Facades\Auth;
+use UnitEnum;
 
 final class UserResource extends Resource
 {
@@ -25,14 +26,11 @@ final class UserResource extends Resource
 
     protected static string|null|BackedEnum $navigationIcon = 'heroicon-o-users';
 
+    protected static string|UnitEnum|null $navigationGroup = NavigationGroupEnum::Settings;
+
     public static function canCreate(): bool
     {
         return false;
-    }
-
-    public static function getNavigationGroup(): ?string
-    {
-        return NavigationGroupEnum::Settings->getLabel();
     }
 
     public static function getModelLabel(): string
