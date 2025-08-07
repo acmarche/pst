@@ -2,18 +2,18 @@
 
 namespace App\Filament\Widgets;
 
-use App\Filament\Resources\ActionResource\Tables\ActionTables;
+use App\Filament\Resources\ActionPst\Tables\ActionTables;
 use App\Repository\ActionRepository;
 use Filament\Tables\Table;
-
-//todo extends BaseWidget
+use Filament\Widgets\TableWidget as BaseWidget;
+//extends BaseWidget
 class ActionsTableWidget
 {
     public function table(Table $table): Table
     {
         $user = auth()->user();
         $table
-            ->description('Actions liés à votre nom ou service')
+            ->description('Actions vous concernant')
             ->query(
                 ActionRepository::findByUser($user->id)
             );
