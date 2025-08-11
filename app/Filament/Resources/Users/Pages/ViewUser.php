@@ -46,14 +46,12 @@ class ViewUser extends ViewRecord
         return [
             Actions\EditAction::make()
                 ->icon('tabler-edit'),
-          //  Impersonate::make(),
         ];
     }
 
     protected function getAllRelationManagers(): array
     {
         $relations = $this->getResource()::getRelations();
-       // $relations[] = ActionsRelationManager::class;
 
         return $relations;
     }

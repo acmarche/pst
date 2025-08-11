@@ -1,7 +1,6 @@
 <?php
 
 
-
 namespace App\Filament\Resources\Users\Schemas;
 
 use App\Constant\DepartmentEnum;
@@ -29,6 +28,10 @@ final class UserForm
                     )
                     ->multiple()
                     ->required(),
+                CheckboxList::make('services')
+                    ->label('Services')
+                    ->relationship('services', 'name')
+                    ->columns(2)
             ]);
     }
 }
