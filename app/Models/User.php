@@ -15,11 +15,12 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Lab404\Impersonate\Models\Impersonate;
 
 #[UseFactory(UserFactory::class)]
 final class User extends Authenticatable implements FilamentUser, HasName
 {
-    use HasFactory, Notifiable; // Impersonate
+    use HasFactory, Notifiable, Impersonate;
 
     protected $fillable = [
         'name',
