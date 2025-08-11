@@ -3,8 +3,8 @@
 namespace App\Filament\Resources\Users\Pages;
 
 use App\Filament\Resources\UserResource;
+use App\Filament\Resources\Users\Schemas\UserInfolist;
 use Filament\Actions;
-use Filament\Infolists\Components\TextEntry;
 use Filament\Resources\Pages\ViewRecord;
 use Filament\Schemas\Schema;
 
@@ -19,26 +19,7 @@ class ViewUser extends ViewRecord
 
     public function infolist(Schema $schema): Schema
     {
-        return $schema->schema([
-            TextEntry::make('email')
-                ->label('Email')
-                ->icon('tabler-mail'),
-            TextEntry::make('phone')
-                ->label('Téléphone')
-                ->icon('tabler-phone'),
-            TextEntry::make('mobile')
-                ->label('Mobile')
-                ->icon('tabler-device-mobile'),
-            TextEntry::make('extension')
-                ->label('Extension')
-                ->icon('tabler-device-landline-phone'),
-            TextEntry::make('departments')
-                ->label('Départements')
-                ->icon('tabler-device-mobile'),
-            TextEntry::make('roles.name')
-                ->label('Rôles')
-                ->icon('tabler-user-shield'),
-        ]);
+        return UserInfolist::configure($schema);
     }
 
     protected function getHeaderActions(): array
