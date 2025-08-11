@@ -7,10 +7,8 @@ namespace App\Filament\Resources;
 use App\Constant\NavigationGroupEnum;
 use App\Constant\RoleEnum;
 use App\Filament\Resources\Users\Pages;
-use App\Filament\Resources\Users\Pages\CreateUser;
 use App\Filament\Resources\Users\Pages\EditUser;
 use App\Filament\Resources\Users\Pages\ListUsers;
-use App\Filament\Resources\Users\RelationManagers\ServicesRelationManager;
 use App\Filament\Resources\Users\Schemas\UserForm;
 use App\Filament\Resources\Users\Tables\UsersTable;
 use App\Models\User;
@@ -28,11 +26,6 @@ final class UserResource extends Resource
     protected static string|null|BackedEnum $navigationIcon = 'heroicon-o-users';
 
     protected static string|UnitEnum|null $navigationGroup = NavigationGroupEnum::Settings;
-
-    public static function canCreate(): bool
-    {
-        return false;
-    }
 
     public static function getModelLabel(): string
     {
@@ -53,7 +46,6 @@ final class UserResource extends Resource
     {
         return [
             'index' => ListUsers::route('/'),
-            'create' => CreateUser::route('/create'),
             'view' => Pages\ViewUser::route('/{record}'),
             'edit' => EditUser::route('/{record}/edit'),
         ];

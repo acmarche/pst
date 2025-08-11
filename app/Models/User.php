@@ -4,8 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
-use App\Constant\RoleEnum;
+use App\Ldap\User as UserLdap;
 use Database\Factories\UserFactory;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Models\Contracts\HasName;
@@ -53,7 +52,7 @@ final class User extends Authenticatable implements FilamentUser, HasName
     public function canAccessPanel(Panel $panel): bool
     {
         if ($panel->getId() === 'admin') {
-            return $this->hasRole(RoleEnum::ADMIN->value) || $this->hasRole(RoleEnum::AGENT->value);
+            return true;
         }
 
         return false;
@@ -149,4 +148,39 @@ final class User extends Authenticatable implements FilamentUser, HasName
             'departments' => 'array',
         ];
     }
+
+
+    public static function generateDataFromLdap(UserLdap $userLdap, string $username): array
+    {
+        $email = $userLdap->getFirstAttribute('mail');
+
+        /*   $department = match (true) {
+               str_contains($email, 'cpas.marche') => DepartmentEnum::CPAS->value,
+               str_contains($email, 'ac.marche') => DepartmentEnum::VILLE->value,
+               default => DepartmentEnum::VILLE->value,
+           };*/
+
+        return [
+            'first_name' => $userLdap->getFirstAttribute('givenname'),
+            'last_name' => $userLdap->getFirstAttribute('sn'),
+            'email' => $email,
+            // 'departments' => [$department],
+            'mobile' => $userLdap->getFirstAttribute('mobile'),
+            'phone' => $userLdap->getFirstAttribute('telephoneNumber'),
+            'extension' => $userLdap->getFirstAttribute('ipPhone'),
+            'uuid' => self::getUuidFromIntranetDb($username),
+        ];
+    }
+
+    private static function getUuidFromIntranetDb(string $username): ?string
+    {
+        $user = UserIntranet::query()->where('username', $username)->first();
+
+        if ($user) {
+            return $user->uuid;
+        }
+
+        return null;
+    }
+
 }

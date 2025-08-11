@@ -7,12 +7,11 @@ use Filament\Support\Contracts\HasDescription;
 use Filament\Support\Contracts\HasIcon;
 use Filament\Support\Contracts\HasLabel;
 
-enum RoleEnum: string implements HasColor, HasLabel, HasDescription, HasIcon
+enum RoleEnum: string implements HasColor, HasDescription, HasIcon, HasLabel
 {
-    case ADMIN = "ROLE_ADMIN";
-    case MANAGER = "ROLE_MANAGER";
-    case AGENT = "ROLE_AGENT";
-    case MANDATAIRE = "ROLE_MANDATAIRE";
+    case ADMIN = 'ROLE_ADMIN';
+    case MANAGER = 'ROLE_MANAGER';
+    case MANDATAIRE = 'ROLE_MANDATAIRE';
 
     public static function toArray(): array
     {
@@ -28,9 +27,8 @@ enum RoleEnum: string implements HasColor, HasLabel, HasDescription, HasIcon
     {
         return match ($this) {
             self::ADMIN => 'Administrateur',
-            self::AGENT => 'Agent',
+            self::MANAGER => 'Responsable',
             self::MANDATAIRE => 'Mandataire',
-            self::MANAGER => 'Manageur',
         };
     }
 
@@ -38,7 +36,6 @@ enum RoleEnum: string implements HasColor, HasLabel, HasDescription, HasIcon
     {
         return match ($this) {
             self::ADMIN => 'success',
-            self::AGENT => 'warning',
             self::MANAGER => 'secondary',
             self::MANDATAIRE => 'primary',
         };
@@ -47,9 +44,8 @@ enum RoleEnum: string implements HasColor, HasLabel, HasDescription, HasIcon
     public function getDescription(): ?string
     {
         return match ($this) {
-            self::ADMIN => 'Gestion des utilisateurs et des services',
-            self::AGENT => 'Rôle standard, gestion des actions',
-            self::MANAGER => 'Gestion des OS,OO,ODD et partenaires',
+            self::ADMIN => 'Gestion des utilisateurs',
+            self::MANAGER => 'Gestion de la liste des OS,OO,ODD et services',
             self::MANDATAIRE => 'Accès en lecture seul',
         };
     }
@@ -58,7 +54,6 @@ enum RoleEnum: string implements HasColor, HasLabel, HasDescription, HasIcon
     {
         return match ($this) {
             self::ADMIN => 'tabler-user-bolt',
-            self::AGENT => 'tabler-user',
             self::MANDATAIRE => 'tabler-user-circle',
             self::MANAGER => 'tabler-user-code',
         };
