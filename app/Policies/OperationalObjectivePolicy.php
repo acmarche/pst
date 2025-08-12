@@ -66,6 +66,9 @@ class OperationalObjectivePolicy
 
     private function hasRoles(User $user): bool
     {
+        if ($user->hasRoles([RoleEnum::MANDATAIRE->value])) {
+            return false;
+        }
         return $user->hasRoles([RoleEnum::ADMIN->value, RoleEnum::MANAGER->value]);
     }
 }

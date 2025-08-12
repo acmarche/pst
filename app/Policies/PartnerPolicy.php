@@ -2,6 +2,7 @@
 
 namespace App\Policies;
 
+use App\Constant\RoleEnum;
 use App\Models\Partner;
 use App\Models\User;
 
@@ -28,6 +29,10 @@ class PartnerPolicy
      */
     public function create(User $user): bool
     {
+        if ($user->hasRoles([RoleEnum::MANDATAIRE->value])) {
+            return false;
+        }
+
         return true;
     }
 
@@ -36,6 +41,10 @@ class PartnerPolicy
      */
     public function update(User $user, Partner $partner): bool
     {
+        if ($user->hasRoles([RoleEnum::MANDATAIRE->value])) {
+            return false;
+        }
+
         return true;
     }
 
@@ -44,6 +53,10 @@ class PartnerPolicy
      */
     public function delete(User $user, Partner $partner): bool
     {
+        if ($user->hasRoles([RoleEnum::MANDATAIRE->value])) {
+            return false;
+        }
+
         return true;
     }
 

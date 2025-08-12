@@ -2,6 +2,7 @@
 
 namespace App\Policies;
 
+use App\Constant\RoleEnum;
 use App\Models\Action;
 use App\Models\User;
 
@@ -29,6 +30,10 @@ final class ActionPolicy
      */
     public function create(User $user): bool
     {
+        if ($user->hasRoles([RoleEnum::MANDATAIRE->value])) {
+            return false;
+        }
+
         return true;
     }
 
@@ -69,6 +74,9 @@ final class ActionPolicy
      */
     private function isUserLinkedToAction(User $user, Action $action): bool
     {
+        if ($user->hasRoles([RoleEnum::MANDATAIRE->value])) {
+            return false;
+        }
         // Check if user is directly linked to the action
         $directlyLinked = $action->users()->where('user_id', $user->id)->exists();
 
@@ -77,7 +85,7 @@ final class ActionPolicy
         }
 
         // Check if user is member of any service that is linked to the action
-        $linkedThroughService = $action->services()
+        $linkedThroughService = $action->leaderServices()
             ->whereHas('users', function ($query) use ($user) {
                 $query->where('user_id', $user->id);
             })
