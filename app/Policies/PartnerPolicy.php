@@ -2,7 +2,6 @@
 
 namespace App\Policies;
 
-use App\Constant\RoleEnum;
 use App\Models\Partner;
 use App\Models\User;
 
@@ -29,7 +28,7 @@ class PartnerPolicy
      */
     public function create(User $user): bool
     {
-        return $this->hasRoles($user);
+        return true;
     }
 
     /**
@@ -37,7 +36,7 @@ class PartnerPolicy
      */
     public function update(User $user, Partner $partner): bool
     {
-        return $this->hasRoles($user);
+        return true;
     }
 
     /**
@@ -45,7 +44,7 @@ class PartnerPolicy
      */
     public function delete(User $user, Partner $partner): bool
     {
-        return $this->hasRoles($user);
+        return true;
     }
 
     /**
@@ -62,11 +61,5 @@ class PartnerPolicy
     public function forceDelete(User $user, Partner $partner): bool
     {
         return false;
-    }
-
-    private function hasRoles(User $user): bool
-    {
-        return true;
-        return $user->hasRoles([RoleEnum::MANAGER->value]);
     }
 }

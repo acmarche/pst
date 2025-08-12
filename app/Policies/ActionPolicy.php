@@ -5,8 +5,8 @@ namespace App\Policies;
 use App\Models\Action;
 use App\Models\User;
 
-//https://laravel.com/docs/12.x/authorization#creating-policies
-class ActionPolicy
+// https://laravel.com/docs/12.x/authorization#creating-policies
+final class ActionPolicy
 {
     /**
      * Determine whether the user can view any models.
@@ -37,7 +37,7 @@ class ActionPolicy
      */
     public function update(User $user, Action $action): bool
     {
-        return true;
+        return $this->isUserLinkedToAction($user, $action);
     }
 
     /**
@@ -45,7 +45,7 @@ class ActionPolicy
      */
     public function delete(User $user, Action $action): bool
     {
-        return true;
+        return $this->isUserLinkedToAction($user, $action);
     }
 
     /**
@@ -53,7 +53,7 @@ class ActionPolicy
      */
     public function restore(User $user, Action $action): bool
     {
-        return true;
+        return false;
     }
 
     /**
@@ -61,6 +61,28 @@ class ActionPolicy
      */
     public function forceDelete(User $user, Action $action): bool
     {
-        return true;
+        return false;
+    }
+
+    /**
+     * Check if user is linked to the action either directly or through services
+     */
+    private function isUserLinkedToAction(User $user, Action $action): bool
+    {
+        // Check if user is directly linked to the action
+        $directlyLinked = $action->users()->where('user_id', $user->id)->exists();
+
+        if ($directlyLinked) {
+            return true;
+        }
+
+        // Check if user is member of any service that is linked to the action
+        $linkedThroughService = $action->services()
+            ->whereHas('users', function ($query) use ($user) {
+                $query->where('user_id', $user->id);
+            })
+            ->exists();
+
+        return $linkedThroughService;
     }
 }

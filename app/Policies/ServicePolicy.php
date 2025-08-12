@@ -66,7 +66,6 @@ class ServicePolicy
 
     private function hasRoles(User $user): bool
     {
-        return true;
-        return $user->hasRoles([RoleEnum::ADMIN->value]);
+        return $user->hasRoles([RoleEnum::ADMIN->value, RoleEnum::MANAGER->value]);
     }
 }
