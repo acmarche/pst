@@ -11,6 +11,12 @@
     </div>
 
 @endforeach
-<p>
-    Un seul rôle est suffisant,
+<p class="text-base block border-l-red-300 border-l-2 pl-3">
+    Les agents encodés comme "Agents pilotes" sur une action, dispose de droits d'écriture sur l'action
+</p>
+<p class="text-base block border-l-red-300 border-l-2 pl-3">
+    Tout le monde a accès en lecture à toutes les actions
+</p>
+<p class="text-base block border-l-red-300 border-l-2 pl-3">
+    Le rôle administrateur dispose du rôle responsable
 </p>
