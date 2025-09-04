@@ -10,11 +10,11 @@ use App\Filament\Resources\ActionPst\Schemas\ActionForm;
 use App\Filament\Resources\ActionPstResource;
 use App\Models\Action;
 use App\Models\OperationalObjective;
+use App\Repository\ActionRepository;
 use App\Repository\UserRepository;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\CreateAction;
 use Filament\Actions\DeleteBulkAction;
-use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
 use Filament\Schemas\Schema;
 use Filament\Support\Enums\Width;
@@ -32,9 +32,9 @@ final class ActionTables
             ->defaultSort('name')
             ->defaultPaginationPageOption(50)
             ->modifyQueryUsing(
-                fn(Builder $query) => $query->where('department', '=', UserRepository::departmentSelected())
+                fn (Builder $query) => ActionRepository::findByDepartmentWithOosAndActions(UserRepository::departmentSelected())
             )
-            ->recordUrl(fn(Action $record) => ActionPstResource::getUrl('view', [$record]))
+            ->recordUrl(fn (Action $record) => ActionPstResource::getUrl('view', [$record]))
             ->columns([
                 TextColumn::make('id')
                     ->searchable()
@@ -43,7 +43,7 @@ final class ActionTables
                     ->label('Numéro'),
                 TextColumn::make('oo')
                     ->label('Oo')
-                    ->state(fn() => 'Oo')
+                    ->state(fn () => 'Oo')
                     ->tooltip(function (TextColumn $column): ?string {
                         $record = $column->getRecord();
 
@@ -53,8 +53,8 @@ final class ActionTables
                     ->searchable()
                     ->sortable()
                     ->label('Intitulé')
-                    ->limit(110)
-                    ->url(fn(Action $record) => ActionPstResource::getUrl('view', ['record' => $record->id]))
+                    ->limit(95)
+                    ->url(fn (Action $record) => ActionPstResource::getUrl('view', ['record' => $record->id]))
                     ->tooltip(function (TextColumn $column): ?string {
                         $state = $column->getState();
 
@@ -65,9 +65,12 @@ final class ActionTables
                         return $state;
                     }),
                 TextColumn::make('state')
-                    ->formatStateUsing(fn(ActionStateEnum $state) => $state->getLabel() ?? 'Unknown'),
+                    ->formatStateUsing(fn (ActionStateEnum $state) => $state->getLabel() ?? 'Unknown'),
+                TextColumn::make('isInternal')
+                    ->label('Interne')
+                    ->state(fn (Action $record) => $record->isInternal() ? 'Oui' : 'Non'),
                 TextColumn::make('type')
-                    ->formatStateUsing(fn(ActionTypeEnum $state) => $state->getLabel() ?? 'Unknown')
+                    ->formatStateUsing(fn (ActionTypeEnum $state) => $state->getLabel() ?? 'Unknown')
                     ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('department')
                     ->label('Département')
@@ -96,28 +99,53 @@ final class ActionTables
                     ->label('Etat')
                     ->options(
                         collect(ActionStateEnum::cases())
-                            ->mapWithKeys(fn(ActionStateEnum $action) => [$action->value => $action->getLabel()])
+                            ->mapWithKeys(fn (ActionStateEnum $action) => [$action->value => $action->getLabel()])
                             ->toArray()
                     ),
                 SelectFilter::make('type')
                     ->label('Type')
                     ->options(
                         collect(ActionTypeEnum::cases())
-                            ->mapWithKeys(fn(ActionTypeEnum $action) => [$action->value => $action->getLabel()])
+                            ->mapWithKeys(fn (ActionTypeEnum $action) => [$action->value => $action->getLabel()])
+                            ->toArray()
+                    ),
+                SelectFilter::make('isInternal')
+                    ->label('Interne')
+                    ->options([
+                        'true' => 'Oui',
+                        'false' => 'Non',
+                    ])
+                    ->query(function (Builder $query, array $data): Builder {
+                        return $query->when(
+                            $data['value'] !== null,
+                            function (Builder $query) use ($data): Builder {
+                                $isInternal = $data['value'] === 'true';
+
+                                return $query->whereHas('operationalObjective', function (Builder $query) use ($isInternal) {
+                                    $query->whereHas('strategicObjective', function (Builder $query) use ($isInternal) {
+                                        $query->where('is_internal', $isInternal);
+                                    });
+                                });
+                            }
+                        );
+                    }),
+                SelectFilter::make('type')
+                    ->label('Type')
+                    ->options(
+                        collect(ActionTypeEnum::cases())
+                            ->mapWithKeys(fn (ActionTypeEnum $action) => [$action->value => $action->getLabel()])
                             ->toArray()
                     ),
                 SelectFilter::make('users')
                     ->label('Agents')
                     ->relationship('users', 'last_name')
-                  //  ->modifyQueryUsing(fn(Builder $query) => $query->orderBy('last_name', 'asc'))
-                    ->getOptionLabelFromRecordUsing(fn($record) => $record->first_name . ' ' . $record->last_name)
+                    //  ->modifyQueryUsing(fn(Builder $query) => $query->orderBy('last_name', 'asc'))
+                    ->getOptionLabelFromRecordUsing(fn ($record) => $record->first_name.' '.$record->last_name)
                     ->searchable(['first_name', 'last_name']),
             ])
             ->filtersFormColumns(3)
             ->filtersFormWidth(Width::ThreeExtraLarge)
             ->recordActions([
-                EditAction::make()
-                    ->icon('tabler-edit'),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
@@ -131,7 +159,7 @@ final class ActionTables
         return $table
             ->defaultSort('name')
             ->defaultPaginationPageOption(50)
-            ->recordUrl(fn(Action $record) => ActionPstResource::getUrl('view', [$record]))
+            ->recordUrl(fn (Action $record) => ActionPstResource::getUrl('view', [$record]))
             ->columns([
                 TextColumn::make('name')
                     ->label('Intitulé')
@@ -144,7 +172,7 @@ final class ActionTables
             ->recordActions([
                 ViewAction::make()
                     ->url(
-                        fn(Action $record): string => ActionPstResource::getUrl(
+                        fn (Action $record): string => ActionPstResource::getUrl(
                             'view',
                             ['record' => $record]
                         )
@@ -157,7 +185,7 @@ final class ActionTables
         return $table
             ->defaultPaginationPageOption(50)
             ->defaultSort('name')
-            ->recordUrl(fn(Action $record) => ActionPstResource::getUrl('view', [$record]))
+            ->recordUrl(fn (Action $record) => ActionPstResource::getUrl('view', [$record]))
             ->columns([
                 TextColumn::make('name')
                     ->label('Intitulé')
@@ -172,7 +200,7 @@ final class ActionTables
                 CreateAction::make()
                     ->label('Ajouter une action')
                     ->icon('tabler-plus')
-                    ->schema(fn(Schema $schema): Schema => ActionForm::createForm($schema, $owner))
+                    ->schema(fn (Schema $schema): Schema => ActionForm::createForm($schema, $owner))
                     ->before(function (array $data) use ($owner): array {
                         // va pas
                         $department = $owner->department;

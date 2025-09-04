@@ -20,7 +20,7 @@ class StrategicObjective extends Model
 
     public function isInternal(): bool
     {
-        return $this->isInternal();
+        return $this->is_internal;
     }
 
     /**

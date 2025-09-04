@@ -63,6 +63,11 @@ final class Action extends Model
         $query->where('state', $state);
     }
 
+    public function isInternal(): bool
+    {
+        return $this->operationalObjective()->first()->strategicObjective()->first()->isInternal();
+    }
+
     /**
      * Get the operational objective that owns the action.
      */
