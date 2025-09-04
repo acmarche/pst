@@ -9,6 +9,7 @@ use App\Constant\ActionStateEnum;
 use App\Constant\ActionSynergyEnum;
 use App\Constant\ActionTypeEnum;
 use App\Filament\Components\ProgressEntry;
+use App\Models\Action;
 use App\Models\Odd;
 use App\Models\Partner;
 use App\Models\Service;
@@ -104,6 +105,9 @@ final class ActionInfolist
                 ->formatStateUsing(fn (ActionTypeEnum $state) => $state->getLabel())
                 ->icon(fn (ActionTypeEnum $state) => $state->getIcon())
                 ->color(fn (ActionTypeEnum $state) => $state->getColor()),
+            TextEntry::make('isInternal')
+                ->label('Interne')
+                ->state(fn (Action $record) => $record->isInternal() ? 'Oui' : 'Non'),
             TextEntry::make('state')
                 ->label('Etat d\'avancement')
                 ->formatStateUsing(fn (ActionStateEnum $state) => $state->getLabel())
