@@ -11,7 +11,7 @@ use Filament\Tables\Table;
 class FollowUpsRelationManager extends RelationManager
 {
     protected static string $relationship = 'followups';
-    protected static ?string $title = 'Suivis';
+    protected static ?string $title = 'Suivi';
     protected static ?string $label = 'Suivi';
 
     public function form(Schema $schema): Schema

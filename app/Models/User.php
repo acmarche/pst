@@ -62,6 +62,10 @@ final class User extends Authenticatable implements FilamentUser, HasName
     {
         return $this->last_name.' '.$this->first_name;
     }
+    public function getFullNameAttribute(): string
+    {
+        return $this->first_name . ' ' . $this->last_name;
+    }
 
     public function getFilamentName(): string
     {
@@ -148,7 +152,6 @@ final class User extends Authenticatable implements FilamentUser, HasName
             'departments' => 'array',
         ];
     }
-
 
     public static function generateDataFromLdap(UserLdap $userLdap, string $username): array
     {
