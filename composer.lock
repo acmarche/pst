@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "2f069babcca886c9520b14b73a33eea0",
+    "content-hash": "fdd140c789e9d752cecebc1b9bcf7867",
     "packages": [
         {
             "name": "anourvalar/eloquent-serialize",
@@ -6485,6 +6485,48 @@
             "time": "2025-01-13T13:04:43+00:00"
         },
         {
+            "name": "stechstudio/filament-impersonate",
+            "version": "4.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/stechstudio/filament-impersonate.git",
+                "reference": "4467c97308210f1a2c7bd8c4511bc6f976dd16e9"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/stechstudio/filament-impersonate/zipball/4467c97308210f1a2c7bd8c4511bc6f976dd16e9",
+                "reference": "4467c97308210f1a2c7bd8c4511bc6f976dd16e9",
+                "shasum": ""
+            },
+            "require": {
+                "filament/filament": "^4.0",
+                "lab404/laravel-impersonate": "^1.7"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "STS\\FilamentImpersonate\\FilamentImpersonateServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "STS\\FilamentImpersonate\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "A Filament package to impersonate your users.",
+            "support": {
+                "issues": "https://github.com/stechstudio/filament-impersonate/issues",
+                "source": "https://github.com/stechstudio/filament-impersonate/tree/4.0.1"
+            },
+            "time": "2025-08-13T20:47:08+00:00"
+        },
+        {
             "name": "symfony/clock",
             "version": "v7.3.0",
             "source": {
@@ -9779,16 +9821,16 @@
         },
         {
             "name": "laravel/boost",
-            "version": "v1.1.1",
+            "version": "v1.1.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/boost.git",
-                "reference": "f4e0b4b2ce01b12b8de3318afc8f2ad55b3fa38b"
+                "reference": "70f909465bf73dad7e791fad8b7716b3b2712076"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/boost/zipball/f4e0b4b2ce01b12b8de3318afc8f2ad55b3fa38b",
-                "reference": "f4e0b4b2ce01b12b8de3318afc8f2ad55b3fa38b",
+                "url": "https://api.github.com/repos/laravel/boost/zipball/70f909465bf73dad7e791fad8b7716b3b2712076",
+                "reference": "70f909465bf73dad7e791fad8b7716b3b2712076",
                 "shasum": ""
             },
             "require": {
@@ -9840,7 +9882,7 @@
                 "issues": "https://github.com/laravel/boost/issues",
                 "source": "https://github.com/laravel/boost"
             },
-            "time": "2025-09-04T07:35:13+00:00"
+            "time": "2025-09-04T12:16:09+00:00"
         },
         {
             "name": "laravel/mcp",

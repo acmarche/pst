@@ -7,6 +7,7 @@ use App\Filament\Resources\Users\Schemas\UserInfolist;
 use Filament\Actions;
 use Filament\Resources\Pages\ViewRecord;
 use Filament\Schemas\Schema;
+use STS\FilamentImpersonate\Actions\Impersonate;
 
 class ViewUser extends ViewRecord
 {
@@ -27,6 +28,7 @@ class ViewUser extends ViewRecord
         return [
             Actions\EditAction::make()
                 ->icon('tabler-edit'),
+            Impersonate::make()
         ];
     }
 
