@@ -8,7 +8,6 @@ use App\Constant\ActionSynergyEnum;
 use App\Constant\ActionTypeEnum;
 use App\Observers\ActionObserver;
 use App\Repository\UserRepository;
-use Auth;
 use Database\Factories\ActionFactory;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Attributes\Scope;
@@ -20,10 +19,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Auth;
 
 #[ObservedBy([ActionObserver::class])]
 #[UseFactory(ActionFactory::class)]
-class Action extends Model
+final class Action extends Model
 {
     use HasFactory, Notifiable;
 
@@ -45,6 +45,7 @@ class Action extends Model
         'user_add',
         'synergy',
         'position',
+        'to_validate',
     ];
 
     protected $casts = [
@@ -56,14 +57,10 @@ class Action extends Model
         'roadmap' => ActionRoadmapEnum::class,
     ];
 
-    protected static function booted(): void
+    #[Scope]
+    public static function byState(Builder $query, string $state): void
     {
-        static::creating(function (self $model) {
-            if (Auth::check()) {
-                $user = Auth::user();
-                $model->user_add = $user->username;
-            }
-        });
+        $query->where('state', $state);
     }
 
     /**
@@ -77,7 +74,7 @@ class Action extends Model
     public function linkedActions(): BelongsToMany
     {
         return $this->belongsToMany(
-            Action::class,
+            self::class,
             'action_related',
             'action_id',
             'related_action_id'
@@ -102,6 +99,7 @@ class Action extends Model
 
     /**
      * Agents pilotes
+     *
      * @return BelongsToMany<User>
      */
     public function users(): BelongsToMany
@@ -140,6 +138,7 @@ class Action extends Model
 
     /**
      * Get the followups for the action.
+     *
      * @return HasMany<FollowUp>
      */
     public function followUps(): HasMany
@@ -149,6 +148,7 @@ class Action extends Model
 
     /**
      * Get the followups for the action.
+     *
      * @return HasMany<History>
      */
     public function histories(): HasMany
@@ -162,10 +162,14 @@ class Action extends Model
         $query->where('department', UserRepository::departmentSelected());
     }
 
-    #[Scope]
-    public static function byState(Builder $query, string $state): void
+    protected static function booted(): void
     {
-        $query->where('state', $state);
+        self::creating(function (self $model) {
+            if (Auth::check()) {
+                $user = Auth::user();
+                $model->user_add = $user->username;
+            }
+            $model->to_validate = true;
+        });
     }
-
 }

@@ -20,6 +20,7 @@ final class ServiceTables
         return $table
             ->defaultPaginationPageOption(50)
             ->defaultSort('name')
+            ->recordUrl(fn(Service $record) => ServiceResource::getUrl('view', [$record]))
             ->columns([
                 TextColumn::make('name')
                     ->searchable()
@@ -35,7 +36,6 @@ final class ServiceTables
                 //
             ])
             ->recordActions([
-                ViewAction::make(),
                 EditAction::make(),
             ])
             ->toolbarActions([
@@ -50,7 +50,7 @@ final class ServiceTables
         return $table
             ->defaultSort('name')
             ->defaultPaginationPageOption(50)
-            ->recordUrl(fn (Service $record) => ServiceResource::getUrl('view', [$record]))
+            ->recordUrl(fn(Service $record) => ServiceResource::getUrl('view', [$record]))
             ->columns([
                 TextColumn::make('name')
                     ->label('Intitulé')
@@ -61,7 +61,7 @@ final class ServiceTables
                 //
             ])
             ->headerActions([
-                CreateAction::make(),       CreateAction::make()
+                CreateAction::make(), CreateAction::make()
                     ->label('Ajouter un Oo')
                     ->icon('tabler-plus')
                     ->before(function (array $data): array {

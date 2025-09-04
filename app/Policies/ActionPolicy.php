@@ -77,6 +77,9 @@ final class ActionPolicy
         if ($user->hasRoles([RoleEnum::MANDATAIRE->value])) {
             return false;
         }
+        if ($user->hasRoles([RoleEnum::ADMIN->value])) {
+            return true;
+        }
         // Check if user is directly linked to the action
         $directlyLinked = $action->users()->where('user_id', $user->id)->exists();
 
@@ -85,12 +88,10 @@ final class ActionPolicy
         }
 
         // Check if user is member of any service that is linked to the action
-        $linkedThroughService = $action->leaderServices()
+        return $action->leaderServices()
             ->whereHas('users', function ($query) use ($user) {
                 $query->where('user_id', $user->id);
             })
             ->exists();
-
-        return $linkedThroughService;
     }
 }

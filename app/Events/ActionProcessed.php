@@ -3,23 +3,20 @@
 namespace App\Events;
 
 use App\Models\Action;
-use App\Models\Walker;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Events\ShouldDispatchAfterCommit;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class ActionProcessed implements ShouldDispatchAfterCommit
+final class ActionProcessed implements ShouldDispatchAfterCommit
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     /**
      * Create a new event instance.
      */
-    public function __construct(private readonly Action $action)
-    {
-    }
+    public function __construct(private readonly Action $action) {}
 
     public function action(): Action
     {
@@ -37,5 +34,4 @@ class ActionProcessed implements ShouldDispatchAfterCommit
             new PrivateChannel('channel-name'),
         ];
     }
-
 }

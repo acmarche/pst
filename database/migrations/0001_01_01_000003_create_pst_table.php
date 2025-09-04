@@ -16,6 +16,7 @@ use App\Models\StrategicObjective;
 use App\Models\User;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration {
     public function up(): void
@@ -52,7 +53,8 @@ return new class extends Migration {
             $table->date('due_date')->nullable();
             $table->text('budget_estimate')->nullable();
             $table->text('financing_mode')->nullable();
-            $table->enum('state', ActionStateEnum::toArray())->default(ActionStateEnum::TO_VALIDATE->value);
+            $table->enum('state', ActionStateEnum::toArray())->nullable()->default(null);
+            $table->boolean('to_validate')->default(true);
             $table->enum('type', ActionTypeEnum::toArray())->nullable();
             $table->enum('roadmap', ActionRoadmapEnum::toArray())->nullable();
             $table->enum('synergy', ActionSynergyEnum::toArray())->nullable();

@@ -2,11 +2,12 @@
 
 namespace App\Filament\Resources\Users\Tables;
 
+use App\Filament\Resources\UserResource;
+use App\Models\User;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
-use Filament\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
@@ -18,6 +19,7 @@ final class UsersTable
         return $table
             ->defaultPaginationPageOption(50)
             ->defaultSort('last_name')
+            ->recordUrl(fn (User $record) => UserResource::getUrl('view', [$record]))
             ->columns([
                 TextColumn::make('last_name')
                     ->label('Nom')
@@ -51,7 +53,6 @@ final class UsersTable
                     ->relationship('roles', 'name'),
             ])
             ->recordActions([
-                ViewAction::make(),
                 EditAction::make(),
                 DeleteAction::make(),
             ])

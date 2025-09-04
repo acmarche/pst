@@ -12,6 +12,7 @@ use Filament\Actions\Action;
 use Filament\Forms;
 use Filament\Forms\Components\FileUpload;
 use Filament\Schemas\Components\Fieldset;
+use Filament\Schemas\Components\Flex;
 use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Utilities\Set;
 use Filament\Schemas\Components\Wizard;
@@ -124,22 +125,39 @@ final class ActionForm
     private static function fieldsProject(Model|OperationalObjective|null $owner): array
     {
         return [
+            Flex::make([
+                Forms\Components\TextInput::make('name')
+                    // ->prefix('CPAS') todo ?
+                    ->label('Intitulé')
+                    ->required()
+                    ->maxLength(250),
+                Forms\Components\ToggleButtons::make('to_validate')
+                    ->label('Validée')
+                    ->options([0 => 'Oui', 1 => 'Non'])
+                    ->colors([
+                        0 => 'success',
+                        1 => 'warning',
+                    ])
+                    ->inline()
+                    ->visible(fn () => ! auth()->user()->hasRole(RoleEnum::ADMIN->value))
+                    ->grow(false),
+            ])
+                ->grow(true),
             Forms\Components\Select::make('operational_objective_id')
                 ->label('Objectif opérationel')
-                ->relationship(name: 'operationalObjective', titleAttribute: 'name')
+                ->relationship(
+                    name: 'operationalObjective',
+                    titleAttribute: 'name',
+                    modifyQueryUsing: fn (Builder $query) => $query->orderBy('name', 'asc'))
                 ->searchable(['name'])
                 ->preload()
                 ->required()
                 ->visible(fn () => $owner === null),
-            Forms\Components\TextInput::make('name')
-                ->label('Intitulé')
-                ->required()
-                ->maxLength(250),
             Grid::make(3)
                 ->schema([
                     Forms\Components\Select::make('state')
                         ->label('Etat d\'avancement')
-                        ->default(ActionStateEnum::TO_VALIDATE->value)
+                        ->required()
                         ->options(ActionStateEnum::class)
                         ->suffixIcon('tabler-ladder'),
                     Forms\Components\TextInput::make('state_percentage')
@@ -233,6 +251,7 @@ final class ActionForm
                 ->label('Partenaires externes')
                 ->relationship(name: 'partners', titleAttribute: 'name')
                 ->multiple()
+                ->preload()
                 ->createOptionForm([
                     Forms\Components\TextInput::make('name')
                         ->required(),

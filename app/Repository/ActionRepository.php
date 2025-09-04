@@ -43,6 +43,11 @@ class ActionRepository
         return Action::query()->where('state', $state->value)->where('department', $department);
     }
 
+    public static function toValidate(): Builder
+    {
+        return Action::query()->where('to_validate', true);
+    }
+
     public static function byState(ActionStateEnum $state): Collection
     {
         return Action::ofState($state->value)->get();

@@ -47,7 +47,7 @@ final class ListUsers extends ListRecords
                     }
                 }),
             Actions\Action::make('roles_help')
-                ->label('Les rôles')
+                ->label('Rappel des rôles')
                 ->icon('tabler-user-heart')
                 ->modal()
                 ->modalHeading('Explications des différents rôles')

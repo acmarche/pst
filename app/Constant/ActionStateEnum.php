@@ -8,7 +8,6 @@ use Filament\Support\Contracts\HasLabel;
 
 enum ActionStateEnum: string implements HasColor, HasLabel, HasIcon
 {
-    case TO_VALIDATE = "TO_VALIDATE";
     case START = "START";
     case PENDING = "PENDING";
     case FINISHED = "FINISHED";
@@ -27,7 +26,6 @@ enum ActionStateEnum: string implements HasColor, HasLabel, HasIcon
     public function getLabel(): string
     {
         return match ($this) {
-            self::TO_VALIDATE => 'A valider',
             self::START => 'A démarrer',
             self::PENDING => 'En cours',
             self::SUSPENDED => "Suspendu",
@@ -38,7 +36,6 @@ enum ActionStateEnum: string implements HasColor, HasLabel, HasIcon
     public function getColor(): string|array|null
     {
         return match ($this) {
-            self::TO_VALIDATE => 'warning',
             self::START => 'secondary',
             self::FINISHED => 'primary',
             self::PENDING => 'success',
@@ -50,7 +47,6 @@ enum ActionStateEnum: string implements HasColor, HasLabel, HasIcon
     {
         return match ($this) {
             self::START => 'heroicon-m-check',
-            self::TO_VALIDATE => 'heroicon-m-exclamation-circle',
             self::FINISHED => "tabler-bolt-filled",
             self::PENDING => 'tabler-line-dashed',
             self::SUSPENDED => "tabler-bolt-off",

@@ -18,7 +18,7 @@ class ListActions extends ListRecords
 
     public function getTitle(): string|Htmlable
     {
-        return $this->getAllTableRecordsCount().' actions';
+        return $this->getAllTableRecordsCount() . ' actions';
     }
 
     protected function getHeaderActions(): array
@@ -38,6 +38,18 @@ class ListActions extends ListRecords
                 ->label('Toutes')
                 ->badge(function () use ($department): int {
                     return ActionRepository::byDepartment($department)->count();
+                }),
+        ];
+        $tabs = [
+            1 => Tab::make('ToValidate')
+                ->label('A valider')
+                ->badge(function () use ($department): int {
+                    return ActionRepository::toValidate()->count();
+                })
+                ->badgeColor('warning')
+                ->icon('heroicon-m-exclamation-circle')
+                ->modifyQueryUsing(function ( ) use ( $department): Builder {
+                    return ActionRepository::toValidate( );
                 }),
         ];
         foreach (ActionStateEnum::cases() as $actionStateEnum) {

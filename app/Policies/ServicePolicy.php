@@ -69,6 +69,6 @@ class ServicePolicy
         if ($user->hasRoles([RoleEnum::MANDATAIRE->value])) {
             return false;
         }
-        return $user->hasRoles([RoleEnum::ADMIN->value, RoleEnum::MANAGER->value]);
+        return $user->hasRoles([RoleEnum::ADMIN->value]);
     }
 }

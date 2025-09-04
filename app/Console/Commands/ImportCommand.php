@@ -183,10 +183,6 @@ final class ImportCommand extends Command
             }
         }
 
-        if (!$state) {
-            $state = ActionStateEnum::TO_VALIDATE->value;
-        }
-
         $type = null;
         if ($this->actionDto->type) {
             $type = ActionTypeEnum::findByName($this->actionDto->type);
