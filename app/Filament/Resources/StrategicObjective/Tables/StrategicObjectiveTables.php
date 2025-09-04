@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Filament\Resources\StrategicObjective\Tables;
 
+use App\Constant\DepartmentEnum;
 use App\Filament\Resources\StrategicObjectiveResource;
 use App\Models\StrategicObjective;
 use App\Repository\UserRepository;
@@ -21,7 +22,7 @@ final class StrategicObjectiveTables
         return $table
             ->defaultPaginationPageOption(50)
             ->modifyQueryUsing(
-                fn (Builder $query) => $query->where('department', '=', UserRepository::departmentSelected())
+                fn (Builder $query) => $query->whereIn('department', [UserRepository::departmentSelected(), DepartmentEnum::COMMON->value])
             )
             ->recordTitleAttribute('name')
             ->recordUrl(fn (StrategicObjective $record) => StrategicObjectiveResource::getUrl('view', [$record]))

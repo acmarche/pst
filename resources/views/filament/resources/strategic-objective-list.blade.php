@@ -5,7 +5,7 @@
 >
 
     <div class="flex flex-col gap-y-6">
-        @foreach ($this->oss as $os)
+        @foreach ($this->getTableRecords() as $os)
             <x-filament::section collapsible collapsed>
                 <x-slot name="heading">
                     <div class="flex items-center justify-start flex-row gap-2">

@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Constant\DepartmentEnum;
 use App\Models\StrategicObjective;
 use Illuminate\Support\Collection;
 
@@ -22,7 +23,7 @@ class StrategicObjectiveRepository
      */
     public static function findByDepartmentWithOosAndActions(string $department): Collection
     {
-        return StrategicObjective::where('department', $department)
+        return StrategicObjective::query()->whereIn('department', [$department, DepartmentEnum::COMMON->value])
             //->withoutGlobalScope(DepartmentScope::class)
             ->with('oos')
             ->with('oos.actions')

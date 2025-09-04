@@ -75,11 +75,6 @@ final class AdminPanelProvider extends PanelProvider
             ])
             ->authMiddleware([
                 Authenticate::class,
-            ])->navigationItems([
-                NavigationItem::make('internal')
-                    ->icon('tabler-arrow-badge-left')
-                    ->label('Volet interne')
-                    ->url('/admin/internal'),
             ])
             ->userMenuItems([
                 Action::make('view-ville')
