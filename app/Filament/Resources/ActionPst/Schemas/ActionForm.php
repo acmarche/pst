@@ -139,7 +139,7 @@ final class ActionForm
                         1 => 'warning',
                     ])
                     ->inline()
-                    ->visible(fn () => ! auth()->user()->hasRole(RoleEnum::ADMIN->value))
+                    ->visible(fn () =>  auth()->user()->hasRole(RoleEnum::ADMIN->value))
                     ->grow(false),
             ])
                 ->grow(true),

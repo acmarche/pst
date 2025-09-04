@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\ActionPst\Pages;
 
 use App\Constant\ActionStateEnum;
+use App\Constant\RoleEnum;
 use App\Filament\Resources\ActionPstResource;
 use App\Repository\ActionRepository;
 use App\Repository\UserRepository;
@@ -12,22 +13,13 @@ use Filament\Schemas\Components\Tabs\Tab;
 use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Database\Eloquent\Builder;
 
-class ListActions extends ListRecords
+final class ListActions extends ListRecords
 {
     protected static string $resource = ActionPstResource::class;
 
     public function getTitle(): string|Htmlable
     {
-        return $this->getAllTableRecordsCount() . ' actions';
-    }
-
-    protected function getHeaderActions(): array
-    {
-        return [
-            Actions\CreateAction::make()
-                ->label('Ajouter une action')
-                ->icon('tabler-plus'),
-        ];
+        return $this->getAllTableRecordsCount().' actions';
     }
 
     public function getTabs(): array
@@ -40,18 +32,18 @@ class ListActions extends ListRecords
                     return ActionRepository::byDepartment($department)->count();
                 }),
         ];
-        $tabs = [
-            1 => Tab::make('ToValidate')
+        if (auth()->user()->hasRole(RoleEnum::ADMIN->value)) {
+            $tabs[1] = Tab::make('ToValidate')
                 ->label('A valider')
-                ->badge(function () use ($department): int {
+                ->badge(function (): int {
                     return ActionRepository::toValidate()->count();
                 })
                 ->badgeColor('warning')
                 ->icon('heroicon-m-exclamation-circle')
-                ->modifyQueryUsing(function ( ) use ( $department): Builder {
-                    return ActionRepository::toValidate( );
-                }),
-        ];
+                ->modifyQueryUsing(function (): Builder {
+                    return ActionRepository::toValidate();
+                });
+        }
         foreach (ActionStateEnum::cases() as $actionStateEnum) {
             $tabs[] =
                 Tab::make($actionStateEnum->value)
@@ -67,5 +59,14 @@ class ListActions extends ListRecords
         }
 
         return $tabs;
+    }
+
+    protected function getHeaderActions(): array
+    {
+        return [
+            Actions\CreateAction::make()
+                ->label('Ajouter une action')
+                ->icon('tabler-plus'),
+        ];
     }
 }
