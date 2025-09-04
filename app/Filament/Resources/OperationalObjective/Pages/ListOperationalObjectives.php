@@ -13,7 +13,9 @@ class ListOperationalObjectives extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            Actions\CreateAction::make(),
+            Actions\CreateAction::make()
+            ->label('Ajouter un objectif opérationnel')
+            ->icon('tabler-plus'),
         ];
     }
 }

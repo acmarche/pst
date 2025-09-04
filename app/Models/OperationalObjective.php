@@ -22,6 +22,11 @@ class OperationalObjective extends Model
         'department',
     ];
 
+    public function isInternal(): bool
+    {
+        return $this->strategicObjective()->first()->isInternal();
+    }
+
     /**
      * Get the strategic objective that owns the operational objective.
      */

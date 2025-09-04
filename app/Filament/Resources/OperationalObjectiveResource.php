@@ -5,16 +5,17 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\OperationalObjective\Pages;
 use App\Filament\Resources\OperationalObjective\Tables\OperationalObjectiveTables;
 use App\Models\OperationalObjective;
+use BackedEnum;
 use Filament\Resources\Resource;
 use Filament\Tables\Table;
 use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Database\Eloquent\Model;
 
-class OperationalObjectiveResource extends Resource
+final class OperationalObjectiveResource extends Resource
 {
     protected static ?string $model = OperationalObjective::class;
 
-    protected static string|null|\BackedEnum $navigationIcon = 'tabler-target';
+    protected static string|null|BackedEnum $navigationIcon = 'tabler-target';
 
     protected static ?string $recordTitleAttribute = 'name';
 

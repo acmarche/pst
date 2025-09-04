@@ -5,6 +5,7 @@ namespace App\Filament\Resources\OperationalObjective\Tables;
 use App\Filament\Resources\OperationalObjectiveResource;
 use App\Models\OperationalObjective;
 use App\Models\StrategicObjective;
+use App\Repository\OperationalObjectiveRepository;
 use App\Repository\UserRepository;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\CreateAction;
@@ -12,12 +13,11 @@ use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
-use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 
-class OperationalObjectiveTables
+final class OperationalObjectiveTables
 {
     public static function configure(Table $table): Table
     {
@@ -25,51 +25,51 @@ class OperationalObjectiveTables
             ->defaultSort('position')
             ->defaultPaginationPageOption(50)
             ->modifyQueryUsing(
-                fn(Builder $query) => $query->where('department', '=', UserRepository::departmentSelected())
+                fn (Builder $query) => OperationalObjectiveRepository::findByDepartmentWithOosAndActions(UserRepository::departmentSelected())
             )
-            ->recordUrl(fn(OperationalObjective $record) => OperationalObjectiveResource::getUrl('view', [$record]))
+            ->recordUrl(fn (OperationalObjective $record) => OperationalObjectiveResource::getUrl('view', [$record]))
             ->columns([
-                Tables\Columns\TextColumn::make('position')
+                TextColumn::make('position')
                     ->label('Numéro')
                     ->state(
-                        fn(OperationalObjective $objective
+                        fn (OperationalObjective $objective
                         ): string => $objective->strategicObjective?->position.'.'.' '.$objective->position
                     )
                     ->sortable(),
-                Tables\Columns\TextColumn::make('os')
+                TextColumn::make('os')
                     ->label('Os')
-                    ->state(fn() => 'Os')
+                    ->state(fn () => 'Os')
                     ->tooltip(function (TextColumn $column): ?string {
                         $record = $column->getRecord();
 
                         return $record->strategicObjective?->name;
                     }),
-                Tables\Columns\TextColumn::make('name')
+                TextColumn::make('name')
                     ->searchable()
                     ->sortable()
                     ->limit(90)
                     ->tooltip(function (TextColumn $column): ?string {
                         $state = $column->getState();
 
-                        if (strlen($state) <= $column->getCharacterLimit()) {
+                        if (mb_strlen($state) <= $column->getCharacterLimit()) {
                             return null;
                         }
 
                         return $state;
                     }),
-                Tables\Columns\TextColumn::make('actions_count')
+                TextColumn::make('actions_count')
                     ->label('Actions')
                     ->counts('actions')
                     ->sortable(),
-                Tables\Columns\TextColumn::make('department')
+                TextColumn::make('department')
                     ->label('Département')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('created_at')
+                TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_at')
+                TextColumn::make('updated_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
@@ -96,8 +96,8 @@ class OperationalObjectiveTables
             ->defaultPaginationPageOption(50)
             ->recordTitleAttribute('name')
             ->columns([
-                Tables\Columns\TextColumn::make('name'),
-                Tables\Columns\TextColumn::make('actions_count')
+                TextColumn::make('name'),
+                TextColumn::make('actions_count')
                     ->label('Actions')
                     ->counts('actions'),
             ])
@@ -112,13 +112,14 @@ class OperationalObjectiveTables
                         // va pas
                         $strategicObjective = StrategicObjective::find($data['strategic_objective_id']);
                         $data['department'] = $strategicObjective->department;
+
                         return $data;
                     }),
             ])
             ->recordActions([
                 ViewAction::make()
                     ->url(
-                        fn(OperationalObjective $record): string => OperationalObjectiveResource::getUrl(
+                        fn (OperationalObjective $record): string => OperationalObjectiveResource::getUrl(
                             'view',
                             ['record' => $record]
                         )
