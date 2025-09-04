@@ -13,6 +13,8 @@ use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
+use Filament\Support\Enums\IconPosition;
+use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
@@ -46,6 +48,8 @@ final class OperationalObjectiveTables
                     }),
                 TextColumn::make('name')
                     ->searchable()
+                    ->icon(fn(OperationalObjective $record)=> $record->isInternal() ? Heroicon::Envelope : false)
+                    ->iconPosition(IconPosition::After)
                     ->sortable()
                     ->limit(90)
                     ->tooltip(function (TextColumn $column): ?string {

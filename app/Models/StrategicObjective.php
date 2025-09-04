@@ -18,6 +18,11 @@ class StrategicObjective extends Model
         'is_internal',
     ];
 
+    public function isInternal(): bool
+    {
+        return $this->isInternal();
+    }
+
     /**
      * Get the operational objectives for the strategic objective.
      * @return HasMany<OperationalObjective>
