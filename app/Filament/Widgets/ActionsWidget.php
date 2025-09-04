@@ -8,8 +8,8 @@ use App\Repository\UserRepository;
 use DB;
 use Filament\Widgets\StatsOverviewWidget as BaseWidget;
 use Filament\Widgets\StatsOverviewWidget\Stat;
-//extends BaseWidget
-class ActionsWidget
+
+class ActionsWidget extends BaseWidget
 {
     protected function getStats(): array
     {
