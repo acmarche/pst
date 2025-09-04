@@ -15,6 +15,7 @@ class StrategicObjective extends Model
         'name',
         'position',
         'department',
+        'is_internal',
     ];
 
     /**

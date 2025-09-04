@@ -25,6 +25,10 @@ class StrategicObjectiveForm
                     ->options(DepartmentEnum::class)
                     ->enum(DepartmentEnum::class)
                     ->visible($schema->getOperation() === 'create'),
+                Forms\Components\ToggleButtons::make('is_internal')
+                    ->label('Volet interne')
+                    ->options([0 => 'Oui', 1 => 'Non'])
+                    ->inline(),
                 Forms\Components\TextInput::make('position')
                     ->required()
                     ->numeric(),

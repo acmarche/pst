@@ -46,7 +46,7 @@ class StrategicObjectiveResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListOs::route('/'),
+            'index' => Pages\ListStrategicObjectives::route('/'),
             'create' => Pages\CreateStrategicObjective::route('/create'),
             'view' => Pages\ViewStrategicObjective::route('/{record}'),
             'edit' => Pages\EditStrategicObjective::route('/{record}/edit'),

@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Filament\Resources\StrategicObjective\Tables;
 
-use App\Constant\DepartmentEnum;
 use App\Filament\Resources\StrategicObjectiveResource;
 use App\Models\StrategicObjective;
+use App\Repository\StrategicObjectiveRepository;
 use App\Repository\UserRepository;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
@@ -22,7 +22,7 @@ final class StrategicObjectiveTables
         return $table
             ->defaultPaginationPageOption(50)
             ->modifyQueryUsing(
-                fn (Builder $query) => $query->whereIn('department', [UserRepository::departmentSelected(), DepartmentEnum::COMMON->value])
+                fn (Builder $query) => StrategicObjectiveRepository::findByDepartmentWithOosAndActions(UserRepository::departmentSelected())
             )
             ->recordTitleAttribute('name')
             ->recordUrl(fn (StrategicObjective $record) => StrategicObjectiveResource::getUrl('view', [$record]))

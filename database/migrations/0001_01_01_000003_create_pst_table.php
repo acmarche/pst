@@ -27,6 +27,7 @@ return new class extends Migration {
             $table->enum('department', DepartmentEnum::toArray())
                 ->nullable(false);
             $table->integer('position')->default(0);
+            $table->boolean('is_internal')->default(false);
             $table->timestamps();
         });
 

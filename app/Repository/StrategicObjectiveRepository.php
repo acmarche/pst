@@ -4,9 +4,10 @@ namespace App\Repository;
 
 use App\Constant\DepartmentEnum;
 use App\Models\StrategicObjective;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 
-class StrategicObjectiveRepository
+final class StrategicObjectiveRepository
 {
     /**
      * @return Collection|StrategicObjective[]
@@ -21,10 +22,10 @@ class StrategicObjectiveRepository
     /**
      * @return Collection|StrategicObjective[]
      */
-    public static function findByDepartmentWithOosAndActions(string $department): Collection
+    public static function findByDepartmentWithOosAndActions(string $department): Builder
     {
         return StrategicObjective::query()->whereIn('department', [$department, DepartmentEnum::COMMON->value])
-            //->withoutGlobalScope(DepartmentScope::class)
+            // ->withoutGlobalScope(DepartmentScope::class)
             ->with('oos')
             ->with('oos.actions')
             ->with('oos.actions.leaderServices')
@@ -32,8 +33,6 @@ class StrategicObjectiveRepository
             ->with('oos.actions.mandataries')
             ->with('oos.actions.users')
             ->with('oos.actions.partners')
-            ->with('oos.actions.odds')
-            // ->with(['oos' => fn ($query) => $query->withoutGlobalScope(DepartmentScope::class)])
-            ->get();
+            ->with('oos.actions.odds');
     }
 }
