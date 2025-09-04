@@ -44,8 +44,8 @@ enum RoleEnum: string implements HasColor, HasDescription, HasIcon, HasLabel
     public function getDescription(): ?string
     {
         return match ($this) {
-            self::ADMIN => 'Gestion des utilisateurs',
-            self::RESPONSIBLE => 'Gestion de la liste des OS,OO,ODD et services',
+            self::ADMIN => 'Gestion des utilisateurs, des OS,OO,ODD et services',
+            self::RESPONSIBLE => 'NON ACTIF ',
             self::MANDATAIRE => 'Accès en lecture seul',
         };
     }
