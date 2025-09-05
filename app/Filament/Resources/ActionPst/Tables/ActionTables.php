@@ -31,9 +31,6 @@ final class ActionTables
         return $table
             ->defaultSort('name')
             ->defaultPaginationPageOption(50)
-            ->modifyQueryUsing(
-                fn (Builder $query) => ActionRepository::findByDepartmentWithOosAndActions(UserRepository::departmentSelected())
-            )
             ->recordUrl(fn (Action $record) => ActionPstResource::getUrl('view', [$record]))
             ->columns([
                 TextColumn::make('id')

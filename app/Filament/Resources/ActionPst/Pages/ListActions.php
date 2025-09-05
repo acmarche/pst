@@ -29,11 +29,15 @@ final class ListActions extends ListRecords
             0 => Tab::make('All')
                 ->label('Toutes')
                 ->badge(function () use ($department): int {
-                    return ActionRepository::byDepartment($department)->count();
+                    return ActionRepository::findByDepartmentWithOosAndActions(
+                        UserRepository::departmentSelected()
+                    )->count();
                 })
-                ->modifyQueryUsing(function () use ($department): Builder {
-                    return ActionRepository::byDepartmentBuilder($department);
-                }),
+                ->modifyQueryUsing(
+                    fn(Builder $query) => ActionRepository::findByDepartmentWithOosAndActions(
+                        UserRepository::departmentSelected()
+                    )
+                ),
         ];
         if (auth()->user()->hasRole(RoleEnum::ADMIN->value)) {
             $tabs[1] = Tab::make('ToValidate')
