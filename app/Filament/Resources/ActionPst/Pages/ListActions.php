@@ -30,6 +30,9 @@ final class ListActions extends ListRecords
                 ->label('Toutes')
                 ->badge(function () use ($department): int {
                     return ActionRepository::byDepartment($department)->count();
+                })
+                ->modifyQueryUsing(function () use ($department): Builder {
+                    return ActionRepository::byDepartmentBuilder($department);
                 }),
         ];
         if (auth()->user()->hasRole(RoleEnum::ADMIN->value)) {
