@@ -74,6 +74,10 @@ final class ListActions extends ListRecords
             Actions\CreateAction::make()
                 ->label('Ajouter une action')
                 ->icon('tabler-plus'),
+            Actions\Action::make('list-sheet')
+                ->label('Liste comme Google sheet')
+                ->icon('tabler-list')
+                ->url(ActionPstResource::getUrl('asGoogleSheet')),
         ];
     }
 }
