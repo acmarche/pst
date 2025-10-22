@@ -47,12 +47,11 @@ final class AppServiceProvider extends ServiceProvider
     {
         RichEditor::configureUsing(function (RichEditor $richEditor): void {
             $richEditor->toolbarButtons([
-                ['bold', 'italic', 'strike', 'link', 'h2', 'h3'],
+                ['bold', 'italic', 'strike', 'textColor', 'link', 'h2', 'h3'],
                 ['alignStart', 'alignCenter', 'alignEnd', 'alignJustify'],
                 ['bulletList', 'orderedList', 'blockquote', 'horizontalRule'],
                 ['table', 'grid'],
-                ['textColor', 'clearFormatting'],
-                ['undo', 'redo'],
+                ['clearFormatting', 'undo', 'redo'],
             ]);
         });
     }
