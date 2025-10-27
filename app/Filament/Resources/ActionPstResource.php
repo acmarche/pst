@@ -61,6 +61,7 @@ class ActionPstResource extends Resource
             'create' => Pages\CreateAction::route('/create'),
             'view' => Pages\ViewAction::route('/{record}'),
             'edit' => Pages\EditAction::route('/{record}/edit'),
+            'asGoogleSheet' => Pages\ListActionsAsGoogleSheet::route('/as/google/sheet'),
         ];
     }
 

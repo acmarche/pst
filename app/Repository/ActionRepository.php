@@ -77,4 +77,9 @@ class ActionRepository
         return Action::query()->where('department', $department)->get();
     }
 
+    public static function byDepartmentBuilder(string $department): Builder
+    {
+        return Action::query()->where('department', $department);
+    }
+
 }

@@ -43,7 +43,7 @@ class StrategicObjectiveExport implements FromCollection, ShouldAutoSize, WithSt
     public function collection(): Collection
     {
         $data = collect();
-        $strategicObjectives = StrategicObjectiveRepository::findByDepartmentWithOosAndActions($this->department);
+        $strategicObjectives = StrategicObjectiveRepository::findByDepartmentWithOosAndActions($this->department)->get();
 
         $data->push($this->titles);
         $ligne = 2;

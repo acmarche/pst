@@ -29,8 +29,15 @@ final class ListActions extends ListRecords
             0 => Tab::make('All')
                 ->label('Toutes')
                 ->badge(function () use ($department): int {
-                    return ActionRepository::byDepartment($department)->count();
-                }),
+                    return ActionRepository::findByDepartmentWithOosAndActions(
+                        UserRepository::departmentSelected()
+                    )->count();
+                })
+                ->modifyQueryUsing(
+                    fn(Builder $query) => ActionRepository::findByDepartmentWithOosAndActions(
+                        UserRepository::departmentSelected()
+                    )
+                ),
         ];
         if (auth()->user()->hasRole(RoleEnum::ADMIN->value)) {
             $tabs[1] = Tab::make('ToValidate')
@@ -67,6 +74,10 @@ final class ListActions extends ListRecords
             Actions\CreateAction::make()
                 ->label('Ajouter une action')
                 ->icon('tabler-plus'),
+            Actions\Action::make('list-sheet')
+                ->label('Liste comme Google sheet')
+                ->icon('tabler-list')
+                ->url(ActionPstResource::getUrl('asGoogleSheet')),
         ];
     }
 }
