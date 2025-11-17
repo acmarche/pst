@@ -30,11 +30,15 @@ final class ActionPolicy
      */
     public function create(User $user): bool
     {
-        if ($user->hasRoles([RoleEnum::MANDATAIRE->value])) {
-            return false;
+        if ($user->hasRoles([RoleEnum::ADMIN->value])) {
+            return true;
         }
 
-        return true;
+        if ($user->hasRoles([RoleEnum::RESPONSIBLE->value])) {
+            return true;
+        }
+
+        return false;
     }
 
     /**
