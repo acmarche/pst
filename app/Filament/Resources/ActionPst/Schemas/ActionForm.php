@@ -60,11 +60,11 @@ final class ActionForm
                 ])
                     ->skippable()
                     ->nextAction(
-                        fn(Action $action) => $action
+                        fn (Action $action) => $action
                             ->label('Suivant')
                             ->color('success'),
                     )->previousAction(
-                        fn(Action $action) => $action
+                        fn (Action $action) => $action
                             ->label('Précédent')
                             ->color('secondary'),
                     )
@@ -139,7 +139,7 @@ final class ActionForm
                         1 => 'warning',
                     ])
                     ->inline()
-                    ->visible(fn() => auth()->user()->hasRole(RoleEnum::ADMIN->value))
+                    ->visible(fn () => auth()->user()->hasRole(RoleEnum::ADMIN->value))
                     ->grow(false),
             ])
                 ->grow(true),
@@ -148,12 +148,12 @@ final class ActionForm
                 ->relationship(
                     name: 'operationalObjective',
                     titleAttribute: 'name',
-                    modifyQueryUsing: fn(Builder $query) => $query->orderBy('name', 'asc')
+                    modifyQueryUsing: fn (Builder $query) => $query->orderBy('name', 'asc')
                 )
                 ->searchable(['name'])
                 ->preload()
                 ->required()
-                ->visible(fn() => $owner === null),
+                ->visible(fn () => $owner === null),
             Grid::make(3)
                 ->schema([
                     Forms\Components\Select::make('state')
@@ -198,16 +198,16 @@ final class ActionForm
                         ->label('Mandataires')
                         ->relationship(
                             name: 'mandataries',
-                            modifyQueryUsing: fn(Builder $query) => $query
+                            modifyQueryUsing: fn (Builder $query) => $query
                                 ->whereHas(
                                     'roles',
-                                    fn(Builder $query) => $query->where('name', RoleEnum::MANDATAIRE->value)
+                                    fn (Builder $query) => $query->where('name', RoleEnum::MANDATAIRE->value)
                                 )
                                 ->orderBy('last_name')
                                 ->orderBy('first_name'),
                         )
                         ->getOptionLabelFromRecordUsing(
-                            fn(Model $record) => "{$record->first_name} {$record->last_name}"
+                            fn (Model $record) => "{$record->first_name} {$record->last_name}"
                         )
                         ->searchable(['first_name', 'last_name'])
                         ->multiple()
@@ -216,11 +216,11 @@ final class ActionForm
                         ->label('Agents pilotes')
                         ->relationship(
                             name: 'users',
-                            modifyQueryUsing: fn(Builder $query) => $query->orderBy('last_name')
+                            modifyQueryUsing: fn (Builder $query) => $query->orderBy('last_name')
                                 ->orderBy('first_name'),
                         )
                         ->getOptionLabelFromRecordUsing(
-                            fn(Model $record) => "{$record->first_name} {$record->last_name}"
+                            fn (Model $record) => "{$record->first_name} {$record->last_name}"
                         )
                         ->searchable(['first_name', 'last_name'])
                         ->multiple(),
@@ -265,7 +265,7 @@ final class ActionForm
                 )
                 ->searchable(['actions.id', 'actions.name'])
                 ->getOptionLabelFromRecordUsing(
-                    fn(Model $record) => "{$record->id}. {$record->name}"
+                    fn (Model $record) => "{$record->id}. {$record->name}"
                 )
                 ->multiple(),
         ];

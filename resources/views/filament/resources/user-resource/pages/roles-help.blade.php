@@ -19,9 +19,6 @@
     <div class="text-gray-600">
         <ul class="space-y-4">
             <li class="flex items-start">
-                Ajouter des actions avec comme statut "A valider"
-            </li>
-            <li class="flex items-start">
                 Droit d'écriture si repris comme agent pilote ou membre du service pilote
             </li>
             <li class="flex items-start">
