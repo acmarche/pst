@@ -8,7 +8,6 @@ use App\Constant\RoleEnum;
 use App\Ldap\User as UserLdap;
 use App\Models\Role;
 use App\Models\User;
-use App\Models\UserIntranet;
 use Illuminate\Console\Command;
 use Str;
 use Symfony\Component\Console\Command\Command as SfCommand;
@@ -42,7 +41,7 @@ final class SyncUserCommand extends Command
             if (! $userLdap->getFirstAttribute('mail')) {
                 continue;
             }
-            if (! $this->isActif($userLdap)) {
+            if (! $this->isActive($userLdap)) {
                 continue;
             }
             $username = $userLdap->getFirstAttribute('samaccountname');
@@ -53,7 +52,7 @@ final class SyncUserCommand extends Command
             }
         }
 
-        //  $this->removeOldUsers();
+        $this->removeOldUsers();
 
         return SfCommand::SUCCESS;
     }
@@ -71,23 +70,27 @@ final class SyncUserCommand extends Command
     private function updateUser(User $user, mixed $userLdap): void
     {
         $user->update(User::generateDataFromLdap($userLdap, $user->username));
-        $this->info('Update '.$user->first_name.' '.$user->last_name);
     }
 
     private function removeOldUsers(): void
     {
-        $ldapUsernames = array_map(function (UserLdap $userLdap) {
-            return $userLdap->getFirstAttribute('samaccountname');
-        }, UserLdap::all()->toArray());
-        foreach (User::all() as $user) {
-            if (in_array($user->username, $ldapUsernames)) {
-                // $user->delete();
-                $this->info('Removed '.$user->first_name.' '.$user->last_name);
+        $ldapUsernames = [];
+
+        foreach (UserLdap::all() as $userLdap) {
+            $ldapUsernames[] = $userLdap->getFirstAttribute('samaccountname');
+        }
+
+        if (count($ldapUsernames) > 200) {
+            foreach (User::all() as $user) {
+                if (! in_array($user->username, $ldapUsernames)) {
+                    $user->delete();
+                    $this->info('Removed '.$user->first_name.' '.$user->last_name);
+                }
             }
         }
     }
 
-    private function isActif(UserLdap $userLdap): bool
+    private function isActive(UserLdap $userLdap): bool
     {
         return $userLdap->getFirstAttribute('userAccountControl') !== 66050;
     }
