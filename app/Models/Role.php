@@ -11,7 +11,7 @@ class Role extends Model
     use HasFactory;
 
     public $timestamps = false;
-    protected $fillable = ['name','description'];
+    protected $fillable = ['name','description', 'label'];
 
     /**
      * The users that belong to the role.

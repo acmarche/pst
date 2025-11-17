@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\Users\Schemas;
 
 use App\Constant\DepartmentEnum;
+use App\Models\Role;
 use App\Repository\UserRepository;
 use Filament\Forms\Components\CheckboxList;
 use Filament\Forms\Components\Select;
@@ -17,7 +18,8 @@ final class UserForm
             ->schema([
                 CheckboxList::make('roles')
                     ->label('Rôles')
-                    ->relationship('roles', 'name'),
+                    ->relationship('roles', 'name')
+                    ->state(fn (Role $role) => $role->label),
                 ToggleButtons::make('departments')
                     ->label('Département(s)')
                     ->default(DepartmentEnum::VILLE->value)

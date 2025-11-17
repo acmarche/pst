@@ -17,6 +17,7 @@ return new class extends Migration {
             $table->id();
             $table->enum('name', RoleEnum::toArray())->unique()->nullable(false);
             $table->string('description')->nullable();
+            $table->string('label')->nullable(false);
         });
 
         Schema::create('users', function (Blueprint $table) {
