@@ -6,6 +6,7 @@ use App\Constant\ActionRoadmapEnum;
 use App\Constant\ActionStateEnum;
 use App\Constant\ActionSynergyEnum;
 use App\Constant\ActionTypeEnum;
+use App\Constant\RoleEnum;
 use App\Observers\ActionObserver;
 use App\Repository\UserRepository;
 use Database\Factories\ActionFactory;
@@ -114,7 +115,10 @@ final class Action extends Model
 
     public function mandataries(): BelongsToMany
     {
-        return $this->belongsToMany(User::class, 'action_mandatory');
+        return $this->belongsToMany(User::class, 'action_mandatory')
+            ->whereHas('roles', function ($query) {
+                $query->where('name', RoleEnum::MANDATAIRE->value);
+            });
     }
 
     /**
