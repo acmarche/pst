@@ -19,7 +19,7 @@ final class UserForm
                 CheckboxList::make('roles')
                     ->label('Rôles')
                     ->relationship('roles', 'name')
-                    ->state(fn (Role $role) => $role->label),
+                    ,
                 ToggleButtons::make('departments')
                     ->label('Département(s)')
                     ->default(DepartmentEnum::VILLE->value)
