@@ -100,7 +100,7 @@ final class User extends Authenticatable implements FilamentUser, HasName
      */
     public function roles(): BelongsToMany
     {
-        return $this->BelongsToMany(Role::class);
+        return $this->belongsToMany(Role::class);
     }
 
     public function hasRole(string $roleToFind): bool
@@ -171,7 +171,6 @@ final class User extends Authenticatable implements FilamentUser, HasName
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
-            'roles' => 'array',
             'departments' => 'array',
         ];
     }
