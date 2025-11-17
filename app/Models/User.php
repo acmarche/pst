@@ -19,7 +19,7 @@ use Lab404\Impersonate\Models\Impersonate;
 #[UseFactory(UserFactory::class)]
 final class User extends Authenticatable implements FilamentUser, HasName
 {
-    use HasFactory, Notifiable, Impersonate;
+    use HasFactory, Impersonate, Notifiable;
 
     protected $fillable = [
         'name',
@@ -49,6 +49,28 @@ final class User extends Authenticatable implements FilamentUser, HasName
         'remember_token',
     ];
 
+    public static function generateDataFromLdap(UserLdap $userLdap, string $username): array
+    {
+        $email = $userLdap->getFirstAttribute('mail');
+
+        /*   $department = match (true) {
+               str_contains($email, 'cpas.marche') => DepartmentEnum::CPAS->value,
+               str_contains($email, 'ac.marche') => DepartmentEnum::VILLE->value,
+               default => DepartmentEnum::VILLE->value,
+           };*/
+
+        return [
+            'first_name' => $userLdap->getFirstAttribute('givenname'),
+            'last_name' => $userLdap->getFirstAttribute('sn'),
+            'email' => $email,
+            // 'departments' => [$department],
+            'mobile' => $userLdap->getFirstAttribute('mobile'),
+            'phone' => $userLdap->getFirstAttribute('telephoneNumber'),
+            'extension' => $userLdap->getFirstAttribute('ipPhone'),
+            'uuid' => self::getUuidFromIntranetDb($username),
+        ];
+    }
+
     public function canAccessPanel(Panel $panel): bool
     {
         if ($panel->getId() === 'admin') {
@@ -60,12 +82,12 @@ final class User extends Authenticatable implements FilamentUser, HasName
 
     public function name(): string
     {
-        return $this->last_name . ' ' . $this->first_name;
+        return $this->last_name.' '.$this->first_name;
     }
 
     public function getFullNameAttribute(): string
     {
-        return $this->first_name . ' ' . $this->last_name;
+        return $this->first_name.' '.$this->last_name;
     }
 
     public function getFilamentName(): string
@@ -154,28 +176,6 @@ final class User extends Authenticatable implements FilamentUser, HasName
         ];
     }
 
-    public static function generateDataFromLdap(UserLdap $userLdap, string $username): array
-    {
-        $email = $userLdap->getFirstAttribute('mail');
-
-        /*   $department = match (true) {
-               str_contains($email, 'cpas.marche') => DepartmentEnum::CPAS->value,
-               str_contains($email, 'ac.marche') => DepartmentEnum::VILLE->value,
-               default => DepartmentEnum::VILLE->value,
-           };*/
-
-        return [
-            'first_name' => $userLdap->getFirstAttribute('givenname'),
-            'last_name' => $userLdap->getFirstAttribute('sn'),
-            'email' => $email,
-            // 'departments' => [$department],
-            'mobile' => $userLdap->getFirstAttribute('mobile'),
-            'phone' => $userLdap->getFirstAttribute('telephoneNumber'),
-            'extension' => $userLdap->getFirstAttribute('ipPhone'),
-            'uuid' => self::getUuidFromIntranetDb($username),
-        ];
-    }
-
     private static function getUuidFromIntranetDb(string $username): ?string
     {
         $user = UserIntranet::query()->where('username', $username)->first();
@@ -186,5 +186,4 @@ final class User extends Authenticatable implements FilamentUser, HasName
 
         return null;
     }
-
 }
