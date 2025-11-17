@@ -28,8 +28,6 @@ final class SyncUserCommand extends Command
      */
     protected $description = 'Sync users with ldap';
 
-    private Role $agentRole;
-
     /**
      * Execute the console command.
      */
