@@ -36,7 +36,7 @@ final class UsersTable
                 TextColumn::make('extension')
                     ->label('Extension')
                     ->icon('tabler-device-landline-phone'),
-                TextColumn::make('roles.name'),
+                TextColumn::make('roles.label'),
                 TextColumn::make('departments')
                     ->label('Départements')
                     ->toggleable(isToggledHiddenByDefault: true),
@@ -50,7 +50,7 @@ final class UsersTable
             ])
             ->filters([
                 SelectFilter::make('roles')
-                    ->relationship('roles', 'name'),
+                    ->relationship('roles', 'label'),
             ])
             ->recordActions([
                 EditAction::make(),

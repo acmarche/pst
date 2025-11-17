@@ -18,7 +18,7 @@ final class UserForm
             ->schema([
                 CheckboxList::make('roles')
                     ->label('Rôles')
-                    ->relationship('roles', 'name')
+                    ->relationship('roles', 'label')
                     ,
                 ToggleButtons::make('departments')
                     ->label('Département(s)')
@@ -59,7 +59,7 @@ final class UserForm
                     ->required(),
                 CheckboxList::make('roles')
                     ->label('Rôles')
-                    ->relationship('roles', 'name'),
+                    ->relationship('roles', 'label'),
             ]);
     }
 }

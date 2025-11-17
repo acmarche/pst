@@ -25,7 +25,7 @@ class UserInfolist
             TextEntry::make('departments')
                 ->label('Départements')
                 ->icon('tabler-device-mobile'),
-            TextEntry::make('roles.name')
+            TextEntry::make('roles.label')
                 ->label('Rôles')
                 ->icon('tabler-user-shield'),
             TextEntry::make('services.name')
