@@ -80,7 +80,7 @@ final class SyncUserCommand extends Command
             foreach (User::all() as $user) {
                 if (!in_array($user->username, $ldapUsernames)) {
                     $user->delete();
-                    $this->info('Removed '.$user->first_name.' '.$user->last_name);
+                    $this->info('Removed from pst'.$user->first_name.' '.$user->last_name);
                 }
             }
         }
