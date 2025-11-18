@@ -19,9 +19,15 @@ final class ListActions extends ListRecords
 
     public function getTitle(): string|Htmlable
     {
+        $this->debugQuery();
+
         return $this->getAllTableRecordsCount().' actions';
     }
 
+    /**
+     * https://github.com/filamentphp/filament/discussions/10803
+     * @return array|Tab[]
+     */
     public function getTabs(): array
     {
         $filters = $this->tableFilters ?? [];
@@ -34,10 +40,10 @@ final class ListActions extends ListRecords
             0 => Tab::make('All')
                 ->label('Toutes')
                 ->badge(
-                    fn () => ActionRepository::findByDepartmentWithOosAndActions($department)->count()
+                    fn() => ActionRepository::findByDepartmentWithOosAndActions($department)->count()
                 )
                 ->modifyQueryUsing(
-                    fn (Builder $query) => ActionRepository::findByDepartmentWithOosAndActions($department)
+                    fn(Builder $query) => ActionRepository::findByDepartmentWithOosAndActions($department)
                 ),
         ];
         if (auth()->user()->hasRole(RoleEnum::ADMIN->value)) {
@@ -46,10 +52,10 @@ final class ListActions extends ListRecords
                 ->badgeColor('warning')
                 ->icon('heroicon-m-exclamation-circle')
                 ->badge(
-                    fn () => ActionRepository::byDepartmentAndToValidateOrNot($department, true)->count()
+                    fn() => ActionRepository::byDepartmentAndToValidateOrNot($department, true)->count()
                 )
                 ->modifyQueryUsing(
-                    fn () => ActionRepository::byDepartmentAndToValidateOrNot($department, true)
+                    fn() => ActionRepository::byDepartmentAndToValidateOrNot($department, true)
                 );
         }
         foreach (ActionStateEnum::cases() as $actionStateEnum) {
@@ -92,10 +98,11 @@ final class ListActions extends ListRecords
         // Replace bindings in SQL
         $fullQuery = $sql;
         foreach ($bindings as $binding) {
+            dump('bind: '.$binding);
             $value = is_numeric($binding) ? $binding : "'".$binding."'";
             $fullQuery = preg_replace('/\?/', $value, $fullQuery, 1);
         }
-        dump(UserRepository::listDepartmentOfCurrentUser());
+
         dump([
             'sql' => $sql,
             'bindings' => implode(',', $bindings),
