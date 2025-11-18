@@ -24,18 +24,18 @@ final class ListActions extends ListRecords
 
     public function getTabs(): array
     {
-        $department = UserRepository::departmentSelected();
+        $departmentSelected = UserRepository::departmentSelected();
         $tabs = [
             0 => Tab::make('All')
                 ->label('Toutes')
-                ->badge(function () use ($department): int {
+                ->badge(function () use ($departmentSelected): int {
                     return ActionRepository::findByDepartmentWithOosAndActions(
-                        UserRepository::departmentSelected()
+                        $departmentSelected
                     )->count();
                 })
                 ->modifyQueryUsing(
-                    fn(Builder $query) => ActionRepository::findByDepartmentWithOosAndActions(
-                        UserRepository::departmentSelected()
+                    fn (Builder $query) => ActionRepository::findByDepartmentWithOosAndActions(
+                        $departmentSelected
                     )
                 ),
         ];
@@ -54,14 +54,14 @@ final class ListActions extends ListRecords
         foreach (ActionStateEnum::cases() as $actionStateEnum) {
             $tabs[] =
                 Tab::make($actionStateEnum->value)
-                    ->badge(function () use ($department, $actionStateEnum): int {
-                        return ActionRepository::byStateAndDepartment($actionStateEnum, $department)->count();
+                    ->badge(function () use ($departmentSelected, $actionStateEnum): int {
+                        return ActionRepository::byStateAndDepartment($actionStateEnum, $departmentSelected)->count();
                     })
                     ->label($actionStateEnum->getLabel())
                     ->badgeColor($actionStateEnum->getColor())
                     ->icon($actionStateEnum->getIcon())
-                    ->modifyQueryUsing(function (Builder $query) use ($actionStateEnum, $department): Builder {
-                        return ActionRepository::byStateAndDepartment($actionStateEnum, $department);
+                    ->modifyQueryUsing(function (Builder $query) use ($actionStateEnum, $departmentSelected): Builder {
+                        return ActionRepository::byStateAndDepartment($actionStateEnum, $departmentSelected);
                     });
         }
 
@@ -79,5 +79,26 @@ final class ListActions extends ListRecords
                 ->icon('tabler-list')
                 ->url(ActionPstResource::getUrl('asGoogleSheet')),
         ];
+    }
+
+    private function debugQuery(): void
+    {
+        // Get the query builder
+        $builder = $this->getFilteredTableQuery();
+        $sql = $builder->toSql();
+        $bindings = $builder->getBindings();
+
+        // Replace bindings in SQL
+        $fullQuery = $sql;
+        foreach ($bindings as $binding) {
+            $value = is_numeric($binding) ? $binding : "'".$binding."'";
+            $fullQuery = preg_replace('/\?/', $value, $fullQuery, 1);
+        }
+        dump(UserRepository::listDepartmentOfCurrentUser());
+        dump([
+            'sql' => $sql,
+            'bindings' => implode(',', $bindings),
+            'full_query' => $fullQuery,
+        ]);
     }
 }
