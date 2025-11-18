@@ -3,8 +3,8 @@
 namespace App\Repository;
 
 use App\Constant\ActionStateEnum;
-use App\Constant\DepartmentEnum;
 use App\Models\Action;
+use App\Models\Scopes\ValidatedScope;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 
@@ -49,6 +49,14 @@ class ActionRepository
         return Action::query()->where('to_validate', true);
     }
 
+    public static function byDepartmentAndToValidateOrNot(string $department, bool $state = false): Builder
+    {
+        return Action::query()->withoutGlobalScope(ValidatedScope::class)->where('to_validate', '=', $state)->where(
+            'department',
+            $department
+        );
+    }
+
     public static function byState(ActionStateEnum $state): Collection
     {
         return Action::ofState($state->value)->get();
@@ -61,8 +69,9 @@ class ActionRepository
 
     public static function findByDepartmentWithOosAndActions(string $department): Builder
     {
-        return Action::query()->whereIn('department', [$department, DepartmentEnum::COMMON->value])
-            // ->withoutGlobalScope(DepartmentScope::class)
+        return Action::query()
+            ->withoutGlobalScope(ValidatedScope::class)
+            ->where('department', $department)
             ->with('operationalObjective')
             ->with('leaderServices')
             ->with('partnerServices')

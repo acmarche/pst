@@ -5,7 +5,7 @@ namespace App\Filament\Resources\ActionPst\Pages;
 use App\Constant\ActionStateEnum;
 use App\Constant\RoleEnum;
 use App\Filament\Resources\ActionPstResource;
-use App\Models\Scopes\ValidatedScope;
+use App\Repository\ActionRepository;
 use App\Repository\UserRepository;
 use Filament\Actions;
 use Filament\Resources\Pages\ListRecords;
@@ -24,14 +24,20 @@ final class ListActions extends ListRecords
 
     public function getTabs(): array
     {
+        $filters = $this->tableFilters ?? [];
+        $department = UserRepository::departmentSelected();
+        if (isset($filters['department']['value']) && $filters['department']['value'] !== null) {
+            $department = $filters['department']['value'];
+        }
+
         $tabs = [
             0 => Tab::make('All')
                 ->label('Toutes')
                 ->badge(
-                    fn () => $this->getFilteredTableQuery()->clone()->withoutGlobalScope(ValidatedScope::class)->count()
+                    fn () => ActionRepository::findByDepartmentWithOosAndActions($department)->count()
                 )
                 ->modifyQueryUsing(
-                    fn (Builder $query) => $query->withoutGlobalScope(ValidatedScope::class)
+                    fn (Builder $query) => ActionRepository::findByDepartmentWithOosAndActions($department)
                 ),
         ];
         if (auth()->user()->hasRole(RoleEnum::ADMIN->value)) {
@@ -40,29 +46,24 @@ final class ListActions extends ListRecords
                 ->badgeColor('warning')
                 ->icon('heroicon-m-exclamation-circle')
                 ->badge(
-                    fn () => $this->getFilteredTableQuery()->clone()->withoutGlobalScope(ValidatedScope::class)->where(
-                        'to_validate',
-                        true
-                    )->count()
+                    fn () => ActionRepository::byDepartmentAndToValidateOrNot($department, true)->count()
                 )
                 ->modifyQueryUsing(
-                    fn (Builder $query) => $query->withoutGlobalScope(ValidatedScope::class)->where('to_validate', true)
+                    fn () => ActionRepository::byDepartmentAndToValidateOrNot($department, true)
                 );
         }
         foreach (ActionStateEnum::cases() as $actionStateEnum) {
             $tabs[] =
                 Tab::make($actionStateEnum->value)
-                    ->badge(
-                        fn () => $this->getFilteredTableQuery()->clone()->where(
-                            'state',
-                            '=',
-                            $actionStateEnum->value
-                        )->count()
-                    )
+                    ->badge(function () use ($department, $actionStateEnum): int {
+                        return ActionRepository::byStateAndDepartment($actionStateEnum, $department)->count();
+                    })
+                    ->modifyQueryUsing(function (Builder $query) use ($actionStateEnum, $department): Builder {
+                        return ActionRepository::byStateAndDepartment($actionStateEnum, $department);
+                    })
                     ->label($actionStateEnum->getLabel())
                     ->badgeColor($actionStateEnum->getColor())
-                    ->icon($actionStateEnum->getIcon())
-                    ->modifyQueryUsing(fn (Builder $query) => $query->where('state', '=', $actionStateEnum->value));
+                    ->icon($actionStateEnum->getIcon());
         }
 
         return $tabs;
