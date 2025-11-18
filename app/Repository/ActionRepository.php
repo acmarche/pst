@@ -51,10 +51,9 @@ class ActionRepository
 
     public static function byDepartmentAndToValidateOrNot(string $department, bool $state = false): Builder
     {
-        return Action::query()->withoutGlobalScope(ValidatedScope::class)->where('to_validate', '=', $state)->where(
-            'department',
-            $department
-        );
+        return Action::query()->withoutGlobalScope(ValidatedScope::class)
+            ->where('to_validate', '=', $state)
+            ->where('department', $department);
     }
 
     public static function byState(ActionStateEnum $state): Collection
