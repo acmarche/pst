@@ -5,7 +5,8 @@ namespace App\Filament\Resources\ActionPst\Pages;
 use App\Constant\ActionStateEnum;
 use App\Constant\RoleEnum;
 use App\Filament\Resources\ActionPstResource;
-use App\Repository\ActionRepository;
+use App\Models\Action;
+use App\Models\Scopes\ValidatedScope;
 use App\Repository\UserRepository;
 use Filament\Actions;
 use Filament\Resources\Pages\ListRecords;
@@ -19,13 +20,14 @@ final class ListActions extends ListRecords
 
     public function getTitle(): string|Htmlable
     {
-        $this->debugQuery();
+        //  $this->debugQuery();
 
         return $this->getAllTableRecordsCount().' actions';
     }
 
     /**
      * https://github.com/filamentphp/filament/discussions/10803
+     *
      * @return array|Tab[]
      */
     public function getTabs(): array
@@ -40,10 +42,20 @@ final class ListActions extends ListRecords
             0 => Tab::make('All')
                 ->label('Toutes')
                 ->badge(
-                    fn() => ActionRepository::findByDepartmentWithOosAndActions($department)->count()
+                    fn() => Action::query()->withoutGlobalScope(ValidatedScope::class)->where(
+                        'department',
+                        $department
+                    )->count()
                 )
                 ->modifyQueryUsing(
-                    fn(Builder $query) => ActionRepository::findByDepartmentWithOosAndActions($department)
+                    fn(Builder $query) => $query->withoutGlobalScope(ValidatedScope::class)
+                        ->with('operationalObjective')
+                        ->with('leaderServices')
+                        ->with('partnerServices')
+                        ->with('mandataries')
+                        ->with('users')
+                        ->with('partners')
+                        ->with('odds')
                 ),
         ];
         if (auth()->user()->hasRole(RoleEnum::ADMIN->value)) {
@@ -52,20 +64,25 @@ final class ListActions extends ListRecords
                 ->badgeColor('warning')
                 ->icon('heroicon-m-exclamation-circle')
                 ->badge(
-                    fn() => ActionRepository::byDepartmentAndToValidateOrNot($department, true)->count()
+                    fn() => Action::query()->where('department', $department)->withoutGlobalScope(ValidatedScope::class)
+                        ->where('to_validate', true)->count()
                 )
                 ->modifyQueryUsing(
-                    fn() => ActionRepository::byDepartmentAndToValidateOrNot($department, true)
+                    fn(Builder $query) => $query->withoutGlobalScope(ValidatedScope::class)
+                        ->where('to_validate', true)
                 );
         }
         foreach (ActionStateEnum::cases() as $actionStateEnum) {
             $tabs[] =
                 Tab::make($actionStateEnum->value)
-                    ->badge(function () use ($department, $actionStateEnum): int {
-                        return ActionRepository::byStateAndDepartment($actionStateEnum, $department)->count();
-                    })
-                    ->modifyQueryUsing(function (Builder $query) use ($actionStateEnum, $department): Builder {
-                        return ActionRepository::byStateAndDepartment($actionStateEnum, $department);
+                    ->badge(
+                        fn() => Action::query()->where('department', $department)->where(
+                            'state',
+                            $actionStateEnum->value
+                        )->count()
+                    )
+                    ->modifyQueryUsing(function (Builder $query) use ($actionStateEnum): Builder {
+                        return $query->where('state', $actionStateEnum->value);
                     })
                     ->label($actionStateEnum->getLabel())
                     ->badgeColor($actionStateEnum->getColor())
