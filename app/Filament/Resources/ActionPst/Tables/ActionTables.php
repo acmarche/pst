@@ -30,7 +30,7 @@ final class ActionTables
         return $table
             ->defaultSort('name')
             ->defaultPaginationPageOption(50)
-            ->recordUrl(fn(Action $record) => ActionPstResource::getUrl('view', [$record]))
+            ->recordUrl(fn (Action $record) => ActionPstResource::getUrl('view', [$record]))
             ->columns(self::getColumns())
             ->filters(self::getFilters())
             ->filtersFormColumns(3)
@@ -49,7 +49,7 @@ final class ActionTables
         return $table
             ->defaultSort('name')
             ->defaultPaginationPageOption(50)
-            ->recordUrl(fn(Action $record) => ActionPstResource::getUrl('view', [$record]))
+            ->recordUrl(fn (Action $record) => ActionPstResource::getUrl('view', [$record]))
             ->columns([
                 TextColumn::make('name')
                     ->label('Intitulé')
@@ -62,7 +62,7 @@ final class ActionTables
             ->recordActions([
                 ViewAction::make()
                     ->url(
-                        fn(Action $record): string => ActionPstResource::getUrl(
+                        fn (Action $record): string => ActionPstResource::getUrl(
                             'view',
                             ['record' => $record]
                         )
@@ -75,7 +75,7 @@ final class ActionTables
         return $table
             ->defaultPaginationPageOption(50)
             ->defaultSort('name')
-            ->recordUrl(fn(Action $record) => ActionPstResource::getUrl('view', [$record]))
+            ->recordUrl(fn (Action $record) => ActionPstResource::getUrl('view', [$record]))
             ->columns([
                 TextColumn::make('name')
                     ->label('Intitulé')
@@ -90,7 +90,7 @@ final class ActionTables
                 CreateAction::make()
                     ->label('Ajouter une action')
                     ->icon('tabler-plus')
-                    ->schema(fn(Schema $schema): Schema => ActionForm::createForm($schema, $owner))
+                    ->schema(fn (Schema $schema): Schema => ActionForm::createForm($schema, $owner))
                     ->before(function (array $data) use ($owner): array {
                         // va pas
                         $department = $owner->department;
@@ -114,13 +114,13 @@ final class ActionTables
 
         $columns[] = TextColumn::make('roadmap')
             ->label('Feuille de route')
-            ->formatStateUsing(fn($state) => $state?->getLabel() ?? '-')
+            ->formatStateUsing(fn ($state) => $state?->getLabel() ?? '-')
             ->sortable()
             ->toggleable(isToggledHiddenByDefault: true);
 
         $columns[] = TextColumn::make('synergy')
             ->label('Synergie CPAS/Ville')
-            ->formatStateUsing(fn($state) => $state?->getLabel() ?? '-')
+            ->formatStateUsing(fn ($state) => $state?->getLabel() ?? '-')
             ->sortable()
             ->toggleable(isToggledHiddenByDefault: true);
 
@@ -130,8 +130,8 @@ final class ActionTables
             ->limitList(2)
             ->expandableLimitedList()
             ->formatStateUsing(
-                fn($state, Action $record) => $record->mandataries->map(
-                    fn($user) => $user->first_name.' '.$user->last_name
+                fn ($state, Action $record) => $record->mandataries->map(
+                    fn ($user) => $user->first_name.' '.$user->last_name
                 )->join(', ')
             )
             ->toggleable(isToggledHiddenByDefault: true);
@@ -142,7 +142,7 @@ final class ActionTables
             ->limitList(2)
             ->expandableLimitedList()
             ->formatStateUsing(
-                fn($state, Action $record) => $record->users->map(fn($user) => $user->first_name.' '.$user->last_name
+                fn ($state, Action $record) => $record->users->map(fn ($user) => $user->first_name.' '.$user->last_name
                 )->join(', ')
             )
             ->toggleable(isToggledHiddenByDefault: true);
@@ -203,13 +203,13 @@ final class ActionTables
 
         $columns[] = TextColumn::make('to_validate')
             ->label('À valider')
-            ->formatStateUsing(fn($state) => $state ? 'Oui' : 'Non')
+            ->formatStateUsing(fn ($state) => $state ? 'Oui' : 'Non')
             ->toggleable(isToggledHiddenByDefault: true);
 
         return $table
             ->defaultSort('name')
             ->defaultPaginationPageOption(50)
-            ->recordUrl(fn(Action $record) => ActionPstResource::getUrl('view', [$record]))
+            ->recordUrl(fn (Action $record) => ActionPstResource::getUrl('view', [$record]))
             ->columns($columns)
             ->filters(self::getFilters())
             ->filtersFormColumns(3)
@@ -227,14 +227,14 @@ final class ActionTables
                 ->label('Etat')
                 ->options(
                     collect(ActionStateEnum::cases())
-                        ->mapWithKeys(fn(ActionStateEnum $action) => [$action->value => $action->getLabel()])
+                        ->mapWithKeys(fn (ActionStateEnum $action) => [$action->value => $action->getLabel()])
                         ->toArray()
                 ),
             SelectFilter::make('type')
                 ->label('Type')
                 ->options(
                     collect(ActionTypeEnum::cases())
-                        ->mapWithKeys(fn(ActionTypeEnum $action) => [$action->value => $action->getLabel()])
+                        ->mapWithKeys(fn (ActionTypeEnum $action) => [$action->value => $action->getLabel()])
                         ->toArray()
                 ),
             SelectFilter::make('isInternal')
@@ -265,12 +265,17 @@ final class ActionTables
                 }),
             SelectFilter::make('department')
                 ->label('Département')
-                ->options(UserRepository::listDepartmentOfCurrentUser()),
+                ->options(UserRepository::listDepartmentOfCurrentUser())
+                ->default(
+                    count(
+                        UserRepository::listDepartmentOfCurrentUser(false)
+                    ) > 0 ? array_values(UserRepository::listDepartmentOfCurrentUser(false))[0] : null
+                ),
             SelectFilter::make('users')
                 ->label('Agents')
                 ->relationship('users', 'last_name')
                 //  ->modifyQueryUsing(fn(Builder $query) => $query->orderBy('last_name', 'asc'))
-                ->getOptionLabelFromRecordUsing(fn($record) => $record->first_name.' '.$record->last_name)
+                ->getOptionLabelFromRecordUsing(fn ($record) => $record->first_name.' '.$record->last_name)
                 ->searchable(['first_name', 'last_name']),
         ];
     }
@@ -285,7 +290,7 @@ final class ActionTables
                 ->label('Numéro'),
             TextColumn::make('oo')
                 ->label('Oo')
-                ->state(fn() => 'Oo')
+                ->state(fn () => 'Oo')
                 ->tooltip(function (TextColumn $column): ?string {
                     $record = $column->getRecord();
 
@@ -296,7 +301,7 @@ final class ActionTables
                 ->sortable()
                 ->label('Intitulé')
                 ->limit(95)
-                ->url(fn(Action $record) => ActionPstResource::getUrl('view', ['record' => $record->id]))
+                ->url(fn (Action $record) => ActionPstResource::getUrl('view', ['record' => $record->id]))
                 ->tooltip(function (TextColumn $column): ?string {
                     $state = $column->getState();
 
@@ -307,12 +312,12 @@ final class ActionTables
                     return $state;
                 }),
             TextColumn::make('state')
-                ->formatStateUsing(fn(ActionStateEnum $state) => $state->getLabel() ?? 'Unknown'),
+                ->formatStateUsing(fn (ActionStateEnum $state) => $state->getLabel() ?? 'Unknown'),
             TextColumn::make('isInternal')
                 ->label('Interne')
-                ->state(fn(Action $record) => $record->isInternal() ? 'Oui' : 'Non'),
+                ->state(fn (Action $record) => $record->isInternal() ? 'Oui' : 'Non'),
             TextColumn::make('type')
-                ->formatStateUsing(fn(ActionTypeEnum $state) => $state->getLabel() ?? 'Unknown')
+                ->formatStateUsing(fn (ActionTypeEnum $state) => $state->getLabel() ?? 'Unknown')
                 ->toggleable(isToggledHiddenByDefault: true),
             TextColumn::make('department')
                 ->label('Département')
