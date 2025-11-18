@@ -7,11 +7,13 @@ use App\Constant\ActionStateEnum;
 use App\Constant\ActionSynergyEnum;
 use App\Constant\ActionTypeEnum;
 use App\Constant\RoleEnum;
+use App\Models\Scopes\ValidatedScope;
 use App\Observers\ActionObserver;
 use App\Repository\UserRepository;
 use Database\Factories\ActionFactory;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Attributes\Scope;
+use Illuminate\Database\Eloquent\Attributes\ScopedBy;
 use Illuminate\Database\Eloquent\Attributes\UseFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -24,6 +26,7 @@ use Illuminate\Support\Facades\Auth;
 
 #[ObservedBy([ActionObserver::class])]
 #[UseFactory(ActionFactory::class)]
+#[ScopedBy([ValidatedScope::class])]
 final class Action extends Model
 {
     use HasFactory, Notifiable;
@@ -62,6 +65,12 @@ final class Action extends Model
     public static function byState(Builder $query, string $state): void
     {
         $query->where('state', $state);
+    }
+
+    #[Scope]
+    public static function toValidateOrNot(Builder $query, bool $state): void
+    {
+        $query->where('to_validate', $state);
     }
 
     public function isInternal(): bool

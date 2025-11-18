@@ -5,6 +5,7 @@ namespace App\Filament\Resources\ActionPst\Pages;
 use App\Constant\ActionStateEnum;
 use App\Constant\RoleEnum;
 use App\Filament\Resources\ActionPstResource;
+use App\Models\Scopes\ValidatedScope;
 use App\Repository\UserRepository;
 use Filament\Actions;
 use Filament\Resources\Pages\ListRecords;
@@ -26,15 +27,27 @@ final class ListActions extends ListRecords
         $tabs = [
             0 => Tab::make('All')
                 ->label('Toutes')
-                ->badge(fn () => $this->getFilteredTableQuery()->clone()->count()),
+                ->badge(
+                    fn () => $this->getFilteredTableQuery()->clone()->withoutGlobalScope(ValidatedScope::class)->count()
+                )
+                ->modifyQueryUsing(
+                    fn (Builder $query) => $query->withoutGlobalScope(ValidatedScope::class)
+                ),
         ];
         if (auth()->user()->hasRole(RoleEnum::ADMIN->value)) {
             $tabs[1] = Tab::make('ToValidate')
                 ->label('A valider')
                 ->badgeColor('warning')
                 ->icon('heroicon-m-exclamation-circle')
-                ->badge(fn () => $this->getFilteredTableQuery()->clone()->where('to_validate', true)->count())
-                ->modifyQueryUsing(fn (Builder $query) => $query->where('to_validate', true));
+                ->badge(
+                    fn () => $this->getFilteredTableQuery()->clone()->withoutGlobalScope(ValidatedScope::class)->where(
+                        'to_validate',
+                        true
+                    )->count()
+                )
+                ->modifyQueryUsing(
+                    fn (Builder $query) => $query->withoutGlobalScope(ValidatedScope::class)->where('to_validate', true)
+                );
         }
         foreach (ActionStateEnum::cases() as $actionStateEnum) {
             $tabs[] =
