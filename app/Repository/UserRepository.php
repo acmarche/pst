@@ -12,7 +12,7 @@ final class UserRepository
     public static function departmentSelected(): string
     {
         $department = session(self::$department_selected_key, null);
-        if (! $department) {
+        if (!$department) {
             if (auth()->user()) {
                 if (count(auth()->user()->departments) > 0) {
                     return auth()->user()->departments[0];
@@ -27,10 +27,10 @@ final class UserRepository
     {
         $users = [];
         foreach (UserLdap::all() as $userLdap) {
-            if (! $userLdap->getFirstAttribute('mail')) {
+            if (!$userLdap->getFirstAttribute('mail')) {
                 continue;
             }
-            if (! self::isActif($userLdap)) {
+            if (!self::isActif($userLdap)) {
                 continue;
             }
             $username = $userLdap->getFirstAttribute('samaccountname');
@@ -49,16 +49,20 @@ final class UserRepository
         $users = [];
         foreach (self::listUsersFromLdap() as $userLdap) {
             $users[$userLdap->getFirstAttribute('samaccountname')] = $userLdap->getFirstAttribute(
-                'sn'
-            ).' '.$userLdap->getFirstAttribute('givenname');
+                    'sn'
+                ).' '.$userLdap->getFirstAttribute('givenname');
         }
 
         return $users;
     }
 
-    public static function listDepartmentOfCurrentUser(): array
+    public static function listDepartmentOfCurrentUser(bool $addCommon = true): array
     {
-        $departments = [DepartmentEnum::COMMON->value => DepartmentEnum::COMMON->value];
+        if ($addCommon) {
+            $departments = [DepartmentEnum::COMMON->value => DepartmentEnum::COMMON->value];
+        } else {
+            $departments = [];
+        }
         if (auth()->user()) {
             foreach (auth()->user()->departments as $department) {
                 $departments[$department] = $department;
