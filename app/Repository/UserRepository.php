@@ -56,6 +56,18 @@ final class UserRepository
         return $users;
     }
 
+    public static function listDepartmentOfCurrentUser(): array
+    {
+        $departments = [DepartmentEnum::COMMON->value => DepartmentEnum::COMMON->value];
+        if (auth()->user()) {
+            foreach (auth()->user()->departments as $department) {
+                $departments[$department] = $department;
+            }
+        }
+
+        return $departments;
+    }
+
     private static function isActif(UserLdap $userLdap): bool
     {
         return $userLdap->getFirstAttribute('userAccountControl') !== 66050;
