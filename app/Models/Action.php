@@ -7,26 +7,23 @@ use App\Constant\ActionStateEnum;
 use App\Constant\ActionSynergyEnum;
 use App\Constant\ActionTypeEnum;
 use App\Constant\RoleEnum;
-use App\Models\Scopes\ValidatedScope;
 use App\Observers\ActionObserver;
 use App\Repository\UserRepository;
 use Database\Factories\ActionFactory;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Attributes\Scope;
-use Illuminate\Database\Eloquent\Attributes\ScopedBy;
 use Illuminate\Database\Eloquent\Attributes\UseFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Query\Builder;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Database\Eloquent\Builder;
 
 #[ObservedBy([ActionObserver::class])]
 #[UseFactory(ActionFactory::class)]
-#[ScopedBy([ValidatedScope::class])]
 final class Action extends Model
 {
     use HasFactory, Notifiable;
@@ -68,9 +65,15 @@ final class Action extends Model
     }
 
     #[Scope]
-    public static function toValidateOrNot(Builder $query, bool $state): void
+    public static function validated(Builder $query): void
     {
-        $query->where('to_validate', $state);
+        $query->where('to_validate', false);
+    }
+
+    #[Scope]
+    public static function toBeValidated(Builder $query): void
+    {
+        $query->where('to_validate', true);
     }
 
     public function isInternal(): bool

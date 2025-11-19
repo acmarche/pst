@@ -4,15 +4,11 @@ namespace App\Repository;
 
 use App\Constant\ActionStateEnum;
 use App\Models\Action;
-use App\Models\Scopes\ValidatedScope;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 
-class ActionRepository
+final class ActionRepository
 {
-    /**
-     *
-     */
     public static function findByUser(int $userId): Builder
     {
         return Action::query()->whereHas('users', function ($query) use ($userId) {
@@ -24,10 +20,6 @@ class ActionRepository
         });
     }
 
-    /**
-     * @param int $actionId
-     * @return Collection
-     */
     public static function findByActionEmailAgents(int $actionId): Collection
     {
         return Action::where('id', $actionId)
@@ -51,7 +43,7 @@ class ActionRepository
 
     public static function byDepartmentAndToValidateOrNot(string $department, bool $state = false): Builder
     {
-        return Action::query()->withoutGlobalScope(ValidatedScope::class)
+        return Action::query()
             ->where('to_validate', '=', $state)
             ->where('department', $department);
     }
@@ -61,7 +53,7 @@ class ActionRepository
         return Action::ofState($state->value)->get();
     }
 
-    public static function all(): int
+    public static function countAll(): int
     {
         return Action::all()->count();
     }
@@ -69,7 +61,6 @@ class ActionRepository
     public static function findByDepartmentWithOosAndActions(string $department): Builder
     {
         return Action::query()
-            ->withoutGlobalScope(ValidatedScope::class)
             ->where('department', $department)
             ->with('operationalObjective')
             ->with('leaderServices')
@@ -89,5 +80,4 @@ class ActionRepository
     {
         return Action::query()->where('department', $department);
     }
-
 }

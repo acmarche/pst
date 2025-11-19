@@ -6,7 +6,6 @@ use App\Constant\ActionStateEnum;
 use App\Constant\RoleEnum;
 use App\Filament\Resources\ActionPstResource;
 use App\Models\Action;
-use App\Models\Scopes\ValidatedScope;
 use App\Repository\UserRepository;
 use Filament\Actions;
 use Filament\Resources\Pages\ListRecords;
@@ -42,13 +41,13 @@ final class ListActions extends ListRecords
             0 => Tab::make('All')
                 ->label('Toutes')
                 ->badge(
-                    fn() => Action::query()->withoutGlobalScope(ValidatedScope::class)->where(
+                    fn () => Action::query()->where(
                         'department',
                         $department
                     )->count()
                 )
                 ->modifyQueryUsing(
-                    fn(Builder $query) => $query->withoutGlobalScope(ValidatedScope::class)
+                    fn (Builder $query) => $query
                         ->with('operationalObjective')
                         ->with('leaderServices')
                         ->with('partnerServices')
@@ -64,25 +63,29 @@ final class ListActions extends ListRecords
                 ->badgeColor('warning')
                 ->icon('heroicon-m-exclamation-circle')
                 ->badge(
-                    fn() => Action::query()->where('department', $department)->withoutGlobalScope(ValidatedScope::class)
-                        ->where('to_validate', true)->count()
+                    fn () => Action::query()
+                        ->where('department', $department)
+                        ->toBeValidated()->count()
                 )
                 ->modifyQueryUsing(
-                    fn(Builder $query) => $query->withoutGlobalScope(ValidatedScope::class)
-                        ->where('to_validate', true)
+                    fn (Builder $query) => $query
+                        ->toBeValidated()
                 );
         }
         foreach (ActionStateEnum::cases() as $actionStateEnum) {
             $tabs[] =
                 Tab::make($actionStateEnum->value)
                     ->badge(
-                        fn() => Action::query()->where('department', $department)->where(
-                            'state',
-                            $actionStateEnum->value
-                        )->count()
+                        fn () => Action::query()
+                            ->where('department', $department)
+                            ->where('state', $actionStateEnum->value)
+                            ->validated()
+                            ->count()
                     )
                     ->modifyQueryUsing(function (Builder $query) use ($actionStateEnum): Builder {
-                        return $query->where('state', $actionStateEnum->value);
+                        return $query
+                            ->where('state', $actionStateEnum->value)
+                            ->validated();
                     })
                     ->label($actionStateEnum->getLabel())
                     ->badgeColor($actionStateEnum->getColor())
