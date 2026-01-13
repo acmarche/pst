@@ -10,6 +10,7 @@ use App\Filament\Resources\ActionPst\ActionPstResource;
 use App\Filament\Resources\ActionPst\Schemas\ActionForm;
 use App\Models\Action;
 use App\Models\OperationalObjective;
+use App\Models\Service;
 use App\Repository\UserRepository;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\CreateAction;
@@ -277,6 +278,21 @@ final class ActionTables
                 //  ->modifyQueryUsing(fn(Builder $query) => $query->orderBy('last_name', 'asc'))
                 ->getOptionLabelFromRecordUsing(fn ($record) => $record->first_name.' '.$record->last_name)
                 ->searchable(['first_name', 'last_name']),
+            SelectFilter::make('services')
+                ->label('Services')
+                ->options(fn () => Service::query()->orderBy('name')->pluck('name', 'id'))
+                ->multiple()
+                ->searchable()
+                ->query(function (Builder $query, array $data): Builder {
+                    return $query->when(
+                        $data['values'],
+                        fn (Builder $query, array $services): Builder => $query->where(
+                            fn (Builder $query) => $query
+                                ->whereHas('leaderServices', fn (Builder $q) => $q->whereIn('services.id', $services))
+                                ->orWhereHas('partnerServices', fn (Builder $q) => $q->whereIn('services.id', $services))
+                        )
+                    );
+                }),
         ];
     }
 
