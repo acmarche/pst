@@ -1,8 +1,7 @@
 <?php
 
-namespace App\Filament\Resources;
+namespace App\Filament\Resources\FollowUp;
 
-use App\Filament\Resources\FollowUp\Pages;
 use App\Filament\Resources\FollowUp\Schemas\FollowUpForm;
 use App\Filament\Resources\FollowUp\Tables\FollowUpTables;
 use App\Models\FollowUp;

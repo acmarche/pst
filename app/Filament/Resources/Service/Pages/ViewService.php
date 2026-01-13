@@ -3,7 +3,7 @@
 namespace App\Filament\Resources\Service\Pages;
 
 use App\Filament\Resources\Service\RelationManagers\ActionsRelationManager;
-use App\Filament\Resources\ServiceResource;
+use App\Filament\Resources\Service\ServiceResource;
 use App\Models\User;
 use Filament\Actions;
 use Filament\Infolists\Components\TextEntry;

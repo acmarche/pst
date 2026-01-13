@@ -1,8 +1,7 @@
 <?php
 
-namespace App\Filament\Resources;
+namespace App\Filament\Resources\ActionPst;
 
-use App\Filament\Resources\ActionPst\Pages;
 use App\Filament\Resources\ActionPst\RelationManagers\FollowUpsRelationManager;
 use App\Filament\Resources\ActionPst\RelationManagers\HistoriesRelationManager;
 use App\Filament\Resources\ActionPst\RelationManagers\MediasRelationManager;

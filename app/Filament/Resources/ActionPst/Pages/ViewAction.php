@@ -4,10 +4,10 @@ namespace App\Filament\Resources\ActionPst\Pages;
 
 use App\Actions\CanPaginateViewRecordTrait;
 use App\Actions\ReminderAction;
+use App\Filament\Resources\ActionPst\ActionPstResource;
 use App\Filament\Resources\ActionPst\Schemas\ActionInfolist;
-use App\Filament\Resources\ActionPstResource;
-use App\Filament\Resources\OperationalObjectiveResource;
-use App\Filament\Resources\StrategicObjectiveResource;
+use App\Filament\Resources\OperationalObjective\OperationalObjectiveResource;
+use App\Filament\Resources\StrategicObjective\StrategicObjectiveResource;
 use App\Models\Action as ActionModel;
 use Filament\Actions;
 use Filament\Actions\Action as ActionAction;

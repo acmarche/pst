@@ -2,11 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Filament\Resources;
+namespace App\Filament\Resources\Users;
 
 use App\Constant\NavigationGroupEnum;
 use App\Constant\RoleEnum;
-use App\Filament\Resources\Users\Pages;
 use App\Filament\Resources\Users\Pages\EditUser;
 use App\Filament\Resources\Users\Pages\ListUsers;
 use App\Filament\Resources\Users\Schemas\UserForm;

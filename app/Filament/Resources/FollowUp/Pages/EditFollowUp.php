@@ -2,7 +2,7 @@
 
 namespace App\Filament\Resources\FollowUp\Pages;
 
-use App\Filament\Resources\FollowUpResource;
+use App\Filament\Resources\FollowUp\FollowUpResource;
 use Filament\Actions;
 use Filament\Resources\Pages\EditRecord;
 

@@ -3,7 +3,7 @@
 namespace App\Filament\Resources\ActionPst\Pages;
 
 use App\Events\ActionProcessed;
-use App\Filament\Resources\ActionPstResource;
+use App\Filament\Resources\ActionPst\ActionPstResource;
 use App\Models\OperationalObjective;
 use Filament\Facades\Filament;
 use Filament\Resources\Pages\CreateRecord;

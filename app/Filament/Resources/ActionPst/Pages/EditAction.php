@@ -2,7 +2,7 @@
 
 namespace App\Filament\Resources\ActionPst\Pages;
 
-use App\Filament\Resources\ActionPstResource;
+use App\Filament\Resources\ActionPst\ActionPstResource;
 use Filament\Actions;
 use Filament\Resources\Pages\EditRecord;
 

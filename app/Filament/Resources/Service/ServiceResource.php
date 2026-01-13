@@ -1,9 +1,8 @@
 <?php
 
-namespace App\Filament\Resources;
+namespace App\Filament\Resources\Service;
 
 use App\Constant\NavigationGroupEnum;
-use App\Filament\Resources\Service\Pages;
 use App\Filament\Resources\Service\Schemas\ServiceForm;
 use App\Filament\Resources\Service\Tables\ServiceTables;
 use App\Models\Service;

@@ -2,7 +2,7 @@
 
 namespace App\Filament\Resources\Odd\Pages;
 
-use App\Filament\Resources\OddResource;
+use App\Filament\Resources\Odd\OddResource;
 use Filament\Resources\Pages\CreateRecord;
 
 class CreateOdd extends CreateRecord

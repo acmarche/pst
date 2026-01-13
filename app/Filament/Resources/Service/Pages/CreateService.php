@@ -2,7 +2,7 @@
 
 namespace App\Filament\Resources\Service\Pages;
 
-use App\Filament\Resources\ServiceResource;
+use App\Filament\Resources\Service\ServiceResource;
 use Filament\Resources\Pages\CreateRecord;
 
 class CreateService extends CreateRecord

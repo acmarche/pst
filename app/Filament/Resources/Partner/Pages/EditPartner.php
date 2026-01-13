@@ -2,7 +2,7 @@
 
 namespace App\Filament\Resources\Partner\Pages;
 
-use App\Filament\Resources\PartnerResource;
+use App\Filament\Resources\Partner\PartnerResource;
 use Filament\Actions;
 use Filament\Resources\Pages\EditRecord;
 use Illuminate\Contracts\Support\Htmlable;

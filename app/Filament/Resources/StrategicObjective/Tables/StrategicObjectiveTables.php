@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Filament\Resources\StrategicObjective\Tables;
 
-use App\Filament\Resources\StrategicObjectiveResource;
+use App\Filament\Resources\StrategicObjective\StrategicObjectiveResource;
 use App\Models\StrategicObjective;
 use App\Repository\StrategicObjectiveRepository;
 use App\Repository\UserRepository;

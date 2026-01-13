@@ -2,8 +2,8 @@
 
 namespace App\Filament\Resources\Users\Pages;
 
-use App\Filament\Resources\UserResource;
 use App\Filament\Resources\Users\Schemas\UserForm;
+use App\Filament\Resources\Users\UserResource;
 use App\Ldap\UserHandler;
 use Exception;
 use Filament\Actions;

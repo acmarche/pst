@@ -2,7 +2,7 @@
 
 namespace App\Filament\Resources\Odd\Pages;
 
-use App\Filament\Resources\OddResource;
+use App\Filament\Resources\Odd\OddResource;
 use App\Filament\Resources\Odd\RelationManagers\ActionsRelationManager;
 use Filament\Actions;
 use Filament\Infolists\Components\TextEntry;

@@ -2,7 +2,7 @@
 
 namespace App\Filament\Resources\OperationalObjective\Tables;
 
-use App\Filament\Resources\OperationalObjectiveResource;
+use App\Filament\Resources\OperationalObjective\OperationalObjectiveResource;
 use App\Models\OperationalObjective;
 use App\Models\StrategicObjective;
 use App\Repository\OperationalObjectiveRepository;

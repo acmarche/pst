@@ -2,14 +2,13 @@
 
 namespace App\Filament\Resources\Service\Tables;
 
-use App\Filament\Resources\ServiceResource;
+use App\Filament\Resources\Service\ServiceResource;
 use App\Models\Service;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\CreateAction;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
-use Filament\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 

@@ -1,8 +1,7 @@
 <?php
 
-namespace App\Filament\Resources;
+namespace App\Filament\Resources\OperationalObjective;
 
-use App\Filament\Resources\OperationalObjective\Pages;
 use App\Filament\Resources\OperationalObjective\Tables\OperationalObjectiveTables;
 use App\Models\OperationalObjective;
 use BackedEnum;

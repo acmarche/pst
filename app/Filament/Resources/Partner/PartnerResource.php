@@ -1,9 +1,8 @@
 <?php
 
-namespace App\Filament\Resources;
+namespace App\Filament\Resources\Partner;
 
 use App\Constant\NavigationGroupEnum;
-use App\Filament\Resources\Partner\Pages;
 use App\Filament\Resources\Partner\Schemas\PartnerForm;
 use App\Filament\Resources\Partner\Tables\PartnerTables;
 use App\Models\Partner;

@@ -3,7 +3,7 @@
 namespace App\Filament\Resources\StrategicObjective\Pages;
 
 use App\Filament\Exports\StrategicObjectiveExport;
-use App\Filament\Resources\StrategicObjectiveResource;
+use App\Filament\Resources\StrategicObjective\StrategicObjectiveResource;
 use App\Repository\UserRepository;
 use Filament\Actions;
 use Filament\Actions\Action;

@@ -2,7 +2,7 @@
 
 namespace App\Mail;
 
-use App\Filament\Resources\ActionPstResource;
+use App\Filament\Resources\ActionPst\ActionPstResource;
 use App\Models\Action;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;

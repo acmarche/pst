@@ -2,9 +2,9 @@
 
 namespace App\Filament\Resources\OperationalObjective\Pages;
 
-use App\Filament\Resources\OperationalObjectiveResource;
+use App\Filament\Resources\OperationalObjective\OperationalObjectiveResource;
 use App\Filament\Resources\OperationalObjective\RelationManagers\ActionsRelationManager;
-use App\Filament\Resources\StrategicObjectiveResource;
+use App\Filament\Resources\StrategicObjective\StrategicObjectiveResource;
 use Filament\Actions;
 use Filament\Resources\Pages\ViewRecord;
 use Filament\Schemas\Schema;

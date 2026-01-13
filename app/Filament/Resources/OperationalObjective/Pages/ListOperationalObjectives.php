@@ -2,7 +2,7 @@
 
 namespace App\Filament\Resources\OperationalObjective\Pages;
 
-use App\Filament\Resources\OperationalObjectiveResource;
+use App\Filament\Resources\OperationalObjective\OperationalObjectiveResource;
 use Filament\Actions;
 use Filament\Resources\Pages\ListRecords;
 

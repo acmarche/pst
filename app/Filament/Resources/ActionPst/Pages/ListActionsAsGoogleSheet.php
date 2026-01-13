@@ -2,8 +2,8 @@
 
 namespace App\Filament\Resources\ActionPst\Pages;
 
+use App\Filament\Resources\ActionPst\ActionPstResource;
 use App\Filament\Resources\ActionPst\Tables\ActionTables;
-use App\Filament\Resources\ActionPstResource;
 use Filament\Actions;
 use Filament\Resources\Pages\ListRecords;
 use Filament\Tables\Table;

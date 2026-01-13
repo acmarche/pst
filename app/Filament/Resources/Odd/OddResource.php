@@ -1,8 +1,7 @@
 <?php
 
-namespace App\Filament\Resources;
+namespace App\Filament\Resources\Odd;
 
-use App\Filament\Resources\Odd\Pages;
 use App\Filament\Resources\Odd\Schemas\OddForm;
 use App\Filament\Resources\Odd\Tables\OddTables;
 use App\Models\Odd;

@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Filament\Resources\Partner\Pages;
 
-use App\Filament\Resources\ActionPstResource;
-use App\Filament\Resources\PartnerResource;
+use App\Filament\Resources\ActionPst\ActionPstResource;
+use App\Filament\Resources\Partner\PartnerResource;
 use App\Models\Action;
 use Filament\Actions;
 use Filament\Infolists\Components\RepeatableEntry;

@@ -2,7 +2,7 @@
 
 namespace App\Filament\Resources\StrategicObjective\Pages;
 
-use App\Filament\Resources\StrategicObjectiveResource;
+use App\Filament\Resources\StrategicObjective\StrategicObjectiveResource;
 use Filament\Resources\Pages\CreateRecord;
 
 class CreateStrategicObjective extends CreateRecord

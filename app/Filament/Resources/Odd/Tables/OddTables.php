@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Filament\Resources\Odd\Tables;
 
-use App\Filament\Resources\OddResource;
+use App\Filament\Resources\Odd\OddResource;
 use App\Models\Odd;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;

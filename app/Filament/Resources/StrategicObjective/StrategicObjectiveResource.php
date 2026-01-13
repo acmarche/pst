@@ -1,8 +1,7 @@
 <?php
 
-namespace App\Filament\Resources;
+namespace App\Filament\Resources\StrategicObjective;
 
-use App\Filament\Resources\StrategicObjective\Pages;
 use App\Filament\Resources\StrategicObjective\RelationManagers\OosRelationManager;
 use App\Filament\Resources\StrategicObjective\Schemas\StrategicObjectiveForm;
 use App\Filament\Resources\StrategicObjective\Tables\StrategicObjectiveTables;
