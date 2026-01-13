@@ -5,7 +5,7 @@ namespace Database\Factories;
 use App\Models\Action;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-class ActionFactory extends Factory
+final class ActionFactory extends Factory
 {
     protected $model = Action::class;
 
@@ -17,7 +17,9 @@ class ActionFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => fake()->name(),
+            'name' => fake()->sentence(3),
+            'department' => 'VILLE',
+            'user_add' => fake()->userName(),
         ];
     }
 }
