@@ -6,7 +6,7 @@
     "keywords": ["laravel", "framework", "filamentphp", "starter-kit", "larament"],
     "license": "MIT",
     "require": {
-        "php": "^8.3",
+        "php": "^8.4",
         "ext-pdo": "*",
         "directorytree/ldaprecord-laravel": "^3.4",
         "filament/filament": "^4.1",
