@@ -20,13 +20,17 @@
                 <span class="text-green-500 mt-0.5">✓</span>
                 <span>Cette action devra être validée.</span>
             </div>
+            <div class="flex items-start gap-2">
+                <span class="text-green-500 mt-0.5">✓</span>
+                <span>Les agents avec un rôle mandataire ne peuvent pas ajouter.</span>
+            </div>
         </div>
     </div>
 
     <!-- Section Modification - Admin uniquement -->
     <div class="space-y-2">
         <h3 class="text-sm font-semibold text-gray-700 uppercase tracking-wide">
-            Modification réservée aux administrateurs
+            Modification d' actions
         </h3>
         <p class="text-sm text-gray-500 mb-2">Les champs suivants ne peuvent être modifiés que par un administrateur
             :</p>
@@ -44,22 +48,15 @@
                 <span>Onglet ODDS</span>
             </li>
         </ul>
-    </div>
-
-    <!-- Section Modification - Autres champs -->
-    <div class="space-y-2">
-        <h3 class="text-sm font-semibold text-gray-700 uppercase tracking-wide">
-            Modification des autres champs
-        </h3>
-        <p class="text-sm text-gray-500 mb-2">Peuvent modifier les autres champs :</p>
+        <p class="text-sm text-gray-500 mb-2">Peuvent modifier les actions si :</p>
         <ul class="space-y-2 ml-4">
             <li class="flex items-start gap-2 text-gray-600">
                 <span class="text-orange-500 mt-1">•</span>
-                <span>Les agents pilotes</span>
+                <span>Agents pilotes</span>
             </li>
             <li class="flex items-start gap-2 text-gray-600">
                 <span class="text-orange-500 mt-1">•</span>
-                <span>Les agents avec le rôle responsable et membre d'un des services porteurs liés à l'action</span>
+                <span>Agents avec le rôle responsable et membre d'un des services porteurs liés à l'action</span>
             </li>
         </ul>
     </div>

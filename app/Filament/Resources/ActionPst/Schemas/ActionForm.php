@@ -132,6 +132,11 @@ final class ActionForm
                     // ->prefix('CPAS') todo ?
                     ->label('Intitulé')
                     ->required()
+                    ->readOnly(
+                        fn (?string $operation = null) => $operation === 'edit' && ! auth()->user()->hasRole(
+                            RoleEnum::ADMIN->value
+                        )
+                    )
                     ->maxLength(250),
                 Forms\Components\ToggleButtons::make('to_validate')
                     ->label('Validée')
@@ -153,6 +158,11 @@ final class ActionForm
                     modifyQueryUsing: fn (Builder $query) => $query->orderBy('name', 'asc')
                 )
                 ->searchable(['name'])
+                ->disabled(
+                    fn (?string $operation = null) => $operation === 'edit' && ! auth()->user()->hasRole(
+                        RoleEnum::ADMIN->value
+                    )
+                )
                 ->preload()
                 ->required()
                 ->visible(fn () => $owner === null),
@@ -172,11 +182,17 @@ final class ActionForm
                         ->label('Type')
                         ->default(ActionTypeEnum::PST->value)
                         ->options(ActionTypeEnum::class)
+                        ->disabled(
+                            fn (?string $operation = null) => $operation === 'edit' && ! auth()->user()->hasRole(
+                                RoleEnum::ADMIN->value
+                            )
+                        )
                         ->inline(),
                     Forms\Components\ToggleButtons::make('roadmap')
                         ->label('Feuille de route')
                         ->required(false)
                         ->options(ActionRoadmapEnum::class)
+                        ->visible(fn () => auth()->user()->hasRole(RoleEnum::ADMIN->value))
                         ->inline(),
                     Forms\Components\ToggleButtons::make('synergy')
                         ->label('Synergie CPAS / VILLLE')
@@ -216,6 +232,7 @@ final class ActionForm
                         ->preload(),
                     Forms\Components\Select::make('action_users')
                         ->label('Agents pilotes')
+                        ->helperText('Les agents pilotes ont le droit de modifier l\'action.')
                         ->relationship(
                             name: 'users',
                             modifyQueryUsing: fn (Builder $query) => $query->orderBy('last_name')
@@ -232,6 +249,7 @@ final class ActionForm
                 ->schema([
                     Forms\Components\Select::make('action_service_leader')
                         ->label('Services porteurs')
+                        ->helperText('L\'agent membre du service, avec un rôle "Responsable" peut modifier l\'action.')
                         ->relationship(name: 'leaderServices', titleAttribute: 'name')
                         ->preload()
                         ->multiple()
