@@ -1,4 +1,70 @@
 @php use App\Constant\RoleEnum; @endphp
+
+<div class="flex flex-col gap-4 p-6 bg-white rounded-2xl shadow-md border border-gray-200 w-full max-w-2xl">
+    <!-- En-tête -->
+    <div class="text-xl font-semibold text-gray-800 border-b border-gray-200 pb-3">
+        Qui peut faire quoi sur les actions
+    </div>
+
+    <!-- Section Création -->
+    <div class="space-y-2">
+        <h3 class="text-sm font-semibold text-gray-700 uppercase tracking-wide">
+            Création d'actions
+        </h3>
+        <div class="flex items-start flex-col gap-2 text-gray-600">
+            <div class="flex items-start gap-2">
+                <span class="text-green-500 mt-0.5">✓</span>
+                <span>N'importe quel agent peut ajouter une action sans restriction.</span>
+            </div>
+            <div class="flex items-start gap-2">
+                <span class="text-green-500 mt-0.5">✓</span>
+                <span>Cette action devra être validée.</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Section Modification - Admin uniquement -->
+    <div class="space-y-2">
+        <h3 class="text-sm font-semibold text-gray-700 uppercase tracking-wide">
+            Modification réservée aux administrateurs
+        </h3>
+        <p class="text-sm text-gray-500 mb-2">Les champs suivants ne peuvent être modifiés que par un administrateur
+            :</p>
+        <ul class="space-y-2 ml-4">
+            <li class="flex items-start gap-2 text-gray-600">
+                <span class="text-blue-500 mt-1">•</span>
+                <span>L'intitulé</span>
+            </li>
+            <li class="flex items-start gap-2 text-gray-600">
+                <span class="text-blue-500 mt-1">•</span>
+                <span>Le type (PST, pérenne...)</span>
+            </li>
+            <li class="flex items-start gap-2 text-gray-600">
+                <span class="text-blue-500 mt-1">•</span>
+                <span>Onglet ODDS</span>
+            </li>
+        </ul>
+    </div>
+
+    <!-- Section Modification - Autres champs -->
+    <div class="space-y-2">
+        <h3 class="text-sm font-semibold text-gray-700 uppercase tracking-wide">
+            Modification des autres champs
+        </h3>
+        <p class="text-sm text-gray-500 mb-2">Peuvent modifier les autres champs :</p>
+        <ul class="space-y-2 ml-4">
+            <li class="flex items-start gap-2 text-gray-600">
+                <span class="text-orange-500 mt-1">•</span>
+                <span>Les agents pilotes</span>
+            </li>
+            <li class="flex items-start gap-2 text-gray-600">
+                <span class="text-orange-500 mt-1">•</span>
+                <span>Les agents avec le rôle responsable et membre d'un des services porteurs liés à l'action</span>
+            </li>
+        </ul>
+    </div>
+</div>
+
 @foreach(RoleEnum::cases() as $role)
 
     <div class="flex flex-col gap-2 p-2 bg-white rounded-2xl shadow-md border border-gray-200 w-full max-w-md">
@@ -11,23 +77,3 @@
     </div>
 
 @endforeach
-
-<div class="flex flex-col gap-2 p-2 bg-white rounded-2xl shadow-md border border-gray-200 w-full max-w-md">
-    <div class="text-xl font-semibold text-gray-800">
-        LES AGENTS
-    </div>
-    <div class="text-gray-600">
-        <ul class="space-y-4">
-            <li class="flex items-start">
-                Droit d'écriture si repris comme agent pilote ou membre du service pilote
-            </li>
-            <li class="flex items-start">
-                Droit de lecture sur toutes les actions
-            </li>
-        </ul>
-
-    </div>
-</div>
-
-
-
