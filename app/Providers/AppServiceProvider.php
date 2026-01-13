@@ -1,8 +1,8 @@
 <?php
 
-
 namespace App\Providers;
 
+use App\Policies\RegisterPolicies;
 use Filament\Forms\Components\RichEditor;
 use Filament\Support\Facades\FilamentView;
 use Filament\Tables\Table;
@@ -23,13 +23,14 @@ final class AppServiceProvider extends ServiceProvider
     {
         Model::shouldBeStrict();
         Model::automaticallyEagerLoadRelationships();
-        if (!app()->environment('production')) {
+        if (! app()->environment('production')) {
             Mail::alwaysTo('jf@marche.be');
         }
+        RegisterPolicies::register();
 
         FilamentView::registerRenderHook(
             PanelsRenderHook::AUTH_LOGIN_FORM_BEFORE,
-            fn(): View => view('filament.login_form'),
+            fn (): View => view('filament.login_form'),
         );
         $this->configureTable();
         $this->configureRichEditor();
