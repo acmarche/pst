@@ -28,3 +28,4 @@ Thumbs.db
 /output/
 *.sql
 /.junie
+/data
