@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Notifications\Notifiable;
 
-class StrategicObjective extends Model
+final class StrategicObjective extends Model
 {
     use HasFactory, Notifiable;
 
@@ -18,6 +18,10 @@ class StrategicObjective extends Model
         'is_internal',
     ];
 
+    protected $casts = [
+        'is_internal' => 'boolean',
+    ];
+
     public function isInternal(): bool
     {
         return $this->is_internal;
@@ -25,6 +29,7 @@ class StrategicObjective extends Model
 
     /**
      * Get the operational objectives for the strategic objective.
+     *
      * @return HasMany<OperationalObjective>
      */
     public function oos(): HasMany

@@ -248,7 +248,7 @@ final class ActionTables
                     return $query->when(
                         $data['value'] !== null,
                         function (Builder $query) use ($data): Builder {
-                            $isInternal = $data['value'] === '1';
+                            $isInternal = $data['value'] === true;
 
                             return $query->whereHas(
                                 'operationalObjective',
