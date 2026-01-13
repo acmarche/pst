@@ -42,13 +42,13 @@ final class ActionForm
                         ->label('Equipes')
                         ->schema(self::fieldsTeam())
                         ->visible(
-                            fn (Action|Model $record, ?string $operation = null) => Gate::check(
+                            fn (Action|Model|null $record = null, ?string $operation = null) => $operation === 'create' || ($record !== null && Gate::check(
                                 'teams-edit',
                                 [
                                     $record,
                                     $operation,
                                 ]
-                            )
+                            ))
                         ),
                     Wizard\Step::make('info')
                         ->label('Informations')
