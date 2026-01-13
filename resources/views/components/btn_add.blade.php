@@ -1,5 +1,12 @@
+@php
+    $buttonLabel = $label ?? (
+        ($this->getOperation() ?? 'create') === 'create'
+            ? "Ajouter l'action"
+            : "Enregistrer l'action"
+    );
+@endphp
 <x-filament::button
     type="submit"
     icon="tabler-plus">
-    {{$label}}
+    {{ $buttonLabel }}
 </x-filament::button>

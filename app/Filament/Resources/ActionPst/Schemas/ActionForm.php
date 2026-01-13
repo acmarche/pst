@@ -70,7 +70,7 @@ final class ActionForm
                             ->label('Précédent')
                             ->color('secondary'),
                     )
-                    ->submitAction(view('components.btn_add', ['label' => 'Ajouter l\'action'])),
+                    ->submitAction(view('components.btn_add')),
             ]);
     }
 
