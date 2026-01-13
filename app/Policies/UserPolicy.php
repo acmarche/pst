@@ -65,6 +65,6 @@ class UserPolicy
 
     private function hasRoles(User $user): bool
     {
-        return $user->hasRoles([RoleEnum::ADMIN->value]);
+        return $user->hasOneOfThisRoles([RoleEnum::ADMIN->value]);
     }
 }

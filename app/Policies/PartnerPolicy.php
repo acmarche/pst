@@ -29,7 +29,7 @@ class PartnerPolicy
      */
     public function create(User $user): bool
     {
-        if ($user->hasRoles([RoleEnum::MANDATAIRE->value])) {
+        if ($user->hasOneOfThisRoles([RoleEnum::MANDATAIRE->value])) {
             return false;
         }
 
@@ -41,7 +41,7 @@ class PartnerPolicy
      */
     public function update(User $user, Partner $partner): bool
     {
-        if ($user->hasRoles([RoleEnum::MANDATAIRE->value])) {
+        if ($user->hasOneOfThisRoles([RoleEnum::MANDATAIRE->value])) {
             return false;
         }
 
@@ -53,7 +53,7 @@ class PartnerPolicy
      */
     public function delete(User $user, Partner $partner): bool
     {
-        if ($user->hasRoles([RoleEnum::MANDATAIRE->value])) {
+        if ($user->hasOneOfThisRoles([RoleEnum::MANDATAIRE->value])) {
             return false;
         }
 

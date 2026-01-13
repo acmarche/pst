@@ -114,13 +114,11 @@ final class User extends Authenticatable implements FilamentUser, HasName
         return false;
     }
 
-    public function hasRoles(array $rolesToFind): bool
+    public function hasOneOfThisRoles(array $rolesToFind): bool
     {
-        foreach ($rolesToFind as $roleToFind) {
-            foreach ($this->roles()->get() as $role) {
-                if ($role->name === $roleToFind) {
-                    return true;
-                }
+        foreach ($this->roles()->get() as $role) {
+            if (in_array($role->name, $rolesToFind)) {
+                return true;
             }
         }
 

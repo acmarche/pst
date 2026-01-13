@@ -30,7 +30,7 @@ final class ActionPolicy
      */
     public function create(User $user): bool
     {
-        if ($user->hasRoles([RoleEnum::MANDATAIRE->value])) {
+        if ($user->hasOneOfThisRoles([RoleEnum::MANDATAIRE->value])) {
             return false;
         }
 
@@ -74,10 +74,10 @@ final class ActionPolicy
      */
     private function isUserLinkedToAction(User $user, Action $action): bool
     {
-        if ($user->hasRoles([RoleEnum::MANDATAIRE->value])) {
+        if ($user->hasOneOfThisRoles([RoleEnum::MANDATAIRE->value])) {
             return false;
         }
-        if ($user->hasRoles([RoleEnum::ADMIN->value])) {
+        if ($user->hasOneOfThisRoles([RoleEnum::ADMIN->value])) {
             return true;
         }
         // Check if user is directly linked to the action
