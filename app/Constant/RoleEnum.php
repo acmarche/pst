@@ -41,7 +41,7 @@ enum RoleEnum: string implements HasColor, HasDescription, HasIcon, HasLabel
         };
     }
 
-    public function getDescription(): ?string
+    public function getDescription(): string
     {
         return match ($this) {
             self::ADMIN => 'Gestion des utilisateurs, des OS,OO,ODD et services',
@@ -50,7 +50,7 @@ enum RoleEnum: string implements HasColor, HasDescription, HasIcon, HasLabel
         };
     }
 
-    public function getIcon(): ?string
+    public function getIcon(): string
     {
         return match ($this) {
             self::ADMIN => 'tabler-user-bolt',
