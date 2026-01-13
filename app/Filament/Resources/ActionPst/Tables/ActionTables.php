@@ -90,7 +90,7 @@ final class ActionTables
                 CreateAction::make()
                     ->label('Ajouter une action')
                     ->icon('tabler-plus')
-                    ->schema(fn (Schema $schema): Schema => ActionForm::createForm($schema, $owner))
+                    ->schema(fn (Schema $schema): Schema => ActionForm::configure($schema, $owner))
                     ->before(function (array $data) use ($owner): array {
                         // va pas
                         $department = $owner->department;
