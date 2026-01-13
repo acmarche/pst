@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Console\Commands;
 
-use App\Constant\ActionStateEnum;
-use App\Constant\ActionSynergyEnum;
-use App\Constant\ActionTypeEnum;
-use App\Constant\DepartmentEnum;
+use App\Enums\ActionStateEnum;
+use App\Enums\ActionSynergyEnum;
+use App\Enums\ActionTypeEnum;
+use App\Enums\DepartmentEnum;
 use App\Models\Action;
 use App\Models\Odd;
 use App\Models\OperationalObjective;

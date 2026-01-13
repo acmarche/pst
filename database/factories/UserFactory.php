@@ -2,7 +2,7 @@
 
 namespace Database\Factories;
 
-use App\Constant\DepartmentEnum;
+use App\Enums\DepartmentEnum;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;

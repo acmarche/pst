@@ -1,8 +1,10 @@
 <?php
 
-namespace App\Constant;
+namespace App\Enums;
 
-enum ActionSynergyEnum: string
+use Filament\Support\Contracts\HasLabel;
+
+enum ActionRoadmapEnum: string implements HasLabel
 {
     case YES = "YES";
     case NO = "NO";
@@ -24,4 +26,5 @@ enum ActionSynergyEnum: string
             self::NO => 'Non',
         };
     }
+
 }

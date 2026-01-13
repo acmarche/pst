@@ -2,7 +2,7 @@
 
 namespace App\Policies;
 
-use App\Constant\RoleEnum;
+use App\Enums\RoleEnum;
 use App\Models\Service;
 use App\Models\User;
 

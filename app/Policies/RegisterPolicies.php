@@ -2,7 +2,7 @@
 
 namespace App\Policies;
 
-use App\Constant\RoleEnum;
+use App\Enums\RoleEnum;
 use App\Models\Action;
 use App\Models\User;
 use Illuminate\Support\Facades\Gate;

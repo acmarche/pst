@@ -2,7 +2,7 @@
 
 namespace App\Ldap;
 
-use App\Constant\DepartmentEnum;
+use App\Enums\DepartmentEnum;
 use App\Ldap\User as UserLdap;
 use App\Models\User;
 use Exception;

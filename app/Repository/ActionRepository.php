@@ -2,7 +2,7 @@
 
 namespace App\Repository;
 
-use App\Constant\ActionStateEnum;
+use App\Enums\ActionStateEnum;
 use App\Models\Action;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;

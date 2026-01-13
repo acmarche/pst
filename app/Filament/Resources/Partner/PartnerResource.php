@@ -2,7 +2,7 @@
 
 namespace App\Filament\Resources\Partner;
 
-use App\Constant\NavigationGroupEnum;
+use App\Enums\NavigationGroupEnum;
 use App\Filament\Resources\Partner\Schemas\PartnerForm;
 use App\Filament\Resources\Partner\Tables\PartnerTables;
 use App\Models\Partner;

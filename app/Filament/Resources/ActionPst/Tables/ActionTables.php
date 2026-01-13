@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Filament\Resources\ActionPst\Tables;
 
-use App\Constant\ActionStateEnum;
-use App\Constant\ActionTypeEnum;
+use App\Enums\ActionStateEnum;
+use App\Enums\ActionTypeEnum;
 use App\Filament\Resources\ActionPst\ActionPstResource;
 use App\Filament\Resources\ActionPst\Schemas\ActionForm;
 use App\Models\Action;

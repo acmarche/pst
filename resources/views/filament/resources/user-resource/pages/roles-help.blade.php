@@ -1,4 +1,4 @@
-@php use App\Constant\RoleEnum; @endphp
+@php use App\Enums\RoleEnum; @endphp
 
 <div class="flex flex-col gap-4 p-6 bg-white rounded-2xl shadow-md border border-gray-200 w-full max-w-2xl">
     <!-- En-tête -->

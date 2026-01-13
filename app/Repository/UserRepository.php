@@ -2,7 +2,7 @@
 
 namespace App\Repository;
 
-use App\Constant\DepartmentEnum;
+use App\Enums\DepartmentEnum;
 use App\Ldap\User as UserLdap;
 
 final class UserRepository

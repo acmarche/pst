@@ -2,7 +2,7 @@
 
 namespace App\Repository;
 
-use App\Constant\DepartmentEnum;
+use App\Enums\DepartmentEnum;
 use App\Models\OperationalObjective;
 use Illuminate\Database\Eloquent\Builder;
 

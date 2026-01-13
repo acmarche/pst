@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Policies;
 
-use App\Constant\RoleEnum;
+use App\Enums\RoleEnum;
 use App\Models\Action;
 use App\Models\OperationalObjective;
 use App\Models\Role;

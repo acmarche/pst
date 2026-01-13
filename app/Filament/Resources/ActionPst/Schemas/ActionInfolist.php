@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Filament\Resources\ActionPst\Schemas;
 
-use App\Constant\ActionRoadmapEnum;
-use App\Constant\ActionStateEnum;
-use App\Constant\ActionSynergyEnum;
-use App\Constant\ActionTypeEnum;
+use App\Enums\ActionRoadmapEnum;
+use App\Enums\ActionStateEnum;
+use App\Enums\ActionSynergyEnum;
+use App\Enums\ActionTypeEnum;
 use App\Filament\Components\ProgressEntry;
 use App\Models\Action;
 use App\Models\Odd;

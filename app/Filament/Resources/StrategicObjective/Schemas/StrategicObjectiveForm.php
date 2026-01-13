@@ -2,7 +2,7 @@
 
 namespace App\Filament\Resources\StrategicObjective\Schemas;
 
-use App\Constant\DepartmentEnum;
+use App\Enums\DepartmentEnum;
 use App\Repository\UserRepository;
 use Filament\Forms;
 use Filament\Schemas\Schema;

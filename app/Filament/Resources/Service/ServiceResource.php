@@ -2,7 +2,7 @@
 
 namespace App\Filament\Resources\Service;
 
-use App\Constant\NavigationGroupEnum;
+use App\Enums\NavigationGroupEnum;
 use App\Filament\Resources\Service\Schemas\ServiceForm;
 use App\Filament\Resources\Service\Tables\ServiceTables;
 use App\Models\Service;

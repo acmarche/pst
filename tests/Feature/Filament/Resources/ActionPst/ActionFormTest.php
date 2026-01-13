@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Filament\Resources\ActionPst;
 
-use App\Constant\RoleEnum;
+use App\Enums\RoleEnum;
 use App\Filament\Resources\ActionPst\Pages\CreateAction;
 use App\Filament\Resources\ActionPst\Pages\EditAction;
 use App\Models\Action;

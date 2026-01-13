@@ -2,11 +2,11 @@
 
 namespace App\Models;
 
-use App\Constant\ActionRoadmapEnum;
-use App\Constant\ActionStateEnum;
-use App\Constant\ActionSynergyEnum;
-use App\Constant\ActionTypeEnum;
-use App\Constant\RoleEnum;
+use App\Enums\ActionRoadmapEnum;
+use App\Enums\ActionStateEnum;
+use App\Enums\ActionSynergyEnum;
+use App\Enums\ActionTypeEnum;
+use App\Enums\RoleEnum;
 use App\Observers\ActionObserver;
 use App\Repository\UserRepository;
 use Database\Factories\ActionFactory;

@@ -2,7 +2,7 @@
 
 namespace App\Observers;
 
-use App\Constant\DepartmentEnum;
+use App\Enums\DepartmentEnum;
 use App\Models\Action;
 use App\Models\TracksHistoryTrait;
 

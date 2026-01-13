@@ -2,7 +2,7 @@
 
 namespace App\Filament\Resources\Users\Schemas;
 
-use App\Constant\DepartmentEnum;
+use App\Enums\DepartmentEnum;
 use App\Models\Role;
 use App\Repository\UserRepository;
 use Filament\Forms\Components\CheckboxList;
