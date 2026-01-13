@@ -240,14 +240,14 @@ final class ActionTables
             SelectFilter::make('isInternal')
                 ->label('Volet interne')
                 ->options([
-                    'true' => 'Oui',
-                    'false' => 'Non',
+                    true => 'Oui',
+                    false => 'Non',
                 ])
                 ->query(function (Builder $query, array $data): Builder {
                     return $query->when(
                         $data['value'] !== null,
                         function (Builder $query) use ($data): Builder {
-                            $isInternal = $data['value'] === 'true';
+                            $isInternal = $data['value'] === '1';
 
                             return $query->whereHas(
                                 'operationalObjective',
