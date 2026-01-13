@@ -33,7 +33,7 @@ class ActionPstResource extends Resource
 
     public static function form(Schema $schema): Schema
     {
-        return ActionForm::createForm($schema, null);
+        return ActionForm::configure($schema, null);
     }
 
     public static function table(Table $table): Table

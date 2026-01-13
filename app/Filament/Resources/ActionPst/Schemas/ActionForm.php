@@ -20,11 +20,12 @@ use Filament\Schemas\Schema;
 use Filament\Support\Enums\Width;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Gate;
 use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
 
 final class ActionForm
 {
-    public static function createForm(Schema $schema, Model|OperationalObjective|null $owner): Schema
+    public static function configure(Schema $schema, Model|OperationalObjective|null $owner): Schema
     {
         return $schema
             ->columns(1)
@@ -39,13 +40,9 @@ final class ActionForm
                         ),
                     Wizard\Step::make('team')
                         ->label('Equipes')
-                        ->schema(
-                            self::fieldsTeam(),
-                        )
+                        ->schema(self::fieldsTeam())
                         ->visible(
-                            fn (?string $operation = null) => $operation === 'create' &&
-                                (auth()->user()->hasRole(RoleEnum::ADMIN->value) ||
-                                    auth()->user()->hasRole(RoleEnum::RESPONSIBLE->value))
+                            fn (?string $operation = null) => Gate::check('teams-edit', $operation)
                         ),
                     Wizard\Step::make('info')
                         ->label('Informations')
