@@ -25,9 +25,15 @@ return Application::configure(basePath: dirname(__DIR__))
                 $ip = request()->ip();
                 $userAgent = request()->userAgent();
                 $user = auth()->user();
+                $file = $e->getFile();
+                $line = $e->getLine();
+                $class = get_class($e);
 
                 Mail::raw(
                     "Exception: {$e->getMessage()}\n\n".
+                    "class: {$class}\n\n".
+                    "file: {$file}\n\n".
+                    "line: {$line}\n\n".
                     "URL: {$method} {$url}\n".
                     "IP: {$ip}\n".
                     "User Agent: {$userAgent}\n".
