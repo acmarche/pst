@@ -9,7 +9,7 @@ use Filament\Actions\ViewAction;
 use Filament\Tables;
 use Filament\Tables\Table;
 
-class PartnerTables
+final class PartnerTables
 {
     public static function configure(Table $table): Table
     {

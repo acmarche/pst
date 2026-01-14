@@ -6,14 +6,14 @@ use App\Filament\Resources\ActionPst\ActionPstResource;
 use Filament\Actions;
 use Filament\Resources\Pages\EditRecord;
 
-class EditAction extends EditRecord
+final class EditAction extends EditRecord
 {
     protected static string $resource = ActionPstResource::class;
 
     /**
      * to remove word "editer"
      */
-    public  function getTitle(): string
+    public function getTitle(): string
     {
         return $this->getRecord()->name;
     }

@@ -7,7 +7,7 @@ use Filament\Forms;
 use Filament\Schemas\Schema;
 use Illuminate\Database\Eloquent\Model;
 
-class OperationalObjectiveForm
+final class OperationalObjectiveForm
 {
     public static function formRelation(Schema $form, Model|OperationalObjective|null $owner = null): Schema
     {

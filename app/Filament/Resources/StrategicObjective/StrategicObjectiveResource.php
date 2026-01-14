@@ -6,17 +6,18 @@ use App\Filament\Resources\StrategicObjective\RelationManagers\OosRelationManage
 use App\Filament\Resources\StrategicObjective\Schemas\StrategicObjectiveForm;
 use App\Filament\Resources\StrategicObjective\Tables\StrategicObjectiveTables;
 use App\Models\StrategicObjective;
+use BackedEnum;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Tables\Table;
 use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Database\Eloquent\Model;
 
-class StrategicObjectiveResource extends Resource
+final class StrategicObjectiveResource extends Resource
 {
     protected static ?string $model = StrategicObjective::class;
 
-    protected static string|null|\BackedEnum $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static string|null|BackedEnum $navigationIcon = 'heroicon-o-rectangle-stack';
 
     protected static ?int $navigationSort = 1;
 

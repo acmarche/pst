@@ -21,7 +21,7 @@ final class OddTables
         return $table
             ->defaultSort('position')
             ->defaultPaginationPageOption(50)
-            ->recordUrl(fn(Odd $record) => OddResource::getUrl('view', [$record]))
+            ->recordUrl(fn (Odd $record) => OddResource::getUrl('view', [$record]))
             ->columns([
                 /* Tables\Columns\ImageColumn::make('icon')
                      ->imageHeight(150)
@@ -33,7 +33,7 @@ final class OddTables
                 Tables\Columns\TextColumn::make('name')
                     ->limit(120)
                     ->searchable()
-                    ->color(fn(Odd $odd) => $odd->color)
+                    ->color(fn (Odd $odd) => $odd->color)
                     ->weight(FontWeight::Medium),
                 Tables\Columns\TextColumn::make('position')
                     ->label('Ordre'),

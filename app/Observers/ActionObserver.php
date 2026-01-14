@@ -5,8 +5,9 @@ namespace App\Observers;
 use App\Enums\DepartmentEnum;
 use App\Models\Action;
 use App\Models\TracksHistoryTrait;
+use Exception;
 
-class ActionObserver
+final class ActionObserver
 {
     use TracksHistoryTrait;
 
@@ -15,12 +16,12 @@ class ActionObserver
      */
     public function created(Action $action): void
     {
-        if ($action->department == DepartmentEnum::VILLE->value) {
+        if ($action->department === DepartmentEnum::VILLE->value) {
             $email = config('pst')['validator']['email'];
             try {
-            /*    Mail::to(new Address($email, 'As'))
-                    ->send(new ActionNewMail($action));*/
-            } catch (\Exception $e) {
+                /*    Mail::to(new Address($email, 'As'))
+                        ->send(new ActionNewMail($action));*/
+            } catch (Exception $e) {
                 dd($e->getMessage());
             }
         }
@@ -57,5 +58,4 @@ class ActionObserver
     {
         // ...
     }
-
 }

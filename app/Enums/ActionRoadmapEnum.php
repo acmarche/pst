@@ -6,8 +6,8 @@ use Filament\Support\Contracts\HasLabel;
 
 enum ActionRoadmapEnum: string implements HasLabel
 {
-    case YES = "YES";
-    case NO = "NO";
+    case YES = 'YES';
+    case NO = 'NO';
 
     public static function toArray(): array
     {
@@ -26,5 +26,4 @@ enum ActionRoadmapEnum: string implements HasLabel
             self::NO => 'Non',
         };
     }
-
 }

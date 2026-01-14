@@ -7,7 +7,7 @@ use Filament\Forms;
 use Filament\Schemas\Schema;
 use Illuminate\Database\Eloquent\Model;
 
-class PartnerForm
+final class PartnerForm
 {
     public static function configure(Schema $schema, Model|Partner|null $record = null): Schema
     {

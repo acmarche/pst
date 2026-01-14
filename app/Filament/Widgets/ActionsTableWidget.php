@@ -7,7 +7,7 @@ use App\Repository\ActionRepository;
 use Filament\Tables\Table;
 use Filament\Widgets\TableWidget as BaseWidget;
 
-class ActionsTableWidget extends BaseWidget
+final class ActionsTableWidget extends BaseWidget
 {
     public function table(Table $table): Table
     {

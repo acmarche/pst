@@ -6,7 +6,7 @@ use App\Enums\RoleEnum;
 use App\Models\Odd;
 use App\Models\User;
 
-class OddPolicy
+final class OddPolicy
 {
     /**
      * Determine whether the user can view any models.
@@ -69,6 +69,7 @@ class OddPolicy
         if ($user->hasOneOfThisRoles([RoleEnum::MANDATAIRE->value])) {
             return false;
         }
+
         return $user->hasOneOfThisRoles([RoleEnum::ADMIN->value]);
     }
 }

@@ -7,7 +7,7 @@ use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Model;
 
-class ActionsRelationManager extends RelationManager
+final class ActionsRelationManager extends RelationManager
 {
     protected static string $relationship = 'actions';
 

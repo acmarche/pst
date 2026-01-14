@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Model;
 final class CreateAction extends CreateRecord
 {
     protected static string $resource = ActionPstResource::class;
+
     protected static ?string $title = 'Ajouter une action';
 
     /**

@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Notifications\Notifiable;
 
 #[UseFactory(ServiceFactory::class)]
-class Service extends Model
+final class Service extends Model
 {
     use HasFactory, Notifiable;
 
@@ -33,5 +33,4 @@ class Service extends Model
     {
         return $this->belongsToMany(Action::class, 'action_service_partner');
     }
-
 }

@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
  * Objectif de développement durable
  */
 #[UseFactory(OddFactory::class)]
-class Odd extends Model
+final class Odd extends Model
 {
     use HasFactory;
 

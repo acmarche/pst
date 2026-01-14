@@ -6,19 +6,11 @@ use App\Filament\Resources\StrategicObjective\StrategicObjectiveResource;
 use Filament\Actions;
 use Filament\Resources\Pages\EditRecord;
 
-class EditStrategicObjective extends EditRecord
+final class EditStrategicObjective extends EditRecord
 {
     protected static string $resource = StrategicObjectiveResource::class;
 
-    protected function getHeaderActions(): array
-    {
-        return [
-            Actions\ViewAction::make()
-                ->icon('tabler-eye'),
-        ];
-    }
-
-    //force remove when edit
+    // force remove when edit
     public function getRelationManagers(): array
     {
         return [];
@@ -27,9 +19,16 @@ class EditStrategicObjective extends EditRecord
     /**
      * to remove word "editer"
      */
-    public  function getTitle(): string
+    public function getTitle(): string
     {
         return $this->getRecord()->name;
     }
 
+    protected function getHeaderActions(): array
+    {
+        return [
+            Actions\ViewAction::make()
+                ->icon('tabler-eye'),
+        ];
+    }
 }

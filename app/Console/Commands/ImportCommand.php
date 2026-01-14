@@ -35,9 +35,13 @@ final class ImportCommand extends Command
     protected $description = 'Test command';
 
     protected string $dir = __DIR__.'/../../../old/output/';
+
     private int $lastOs = 0;
+
     private int $lastOo = 0;
+
     private ImportDto $actionDto;
+
     private string $department;
 
     public function handle(): int
@@ -93,7 +97,7 @@ final class ImportCommand extends Command
                 $services = explode(',', $this->actionDto->servicePorteur);
                 foreach ($services as $name) {
                     $service = $this->findService(mb_trim($name));
-                    if (!$service) {
+                    if (! $service) {
                         $this->warn(
                             'ERROR service with , not found '.$name.' original: '.$this->actionDto->servicePorteur
                         );
@@ -102,7 +106,7 @@ final class ImportCommand extends Command
                 }
             } else {
                 $service = $this->findService(mb_trim($this->actionDto->servicePorteur));
-                if (!$service) {
+                if (! $service) {
                     $this->warn('ERROR service not found '.$this->actionDto->servicePorteur);
                 }
                 $action->leaderServices()->attach($service->id);
@@ -113,7 +117,7 @@ final class ImportCommand extends Command
                 $services = explode(',', $this->actionDto->servicePartenaire);
                 foreach ($services as $name) {
                     $service = $this->findService(mb_trim($name));
-                    if (!$service) {
+                    if (! $service) {
                         $this->warn(
                             'ERROR service part with , not found '.$name.' original: '.$this->actionDto->servicePartenaire
                         );
@@ -122,7 +126,7 @@ final class ImportCommand extends Command
                 }
             } else {
                 $service = $this->findService(mb_trim($this->actionDto->servicePartenaire));
-                if (!$service) {
+                if (! $service) {
                     $this->warn('ERROR service part not found '.$this->actionDto->servicePartenaire);
                 }
                 $action->partnerServices()->attach($service->id);
@@ -162,7 +166,7 @@ final class ImportCommand extends Command
         $oo = OperationalObjective::create([
             'strategic_objective_id' => $this->lastOs,
             'name' => $name,
-            'department' =>  $this->department,
+            'department' => $this->department,
             'position' => $number,
         ]);
         $this->lastOo = $oo->id;
@@ -170,7 +174,7 @@ final class ImportCommand extends Command
 
     private function addAction(): void
     {
-        if (!$this->actionDto->name) {
+        if (! $this->actionDto->name) {
             return;
         }
 
@@ -178,7 +182,7 @@ final class ImportCommand extends Command
         $state = null;
         if ($this->actionDto->etat) {
             $state = $this->findState($this->actionDto->etat);
-            if (!$state) {
+            if (! $state) {
                 $this->warn('state not found'.$this->actionDto->etat);
             }
         }
@@ -195,12 +199,12 @@ final class ImportCommand extends Command
 
         $action = Action::create([
             'name' => $this->actionDto->name,
-            'department' =>  $this->department,
+            'department' => $this->department,
             'state' => $state,
             'type' => $type?->value,
             'user_add' => 'import',
             'note' => $this->actionDto->notes,
-            'position' => (int)$position,
+            'position' => (int) $position,
             'synergy' => $synergie,
             'roadmap' => $sheet,
             'operational_objective_id' => $this->lastOo,
@@ -222,7 +226,7 @@ final class ImportCommand extends Command
 
     private function findSynergy(?string $name): ?string
     {
-        if (!$name) {
+        if (! $name) {
             return null;
         }
 
@@ -236,7 +240,7 @@ final class ImportCommand extends Command
     private function findMandatary(string $name): array
     {
         $users = [];
-        if (!$name) {
+        if (! $name) {
             return [];
         }
 
@@ -263,7 +267,7 @@ final class ImportCommand extends Command
                     $nom = 'Gregoire';
                 }
                 $user = User::where('last_name', mb_trim($nom))->first();
-                if (!$user) {
+                if (! $user) {
                     $this->warn('ERROR User with , not found: '.$nom.' original: '.$name);
                 } else {
                     $users[] = $user;
@@ -293,7 +297,7 @@ final class ImportCommand extends Command
                 }
                 if ($nom) {
                     $user = User::where('last_name', mb_trim($nom))->first();
-                    if (!$user) {
+                    if (! $user) {
                         $this->warn('ERROR User not found: '.$nom.' original: '.$name);
                     } else {
                         $users[] = $user;
@@ -308,7 +312,7 @@ final class ImportCommand extends Command
     private function findOdd(string $name): array
     {
         $odds = [];
-        if (!$name) {
+        if (! $name) {
             return [];
         }
         if (str_contains($name, ',')) {
@@ -321,7 +325,7 @@ final class ImportCommand extends Command
                 } else {
                     $odd = Odd::where('name', mb_trim($nom))->first();
                 }
-                if (!$odd) {
+                if (! $odd) {
                     $this->warn('ERROR Odd with , not found: '.$nom.' original: '.$name);
                 } else {
                     $odds[] = $odd;
@@ -335,7 +339,7 @@ final class ImportCommand extends Command
             } else {
                 $odd = Odd::where('name', mb_trim($name))->first();
             }
-            if (!$odd) {
+            if (! $odd) {
                 $this->warn('ERROR Odd not found: '.$name.' original: '.$name);
             } else {
                 $odds[] = $odd;
@@ -353,7 +357,7 @@ final class ImportCommand extends Command
     private function findPartner(string $name): Partner
     {
         $partner = Partner::where('name', $name)->orWhere('initials', $name)->first();
-        if (!$partner) {
+        if (! $partner) {
             $partner = Partner::create(['name' => $name]);
         }
 

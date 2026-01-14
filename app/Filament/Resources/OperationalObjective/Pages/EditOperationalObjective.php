@@ -6,9 +6,17 @@ use App\Filament\Resources\OperationalObjective\OperationalObjectiveResource;
 use Filament\Actions;
 use Filament\Resources\Pages\EditRecord;
 
-class EditOperationalObjective extends EditRecord
+final class EditOperationalObjective extends EditRecord
 {
     protected static string $resource = OperationalObjectiveResource::class;
+
+    /**
+     * to remove word "editer"
+     */
+    public function getTitle(): string
+    {
+        return $this->getRecord()->name;
+    }
 
     protected function getHeaderActions(): array
     {
@@ -16,13 +24,5 @@ class EditOperationalObjective extends EditRecord
             Actions\ViewAction::make()
                 ->icon('tabler-eye'),
         ];
-    }
-
-    /**
-     * to remove word "editer"
-     */
-    public  function getTitle(): string
-    {
-        return $this->getRecord()->name;
     }
 }

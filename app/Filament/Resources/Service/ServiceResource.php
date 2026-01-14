@@ -6,16 +6,17 @@ use App\Enums\NavigationGroupEnum;
 use App\Filament\Resources\Service\Schemas\ServiceForm;
 use App\Filament\Resources\Service\Tables\ServiceTables;
 use App\Models\Service;
+use BackedEnum;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Tables\Table;
 use UnitEnum;
 
-class ServiceResource extends Resource
+final class ServiceResource extends Resource
 {
     protected static ?string $model = Service::class;
 
-    protected static string|null|\BackedEnum $navigationIcon = 'tabler-users-group';
+    protected static string|null|BackedEnum $navigationIcon = 'tabler-users-group';
 
     protected static string|UnitEnum|null $navigationGroup = NavigationGroupEnum::Settings;
 

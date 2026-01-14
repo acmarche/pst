@@ -6,7 +6,7 @@ use App\Models\Action;
 use Spatie\LaravelPdf\Facades\Pdf;
 use Spatie\LaravelPdf\PdfBuilder;
 
-class PdfExport
+final class PdfExport
 {
     public static function exportAcion(Action $action): PdfBuilder
     {
@@ -15,7 +15,7 @@ class PdfExport
             'customerName' => 'Grumpy Cat',
             'action' => $action,
         ]))
-            //->withBrowsershot(fn(Browsershot $shot) => $shot->setNodeBinary()->setNpmBinary()->setPuppeteerBinary()->setPuppeteerLaunchOptions([]))
+            // ->withBrowsershot(fn(Browsershot $shot) => $shot->setNodeBinary()->setNpmBinary()->setPuppeteerBinary()->setPuppeteerLaunchOptions([]))
             ->download('action-'.$action->id.'.pdf');
         // ->save('action-'.$action->id.'.pdf');
     }

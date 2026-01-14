@@ -7,7 +7,7 @@ use Filament\Actions;
 use Filament\Resources\Pages\ListRecords;
 use Illuminate\Contracts\Support\Htmlable;
 
-class ListPartners extends ListRecords
+final class ListPartners extends ListRecords
 {
     protected static string $resource = PartnerResource::class;
 

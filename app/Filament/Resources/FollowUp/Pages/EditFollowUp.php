@@ -6,7 +6,7 @@ use App\Filament\Resources\FollowUp\FollowUpResource;
 use Filament\Actions;
 use Filament\Resources\Pages\EditRecord;
 
-class EditFollowUp extends EditRecord
+final class EditFollowUp extends EditRecord
 {
     protected static string $resource = FollowUpResource::class;
 

@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Notifications\Notifiable;
 
-class OperationalObjective extends Model
+final class OperationalObjective extends Model
 {
     use HasFactory, Notifiable;
 
@@ -47,6 +47,7 @@ class OperationalObjective extends Model
 
     /**
      * Get the actions for the Operational Objective.
+     *
      * @return HasMany<Action>
      */
     public function actions(): HasMany
@@ -59,5 +60,4 @@ class OperationalObjective extends Model
     {
         $builder->where('department', $department);
     }
-
 }

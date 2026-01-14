@@ -7,7 +7,7 @@ use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 use SensitiveParameter;
 
-class MagicLoginLink extends Notification
+final class MagicLoginLink extends Notification
 {
     use Queueable;
 

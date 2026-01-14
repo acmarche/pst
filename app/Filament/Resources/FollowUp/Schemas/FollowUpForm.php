@@ -5,7 +5,7 @@ namespace App\Filament\Resources\FollowUp\Schemas;
 use Filament\Forms;
 use Filament\Schemas\Schema;
 
-class FollowUpForm
+final class FollowUpForm
 {
     public static function configure(Schema $schema): Schema
     {

@@ -5,15 +5,16 @@ namespace App\Filament\Resources\FollowUp;
 use App\Filament\Resources\FollowUp\Schemas\FollowUpForm;
 use App\Filament\Resources\FollowUp\Tables\FollowUpTables;
 use App\Models\FollowUp;
+use BackedEnum;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Tables\Table;
 
-class FollowUpResource extends Resource
+final class FollowUpResource extends Resource
 {
     protected static ?string $model = FollowUp::class;
 
-    protected static string|null|\BackedEnum $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static string|null|BackedEnum $navigationIcon = 'heroicon-o-rectangle-stack';
 
     protected static bool $shouldRegisterNavigation = false;
 

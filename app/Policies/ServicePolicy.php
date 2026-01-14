@@ -6,7 +6,7 @@ use App\Enums\RoleEnum;
 use App\Models\Service;
 use App\Models\User;
 
-class ServicePolicy
+final class ServicePolicy
 {
     /**
      * Determine whether the user can view any models.
@@ -69,6 +69,7 @@ class ServicePolicy
         if ($user->hasOneOfThisRoles([RoleEnum::MANDATAIRE->value])) {
             return false;
         }
+
         return $user->hasOneOfThisRoles([RoleEnum::ADMIN->value]);
     }
 }

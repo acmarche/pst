@@ -6,19 +6,20 @@ use App\Enums\NavigationGroupEnum;
 use App\Filament\Resources\Partner\Schemas\PartnerForm;
 use App\Filament\Resources\Partner\Tables\PartnerTables;
 use App\Models\Partner;
+use BackedEnum;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
 use UnitEnum;
 
-class PartnerResource extends Resource
+final class PartnerResource extends Resource
 {
     protected static ?string $model = Partner::class;
 
     protected static ?string $recordTitleAttribute = 'name';
 
-    protected static string|null|\BackedEnum $navigationIcon = Heroicon::OutlinedUserGroup;
+    protected static string|null|BackedEnum $navigationIcon = Heroicon::OutlinedUserGroup;
 
     protected static string|UnitEnum|null $navigationGroup = NavigationGroupEnum::Settings;
 

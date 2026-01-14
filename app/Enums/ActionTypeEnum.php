@@ -7,11 +7,11 @@ use Filament\Support\Contracts\HasDescription;
 use Filament\Support\Contracts\HasIcon;
 use Filament\Support\Contracts\HasLabel;
 
-enum ActionTypeEnum: string implements HasColor, HasLabel, HasDescription, HasIcon
+enum ActionTypeEnum: string implements HasColor, HasDescription, HasIcon, HasLabel
 {
-    case PST = "PST";
-    case PERENNIAL = "PERENNIAL";
-    case OFF_SCREEN = "OFF_SCREEN";
+    case PST = 'PST';
+    case PERENNIAL = 'PERENNIAL';
+    case OFF_SCREEN = 'OFF_SCREEN';
 
     public static function toArray(): array
     {
@@ -23,15 +23,6 @@ enum ActionTypeEnum: string implements HasColor, HasLabel, HasDescription, HasIc
         return $values;
     }
 
-    public function getLabel(): string
-    {
-        return match ($this) {
-            self::PST => 'PST',
-            self::PERENNIAL => 'Perenne',
-            self::OFF_SCREEN => 'Hors champ',
-        };
-    }
-
     public static function findByName(string $name): ?self
     {
         return match ($name) {
@@ -39,6 +30,15 @@ enum ActionTypeEnum: string implements HasColor, HasLabel, HasDescription, HasIc
             'Perenne' => self::PERENNIAL,
             'Hors Champ' => self::OFF_SCREEN,
             default => null,
+        };
+    }
+
+    public function getLabel(): string
+    {
+        return match ($this) {
+            self::PST => 'PST',
+            self::PERENNIAL => 'Perenne',
+            self::OFF_SCREEN => 'Hors champ',
         };
     }
 

@@ -15,7 +15,7 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Storage;
 
-class MediasRelationManager extends RelationManager
+final class MediasRelationManager extends RelationManager
 {
     protected static string $relationship = 'medias';
 
@@ -35,7 +35,7 @@ class MediasRelationManager extends RelationManager
                     ->label('Téléchargement')
                     ->state('Télécharger')
                     ->icon('tabler-download')
-                    ->action(fn(Media $media) => Storage::disk('public')->download($media->file_name)),
+                    ->action(fn (Media $media) => Storage::disk('public')->download($media->file_name)),
                 Tables\Columns\TextColumn::make('size'),
                 Tables\Columns\TextColumn::make('mime_type'),
             ])

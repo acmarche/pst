@@ -9,7 +9,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Request;
 
-class MagicLoginLinkController extends Controller
+final class MagicLoginLinkController extends Controller
 {
     public function create(Request $request, User $user)
     {
@@ -20,7 +20,7 @@ class MagicLoginLinkController extends Controller
 
     public function store(Request $request, User $user): RedirectResponse
     {
-        if (!Password::tokenExists($user, $request->token)) {
+        if (! Password::tokenExists($user, $request->token)) {
             abort(404);
         }
 

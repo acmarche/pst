@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Scope;
 
-class DepartmentScope implements Scope
+final class DepartmentScope implements Scope
 {
     /**
      * Apply the scope to a given Eloquent query builder.
@@ -17,5 +17,4 @@ class DepartmentScope implements Scope
         $department = UserRepository::departmentSelected();
         $builder->where('department', $department);
     }
-
 }

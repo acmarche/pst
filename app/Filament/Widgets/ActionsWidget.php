@@ -9,7 +9,7 @@ use DB;
 use Filament\Widgets\StatsOverviewWidget as BaseWidget;
 use Filament\Widgets\StatsOverviewWidget\Stat;
 
-class ActionsWidget extends BaseWidget
+final class ActionsWidget extends BaseWidget
 {
     protected function getStats(): array
     {

@@ -6,9 +6,10 @@ use App\Models\Service;
 use App\Models\User;
 use Carbon\Carbon;
 use Carbon\CarbonInterface;
+use Exception;
 use Meilisearch\Search\SearchResult;
 
-class SearchMeili
+final class SearchMeili
 {
     use MeiliTrait;
 
@@ -23,12 +24,7 @@ class SearchMeili
     }
 
     /**
-     * @param array $args
-     * @param UserInterface $user
-     * @param int $limit
-     * @param array $sort
-     * @return SearchResult
-     * @throws \Exception
+     * @throws Exception
      */
     public function search(
         array $args,
@@ -37,7 +33,7 @@ class SearchMeili
         array $sort = [],
     ): SearchResult {
         $filters = $this->setQuery($args, $user);
-        $filters = array_filter($filters, fn($item) => $item !== null);
+        $filters = array_filter($filters, fn ($item) => $item !== null);
         $filter = implode(' AND ', $filters);
 
         $this->init();
@@ -56,8 +52,6 @@ class SearchMeili
 
     /**
      * https://www.meilisearch.com/docs/learn/fine_tuning_results/filtering
-     * @param string $keyword
-     * @return iterable|SearchResult
      */
     public function doSearch(string $keyword): iterable|SearchResult
     {
@@ -67,10 +61,9 @@ class SearchMeili
     }
 
     /**
-     * @param array $args
-     * @param UserInterface|null $user
      * @return string
-     * @throws \Exception
+     *
+     * @throws Exception
      */
     private function setQuery(array $args, ?UserInterface $user): array
     {
@@ -81,7 +74,7 @@ class SearchMeili
         $date_debut = $args['date_debut'] ?? null;
         $date_fin = $args['date_fin'] ?? null;
 
-        if (!$date_debut instanceof CarbonInterface && $date_debut !== null) {
+        if (! $date_debut instanceof CarbonInterface && $date_debut !== null) {
             $date_debut = Carbon::createFromDate(
                 $date_debut->format('Y'),
                 $date_debut->format('m'),
@@ -89,7 +82,7 @@ class SearchMeili
                 'UTC',
             )->hour(0)->minute(0)->second(0);
         }
-        if (!$date_fin instanceof Carbon && $date_fin !== null) {
+        if (! $date_fin instanceof Carbon && $date_fin !== null) {
             $date_fin = Carbon::createFromDate(
                 $date_fin->format('Y'),
                 $date_fin->format('m'),
@@ -121,10 +114,10 @@ class SearchMeili
         }
 
         if (
-            !$user->hasRole('ROLE_INTRANET_ADMIN') &&
-            !$user->hasRole('ROLE_INDICATEUR_VILLE_READ') &&
-            !$user->hasRole('ROLE_INDICATEUR_VILLE_ADMIN') &&
-            !$user->hasRole('ROLE_INDICATEUR_VILLE_INDEX')
+            ! $user->hasRole('ROLE_INTRANET_ADMIN') &&
+            ! $user->hasRole('ROLE_INDICATEUR_VILLE_READ') &&
+            ! $user->hasRole('ROLE_INDICATEUR_VILLE_ADMIN') &&
+            ! $user->hasRole('ROLE_INDICATEUR_VILLE_INDEX')
         ) {
             $filters = [...$filters, ...$this->setConstaintUser($user->getUserIdentifier(), $service)];
         }
@@ -133,41 +126,37 @@ class SearchMeili
     }
 
     /**
-     * @param string $userName
-     * @param Service|null $serviceSelected
-     * @return array
-     * @throws \Exception
-     * date_courrier_timestamp >= 1730934000 AND date_courrier_timestamp <= 1731020400
-     * AND (destinataires = 6)
-     * OR (services = 9)
+     * @throws Exception
+     *                   date_courrier_timestamp >= 1730934000 AND date_courrier_timestamp <= 1731020400
+     *                   AND (destinataires = 6)
+     *                   OR (services = 9)
      */
     private function setConstaintUser(
         string $userName,
         ?Service $serviceSelected,
     ): array {
-        if (!$destinataire = $this->destinataireRepository->findOneByUsername($userName)) {
-            throw new \Exception('Vous n\'avez pas été trouvé dans la liste des destinataires');
+        if (! $destinataire = $this->destinataireRepository->findOneByUsername($userName)) {
+            throw new Exception('Vous n\'avez pas été trouvé dans la liste des destinataires');
         }
         $services = $this->serviceRepository->findByDestinataires([$destinataire]);
         if ($serviceSelected) {
             if (count($services) === 0) {
-                throw new \Exception('Vous n\'êtes dans aucun service');
+                throw new Exception('Vous n\'êtes dans aucun service');
             }
-            if (!$serviceSelected->isServiceInArray($services)) {
-                throw new \Exception('Le service sélectionné n\'est pas dans la liste de vos services');
+            if (! $serviceSelected->isServiceInArray($services)) {
+                throw new Exception('Le service sélectionné n\'est pas dans la liste de vos services');
             }
 
             return ['services' => 'services = '.$serviceSelected->getId()];
-        } else {
-            $filters = [];
-            $servicesFilter = [];
-            foreach ($services as $service) {
-                $servicesFilter[] = 'services = '.$service->getId();
-            }
-            $servicesFilter = '('.implode(' OR ', $servicesFilter).')';
-            $filters['services'] = '((destinataires = '.$destinataire->getId().') OR '.$servicesFilter.')';
-            $filters['destinataires'] = null;
         }
+        $filters = [];
+        $servicesFilter = [];
+        foreach ($services as $service) {
+            $servicesFilter[] = 'services = '.$service->getId();
+        }
+        $servicesFilter = '('.implode(' OR ', $servicesFilter).')';
+        $filters['services'] = '((destinataires = '.$destinataire->getId().') OR '.$servicesFilter.')';
+        $filters['destinataires'] = null;
 
         return $filters;
     }

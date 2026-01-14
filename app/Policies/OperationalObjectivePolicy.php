@@ -6,7 +6,7 @@ use App\Enums\RoleEnum;
 use App\Models\OperationalObjective;
 use App\Models\User;
 
-class OperationalObjectivePolicy
+final class OperationalObjectivePolicy
 {
     /**
      * Determine whether the user can view any models.
@@ -69,6 +69,7 @@ class OperationalObjectivePolicy
         if ($user->hasOneOfThisRoles([RoleEnum::MANDATAIRE->value])) {
             return false;
         }
+
         return $user->hasOneOfThisRoles([RoleEnum::ADMIN->value]);
     }
 }
