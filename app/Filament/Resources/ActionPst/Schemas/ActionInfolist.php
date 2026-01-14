@@ -115,7 +115,7 @@ final class ActionInfolist
                         ->badge()
                         ->formatStateUsing(fn (Service $state): string => $state->name),
                     TextEntry::make('partners')
-                        ->label('Partenaires')
+                        ->label('Partenaires externes')
                         ->badge()
                         ->formatStateUsing(fn (Partner $state): string => $state->name),
                 ]),
@@ -154,9 +154,9 @@ final class ActionInfolist
                 ->label('Date d\'échéance')
                 ->visible(fn (?DateTimeImmutable $date) => $date instanceof DateTimeImmutable)
                 ->dateTime(),
-            TextEntry::make('synergie')
+            TextEntry::make('synergy')
                 ->label('Synergie Cpas / Ville')
-                ->formatStateUsing(fn (ActionSynergyEnum $state) => $state->getLabel()),
+                ->formatStateUsing(fn (?ActionSynergyEnum $state) => $state?->getLabel() ?? '-'),
             TextEntry::make('created_at')
                 ->label('Créé le')
                 ->dateTime(),
@@ -166,7 +166,7 @@ final class ActionInfolist
                 ->label('Département'),
             TextEntry::make('roadmap')
                 ->label('Feuille de route')
-                ->formatStateUsing(fn (ActionRoadmapEnum $state) => $state->getLabel()),
+                ->formatStateUsing(fn (?ActionRoadmapEnum $state) => $state?->getLabel() ?? '-'),
         ];
     }
 }
