@@ -18,6 +18,14 @@ final class EditAction extends EditRecord
         return $this->getRecord()->name;
     }
 
+    /**
+     * Hide relation managers on Edit page - they are shown on View page only.
+     */
+    protected function getAllRelationManagers(): array
+    {
+        return [];
+    }
+
     protected function getHeaderActions(): array
     {
         return [

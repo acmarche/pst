@@ -10,18 +10,15 @@ use App\Enums\RoleEnum;
 use App\Models\OperationalObjective;
 use Filament\Actions\Action;
 use Filament\Forms;
-use Filament\Forms\Components\FileUpload;
 use Filament\Schemas\Components\Fieldset;
 use Filament\Schemas\Components\Flex;
 use Filament\Schemas\Components\Grid;
-use Filament\Schemas\Components\Utilities\Set;
 use Filament\Schemas\Components\Wizard;
 use Filament\Schemas\Schema;
 use Filament\Support\Enums\Width;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Gate;
-use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
 
 final class ActionForm
 {
@@ -42,13 +39,16 @@ final class ActionForm
                         ->label('Equipes')
                         ->schema(self::fieldsTeam())
                         ->visible(
-                            fn (Action|Model|null $record = null, ?string $operation = null) => $operation === 'create' || ($record !== null && Gate::check(
-                                'teams-edit',
-                                [
-                                    $record,
-                                    $operation,
-                                ]
-                            ))
+                            fn(
+                                Action|Model|null $record = null,
+                                ?string $operation = null
+                            ) => $operation === 'create' || ($record !== null && Gate::check(
+                                        'teams-edit',
+                                        [
+                                            $record,
+                                            $operation,
+                                        ]
+                                    ))
                         ),
                     Wizard\Step::make('info')
                         ->label('Informations')
@@ -68,45 +68,16 @@ final class ActionForm
                 ])
                     ->skippable()
                     ->nextAction(
-                        fn (Action $action) => $action
+                        fn(Action $action) => $action
                             ->label('Suivant')
                             ->color('success'),
                     )->previousAction(
-                        fn (Action $action) => $action
+                        fn(Action $action) => $action
                             ->label('Précédent')
                             ->color('secondary'),
                     )
                     ->submitAction(view('components.btn_add')),
             ]);
-    }
-
-    public static function fieldsAttachment(): array
-    {
-        return
-            [
-                Forms\Components\Hidden::make('file_mime'),
-                Forms\Components\Hidden::make('file_size'),
-                Forms\Components\TextInput::make('file_name')
-                    ->label('Nom du média')
-                    ->required()
-                    ->maxLength(150),
-                FileUpload::make('media')
-                    ->label('Pièce jointe')
-                    ->required()
-                    ->maxFiles(1)
-                    ->disk('public')
-                    ->directory('uploads')
-                    // ->acceptedFileTypes(['image/jpeg', 'image/png', 'application/pdf'])
-                    // ->preserveFilenames()
-                    ->downloadable()
-                    ->maxSize(10240)
-                    ->afterStateUpdated(function ($state, Set $set) {
-                        if ($state instanceof TemporaryUploadedFile) {
-                            $set('file_mime', $state->getMimeType());
-                            $set('file_size', $state->getSize());
-                        }
-                    }),
-            ];
     }
 
     public static function fieldsReminder(): array
@@ -139,9 +110,9 @@ final class ActionForm
                     ->label('Intitulé')
                     ->required()
                     ->readOnly(
-                        fn (?string $operation = null) => $operation === 'edit' && ! auth()->user()->hasRole(
-                            RoleEnum::ADMIN->value
-                        )
+                        fn(?string $operation = null) => $operation === 'edit' && !auth()->user()->hasRole(
+                                RoleEnum::ADMIN->value
+                            )
                     )
                     ->maxLength(250),
                 Forms\Components\ToggleButtons::make('to_validate')
@@ -152,7 +123,7 @@ final class ActionForm
                         1 => 'warning',
                     ])
                     ->inline()
-                    ->visible(fn () => auth()->user()->hasRole(RoleEnum::ADMIN->value))
+                    ->visible(fn() => auth()->user()->hasRole(RoleEnum::ADMIN->value))
                     ->grow(false),
             ])
                 ->grow(true),
@@ -161,17 +132,17 @@ final class ActionForm
                 ->relationship(
                     name: 'operationalObjective',
                     titleAttribute: 'name',
-                    modifyQueryUsing: fn (Builder $query) => $query->orderBy('name', 'asc')
+                    modifyQueryUsing: fn(Builder $query) => $query->orderBy('name', 'asc')
                 )
                 ->searchable(['name'])
                 ->disabled(
-                    fn (?string $operation = null) => $operation === 'edit' && ! auth()->user()->hasRole(
-                        RoleEnum::ADMIN->value
-                    )
+                    fn(?string $operation = null) => $operation === 'edit' && !auth()->user()->hasRole(
+                            RoleEnum::ADMIN->value
+                        )
                 )
                 ->preload()
                 ->required()
-                ->visible(fn () => $owner === null),
+                ->visible(fn() => $owner === null),
             Grid::make(3)
                 ->schema([
                     Forms\Components\Select::make('state')
@@ -189,16 +160,16 @@ final class ActionForm
                         ->default(ActionTypeEnum::PST->value)
                         ->options(ActionTypeEnum::class)
                         ->disabled(
-                            fn (?string $operation = null) => $operation === 'edit' && ! auth()->user()->hasRole(
-                                RoleEnum::ADMIN->value
-                            )
+                            fn(?string $operation = null) => $operation === 'edit' && !auth()->user()->hasRole(
+                                    RoleEnum::ADMIN->value
+                                )
                         )
                         ->inline(),
                     Forms\Components\ToggleButtons::make('roadmap')
                         ->label('Feuille de route')
                         ->required(false)
                         ->options(ActionRoadmapEnum::class)
-                        ->visible(fn () => auth()->user()->hasRole(RoleEnum::ADMIN->value))
+                        ->visible(fn() => auth()->user()->hasRole(RoleEnum::ADMIN->value))
                         ->inline(),
                     Forms\Components\ToggleButtons::make('synergy')
                         ->label('Synergie CPAS / VILLLE')
@@ -222,16 +193,16 @@ final class ActionForm
                         ->label('Mandataires')
                         ->relationship(
                             name: 'mandataries',
-                            modifyQueryUsing: fn (Builder $query) => $query
+                            modifyQueryUsing: fn(Builder $query) => $query
                                 ->whereHas(
                                     'roles',
-                                    fn (Builder $query) => $query->where('name', RoleEnum::MANDATAIRE->value)
+                                    fn(Builder $query) => $query->where('name', RoleEnum::MANDATAIRE->value)
                                 )
                                 ->orderBy('last_name')
                                 ->orderBy('first_name'),
                         )
                         ->getOptionLabelFromRecordUsing(
-                            fn (Model $record) => "{$record->first_name} {$record->last_name}"
+                            fn(Model $record) => "{$record->first_name} {$record->last_name}"
                         )
                         ->searchable(['first_name', 'last_name'])
                         ->multiple()
@@ -241,11 +212,11 @@ final class ActionForm
                         ->helperText('Les agents pilotes ont le droit de modifier l\'action.')
                         ->relationship(
                             name: 'users',
-                            modifyQueryUsing: fn (Builder $query) => $query->orderBy('last_name')
+                            modifyQueryUsing: fn(Builder $query) => $query->orderBy('last_name')
                                 ->orderBy('first_name'),
                         )
                         ->getOptionLabelFromRecordUsing(
-                            fn (Model $record) => "{$record->first_name} {$record->last_name}"
+                            fn(Model $record) => "{$record->first_name} {$record->last_name}"
                         )
                         ->searchable(['first_name', 'last_name'])
                         ->multiple(),
@@ -291,7 +262,7 @@ final class ActionForm
                 )
                 ->searchable(['actions.id', 'actions.name'])
                 ->getOptionLabelFromRecordUsing(
-                    fn (Model $record) => "{$record->id}. {$record->name}"
+                    fn(Model $record) => "{$record->id}. {$record->name}"
                 )
                 ->multiple(),
         ];
