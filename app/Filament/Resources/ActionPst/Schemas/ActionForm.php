@@ -251,7 +251,7 @@ final class ActionForm
                         ->multiple(),
                 ])
                 ->columns(3),
-            Fieldset::make('Services porteurs et partenaires')
+            Fieldset::make('Services porteurs et partenaires externes')
                 ->schema([
                     Forms\Components\Select::make('action_service_leader')
                         ->label('Services porteurs')
