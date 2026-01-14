@@ -31,6 +31,7 @@ final class ActionTables
         return $table
             ->defaultSort('name')
             ->defaultPaginationPageOption(50)
+            ->persistFiltersInSession()
             ->recordUrl(fn (Action $record) => ActionPstResource::getUrl('view', [$record]))
             ->columns(self::getColumns())
             ->filters(self::getFilters())
@@ -210,6 +211,7 @@ final class ActionTables
         return $table
             ->defaultSort('name')
             ->defaultPaginationPageOption(50)
+            ->persistFiltersInSession()
             ->recordUrl(fn (Action $record) => ActionPstResource::getUrl('view', [$record]))
             ->columns($columns)
             ->filters(self::getFilters())
