@@ -16,6 +16,11 @@ final class FollowUpsRelationManager extends RelationManager
 
     protected static ?string $label = 'Suivi';
 
+    public function isReadOnly(): bool
+    {
+        return false;
+    }
+
     public function form(Schema $schema): Schema
     {
         return $schema
