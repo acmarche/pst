@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Notifications\Notifiable;
 
 #[UseFactory(PartnerFactory::class)]
-class Partner extends Model
+final class Partner extends Model
 {
     use HasFactory, Notifiable;
 

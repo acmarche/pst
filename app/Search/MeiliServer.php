@@ -7,11 +7,12 @@ use Meilisearch\Contracts\DeleteTasksQuery;
 use Meilisearch\Endpoints\Indexes;
 use Meilisearch\Endpoints\Keys;
 
-class MeiliServer
+final class MeiliServer
 {
     use MeiliTrait;
 
     private string $primaryKey = 'idSearch';
+
     private ?Indexes $index = null;
 
     public function __construct(
@@ -23,7 +24,6 @@ class MeiliServer
     }
 
     /**
-     *
      * @return array<'taskUid','indexUid','status','enqueuedAt'>
      */
     public function createIndex(): array
@@ -38,7 +38,6 @@ class MeiliServer
     /**
      * https://raw.githubusercontent.com/meilisearch/meilisearch/latest/config.toml
      * curl -X PATCH 'http://localhost:7700/experimental-features/' -H 'Content-Type: application/json' -H 'Authorization: Bearer xxxxxx' --data-binary '{"containsFilter": true}'
-     * @return array
      */
     public function settings(): array
     {
@@ -115,14 +114,14 @@ class MeiliServer
         }
         $document = [];
         $document['id'] = $action->getId();
-        $document['idSearch'] = MeiliServer::createKey($action->getId());
+        $document['idSearch'] = self::createKey($action->getId());
         $document['numero'] = $action->numero;
         $document['description'] = Cleaner::cleandata($action->description);
         $document['expediteur'] = Cleaner::cleandata($action->expediteur);
         $document['destinataires'] = $destinatairesId;
         $document['services'] = $servicesId;
-        $document['original'] = $original; //pour affichage
-        $document['copie'] = $copie; //pour affichage
+        $document['original'] = $original; // pour affichage
+        $document['copie'] = $copie; // pour affichage
         $document['recommande'] = $action->recommande;
         $document['date_courrier'] = $action->date_courrier->format('Y-m-d');
         $date = $action->date_courrier;
@@ -155,12 +154,7 @@ class MeiliServer
     {
         $this->init();
         $index = $this->client->index($this->indexName);
-        $index->deleteDocument(MeiliServer::createKey($id));
-    }
-
-    private static function createKey(int $id): string
-    {
-        return 'pst-'.$id;
+        $index->deleteDocument(self::createKey($id));
     }
 
     public function dump(): array
@@ -168,5 +162,10 @@ class MeiliServer
         $this->init();
 
         return $this->client->createDump();
+    }
+
+    private static function createKey(int $id): string
+    {
+        return 'pst-'.$id;
     }
 }

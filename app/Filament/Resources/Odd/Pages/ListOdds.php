@@ -6,7 +6,7 @@ use App\Filament\Resources\Odd\OddResource;
 use Filament\Actions;
 use Filament\Resources\Pages\ListRecords;
 
-class ListOdds extends ListRecords
+final class ListOdds extends ListRecords
 {
     protected static string $resource = OddResource::class;
 

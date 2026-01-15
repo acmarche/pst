@@ -5,7 +5,7 @@ namespace App\Filament\Resources\OperationalObjective\Pages;
 use App\Filament\Resources\OperationalObjective\OperationalObjectiveResource;
 use Filament\Resources\Pages\CreateRecord;
 
-class CreateOperationalObjective extends CreateRecord
+final class CreateOperationalObjective extends CreateRecord
 {
     protected static string $resource = OperationalObjectiveResource::class;
 

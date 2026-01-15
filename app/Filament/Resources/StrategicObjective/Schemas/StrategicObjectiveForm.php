@@ -7,7 +7,7 @@ use App\Repository\UserRepository;
 use Filament\Forms;
 use Filament\Schemas\Schema;
 
-class StrategicObjectiveForm
+final class StrategicObjectiveForm
 {
     public static function configure(Schema $schema): Schema
     {

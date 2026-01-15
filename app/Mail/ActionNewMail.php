@@ -14,7 +14,7 @@ use Illuminate\Queue\SerializesModels;
 /**
  * https://maizzle.com/docs/components // todo
  */
-class ActionNewMail extends Mailable
+final class ActionNewMail extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -42,7 +42,7 @@ class ActionNewMail extends Mailable
     public function content(): Content
     {
         $this->logo = public_path('images/Marche_logo.png');
-        if (!file_exists($this->logo)) {
+        if (! file_exists($this->logo)) {
             $this->logo = null;
         }
 
@@ -55,5 +55,4 @@ class ActionNewMail extends Mailable
             ],
         );
     }
-
 }

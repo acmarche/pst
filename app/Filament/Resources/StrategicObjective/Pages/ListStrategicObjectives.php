@@ -11,16 +11,16 @@ use Filament\Resources\Pages\ListRecords;
 use Illuminate\Contracts\Support\Htmlable;
 use Maatwebsite\Excel\Facades\Excel;
 
-class ListStrategicObjectives extends ListRecords
+final class ListStrategicObjectives extends ListRecords
 {
     protected static string $resource = StrategicObjectiveResource::class;
+
+    protected string $view = 'filament.resources.strategic-objective-list';
 
     public function getTitle(): string|Htmlable
     {
         return $this->getAllTableRecordsCount().' objectifs stratégiques (OS)';
     }
-
-    protected string $view = 'filament.resources.strategic-objective-list';
 
     protected function getHeaderActions(): array
     {

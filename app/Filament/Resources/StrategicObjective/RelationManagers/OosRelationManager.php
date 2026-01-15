@@ -9,7 +9,7 @@ use Filament\Schemas\Schema;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Model;
 
-class OosRelationManager extends RelationManager
+final class OosRelationManager extends RelationManager
 {
     protected static string $relationship = 'oos';
 

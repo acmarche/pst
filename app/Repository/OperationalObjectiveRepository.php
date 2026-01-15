@@ -6,7 +6,7 @@ use App\Enums\DepartmentEnum;
 use App\Models\OperationalObjective;
 use Illuminate\Database\Eloquent\Builder;
 
-class OperationalObjectiveRepository
+final class OperationalObjectiveRepository
 {
     public static function findByDepartment(Builder $query, string $department): Builder
     {

@@ -43,7 +43,42 @@ final class ActionInfolist
             ]);
     }
 
-    public static function informations(): array
+    private static function odd(): Component
+    {
+        return
+            Fieldset::make('odd_tab')
+                ->label('Objectifs de développement durable')
+                ->schema([
+                    TextEntry::make('odds')
+                        ->label(null)
+                        ->formatStateUsing(
+                            fn (Odd $state): string => '<span class="p-2 text-lg">'.$state->name.'</span>'
+                        )
+                        ->html(true)
+                        ->size(TextSize::Large)
+                        ->color('secondary')
+                        ->badge(),
+                ]);
+    }
+
+    private static function budget(): Component
+    {
+        return Fieldset::make('budget')
+            ->label('Financement')
+            ->schema([
+                TextEntry::make('budget_estimate')
+                    ->markdown()
+                    ->label('Budget estimé')
+                    ->prose(),
+                TextEntry::make('financing_mode')
+                    ->markdown()
+                    ->label('Mode de financement')
+                    ->prose(),
+            ]);
+
+    }
+
+    private static function informations(): array
     {
         return [
             TextEntry::make('description')
@@ -80,7 +115,7 @@ final class ActionInfolist
                         ->badge()
                         ->formatStateUsing(fn (Service $state): string => $state->name),
                     TextEntry::make('partners')
-                        ->label('Partenaires')
+                        ->label('Partenaires externes')
                         ->badge()
                         ->formatStateUsing(fn (Partner $state): string => $state->name),
                 ]),
@@ -97,7 +132,7 @@ final class ActionInfolist
         ];
     }
 
-    public static function etat(): array
+    private static function etat(): array
     {
         return [
             TextEntry::make('type')
@@ -119,12 +154,9 @@ final class ActionInfolist
                 ->label('Date d\'échéance')
                 ->visible(fn (?DateTimeImmutable $date) => $date instanceof DateTimeImmutable)
                 ->dateTime(),
-            TextEntry::make('roadmap')
-                ->label('Feuille de route')
-                ->formatStateUsing(fn (ActionRoadmapEnum $state) => $state->getLabel()),
-            TextEntry::make('synergie')
+            TextEntry::make('synergy')
                 ->label('Synergie Cpas / Ville')
-                ->formatStateUsing(fn (ActionSynergyEnum $state) => $state->getLabel()),
+                ->formatStateUsing(fn (?ActionSynergyEnum $state) => $state?->getLabel() ?? '-'),
             TextEntry::make('created_at')
                 ->label('Créé le')
                 ->dateTime(),
@@ -132,41 +164,9 @@ final class ActionInfolist
                 ->label('Créé par'),
             TextEntry::make('department')
                 ->label('Département'),
+            TextEntry::make('roadmap')
+                ->label('Feuille de route')
+                ->formatStateUsing(fn (?ActionRoadmapEnum $state) => $state?->getLabel() ?? '-'),
         ];
-    }
-
-    public static function odd(): Component
-    {
-        return
-            Fieldset::make('odd_tab')
-                ->label('Objectifs de développement durable')
-                ->schema([
-                    TextEntry::make('odds')
-                        ->label(null)
-                        ->formatStateUsing(
-                            fn (Odd $state): string => '<span class="p-2 text-lg">'.$state->name.'</span>'
-                        )
-                        ->html(true)
-                        ->size(TextSize::Large)
-                        ->color('secondary')
-                        ->badge(),
-                ]);
-    }
-
-    public static function budget(): Component
-    {
-        return Fieldset::make('budget')
-            ->label('Financement')
-            ->schema([
-                TextEntry::make('budget_estimate')
-                    ->markdown()
-                    ->label('Budget estimé')
-                    ->prose(),
-                TextEntry::make('financing_mode')
-                    ->markdown()
-                    ->label('Mode de financement')
-                    ->prose(),
-            ]);
-
     }
 }

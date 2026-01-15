@@ -6,12 +6,9 @@ use App\Ldap\User as UserLdap;
 use App\Models\User;
 use LdapRecord\Container;
 
-class LdapAuthService
+final class LdapAuthService
 {
     /**
-     * @param string $username
-     * @param string $password
-     * @return User|null
      * @throws \LdapRecord\Auth\PasswordRequiredException
      * @throws \LdapRecord\Auth\UsernameRequiredException
      * @throws \LdapRecord\ContainerException
@@ -25,7 +22,7 @@ class LdapAuthService
         }
         if ($user) {
             $userLdap = UserLdap::where('sAMAccountName', '=', $user->username)->first();
-            if (!$userLdap) {
+            if (! $userLdap) {
 
                 return null;
             }
@@ -33,14 +30,14 @@ class LdapAuthService
 
             if ($connection->auth()->attempt($userLdap->getDn(), $password)) {
                 return $user;
-            } else {
-                $message = $connection->getLdapConnection()->getDiagnosticMessage();
-
-                if (strpos($message, '532') !== false) {
-                    //"Your password has expired.";
-                    return null;
-                }
             }
+            $message = $connection->getLdapConnection()->getDiagnosticMessage();
+
+            if (mb_strpos($message, '532') !== false) {
+                // "Your password has expired.";
+                return null;
+            }
+
         }
 
         return null;

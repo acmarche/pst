@@ -5,7 +5,7 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use Symfony\Component\Console\Command\Command as SfCommand;
 
-class FixCommand extends Command
+final class FixCommand extends Command
 {
     /**
      * The name and signature of the console command.
@@ -26,5 +26,4 @@ class FixCommand extends Command
 
         return SfCommand::SUCCESS;
     }
-
 }

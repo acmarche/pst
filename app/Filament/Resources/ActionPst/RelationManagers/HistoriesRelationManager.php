@@ -9,14 +9,15 @@ use Filament\Actions\ViewAction;
 use Filament\Forms\Components\Textarea;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Schemas\Schema;
-use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
-class HistoriesRelationManager extends RelationManager
+final class HistoriesRelationManager extends RelationManager
 {
     protected static string $relationship = 'histories';
+
     protected static ?string $title = 'Historique';
+
     protected static ?string $label = 'Historique';
 
     public function isReadOnly(): bool
@@ -39,21 +40,21 @@ class HistoriesRelationManager extends RelationManager
         return $table
             ->recordTitleAttribute('property')
             ->columns([
-                Tables\Columns\TextColumn::make('body')
+                TextColumn::make('body')
                     ->label('Changement')
                     ->html()
                     ->limit(120)
                     ->tooltip(function (TextColumn $column): ?string {
                         $state = $column->getState();
-                        if (strlen($state) <= $column->getCharacterLimit()) {
+                        if (mb_strlen($state) <= $column->getCharacterLimit()) {
                             return null;
                         }
 
                         return $state;
                     }),
-                Tables\Columns\TextColumn::make('user_add')
+                TextColumn::make('user_add')
                     ->label('Ajouté par'),
-                Tables\Columns\TextColumn::make('created_at')
+                TextColumn::make('created_at')
                     ->label('Modifié le')
                     ->dateTime(),
             ])

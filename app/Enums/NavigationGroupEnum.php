@@ -6,9 +6,9 @@ use Filament\Support\Contracts\HasColor;
 use Filament\Support\Contracts\HasIcon;
 use Filament\Support\Contracts\HasLabel;
 
-enum NavigationGroupEnum implements HasColor, HasLabel, HasIcon
+enum NavigationGroupEnum implements HasColor, HasIcon, HasLabel
 {
-    //the order in which the cases are defined controls the order of the groups
+    // the order in which the cases are defined controls the order of the groups
     case Settings;
     case ProjectManagment;
     case Organisation;
@@ -48,4 +48,3 @@ enum NavigationGroupEnum implements HasColor, HasLabel, HasIcon
         };
     }
 }
-

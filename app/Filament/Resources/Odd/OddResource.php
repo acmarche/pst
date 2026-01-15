@@ -5,18 +5,19 @@ namespace App\Filament\Resources\Odd;
 use App\Filament\Resources\Odd\Schemas\OddForm;
 use App\Filament\Resources\Odd\Tables\OddTables;
 use App\Models\Odd;
+use BackedEnum;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Tables\Table;
 use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Database\Eloquent\Model;
 
-//todo try https://github.com/LaravelDaily/FilamentExamples-Projects/tree/main/tables/table-reorderable-position
-class OddResource extends Resource
+// todo try https://github.com/LaravelDaily/FilamentExamples-Projects/tree/main/tables/table-reorderable-position
+final class OddResource extends Resource
 {
     protected static ?string $model = Odd::class;
 
-    protected static string|null|\BackedEnum $navigationIcon = 'tabler-trees';
+    protected static string|null|BackedEnum $navigationIcon = 'tabler-trees';
 
     protected static ?int $navigationSort = 3;
 

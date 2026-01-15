@@ -1,7 +1,5 @@
 <?php
 
-
-
 namespace App\Filament\Pages\Auth;
 
 use App\Auth\LdapAuthService;

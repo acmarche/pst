@@ -6,12 +6,12 @@ use Filament\Support\Contracts\HasColor;
 use Filament\Support\Contracts\HasIcon;
 use Filament\Support\Contracts\HasLabel;
 
-enum ActionStateEnum: string implements HasColor, HasLabel, HasIcon
+enum ActionStateEnum: string implements HasColor, HasIcon, HasLabel
 {
-    case START = "START";
-    case PENDING = "PENDING";
-    case FINISHED = "FINISHED";
-    case SUSPENDED = "SUSPENDED";
+    case START = 'START';
+    case PENDING = 'PENDING';
+    case FINISHED = 'FINISHED';
+    case SUSPENDED = 'SUSPENDED';
 
     public static function toArray(): array
     {
@@ -28,8 +28,8 @@ enum ActionStateEnum: string implements HasColor, HasLabel, HasIcon
         return match ($this) {
             self::START => 'A démarrer',
             self::PENDING => 'En cours',
-            self::SUSPENDED => "Suspendu",
-            self::FINISHED => "Terminé",
+            self::SUSPENDED => 'Suspendu',
+            self::FINISHED => 'Terminé',
         };
     }
 
@@ -39,7 +39,7 @@ enum ActionStateEnum: string implements HasColor, HasLabel, HasIcon
             self::START => 'secondary',
             self::FINISHED => 'primary',
             self::PENDING => 'success',
-            self::SUSPENDED => "danger",
+            self::SUSPENDED => 'danger',
         };
     }
 
@@ -47,9 +47,9 @@ enum ActionStateEnum: string implements HasColor, HasLabel, HasIcon
     {
         return match ($this) {
             self::START => 'heroicon-m-check',
-            self::FINISHED => "tabler-bolt-filled",
+            self::FINISHED => 'tabler-bolt-filled',
             self::PENDING => 'tabler-line-dashed',
-            self::SUSPENDED => "tabler-bolt-off",
+            self::SUSPENDED => 'tabler-bolt-off',
         };
     }
 }

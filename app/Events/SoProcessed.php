@@ -9,22 +9,19 @@ use Illuminate\Contracts\Events\ShouldDispatchAfterCommit;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class SoProcessed implements ShouldDispatchAfterCommit
+final class SoProcessed implements ShouldDispatchAfterCommit
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     /**
      * Create a new event instance.
      */
-    public function __construct(private readonly StrategicObjective $strategicObjective)
-    {
-    }
+    public function __construct(private readonly StrategicObjective $strategicObjective) {}
 
     public function operationalObjective(): StrategicObjective
     {
         return $this->strategicObjective;
     }
-
 
     /**
      * Get the channels the event should broadcast on.
@@ -37,5 +34,4 @@ class SoProcessed implements ShouldDispatchAfterCommit
             new PrivateChannel('channel-name'),
         ];
     }
-
 }

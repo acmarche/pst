@@ -7,7 +7,7 @@ use Filament\Actions;
 use Filament\Resources\Pages\ViewRecord;
 use Filament\Schemas\Schema;
 
-class ViewStrategicObjective extends ViewRecord
+final class ViewStrategicObjective extends ViewRecord
 {
     protected static string $resource = StrategicObjectiveResource::class;
 
@@ -16,22 +16,12 @@ class ViewStrategicObjective extends ViewRecord
         return $this->record->name ?? 'Empty name';
     }
 
-    protected function getHeaderActions(): array
-    {
-        return [
-            Actions\EditAction::make()
-                ->icon('tabler-edit'),
-            Actions\DeleteAction::make()
-                ->icon('tabler-trash'),
-        ];
-    }
-
     public function getBreadcrumbs(): array
     {
         return [
             StrategicObjectiveResource::getUrl('index') => 'Objectifs Stratégiques',
             'OS',
-            //$this->getBreadcrumb(),
+            // $this->getBreadcrumb(),
         ];
     }
 
@@ -44,4 +34,13 @@ class ViewStrategicObjective extends ViewRecord
             ->schema([]);
     }
 
+    protected function getHeaderActions(): array
+    {
+        return [
+            Actions\EditAction::make()
+                ->icon('tabler-edit'),
+            Actions\DeleteAction::make()
+                ->icon('tabler-trash'),
+        ];
+    }
 }

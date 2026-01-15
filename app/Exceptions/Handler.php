@@ -8,7 +8,7 @@ use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Support\Facades\Mail;
 use Throwable;
 
-class Handler extends ExceptionHandler
+final class Handler extends ExceptionHandler
 {
     public function register(): void
     {
@@ -26,10 +26,10 @@ class Handler extends ExceptionHandler
         $email = config('MAIL_IT_ADDRESS', null);
 
         if ($email) {
-            $body = "An error occurred: \n" . $exception->getMessage() . "\n" . $exception->getTraceAsString();
+            $body = "An error occurred: \n".$exception->getMessage()."\n".$exception->getTraceAsString();
             try {
                 Mail::to($email)->send(new ExceptionMail($body));
-            } catch (\Throwable $th) {
+            } catch (Throwable $th) {
                 //
             }
         }

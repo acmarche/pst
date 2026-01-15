@@ -14,11 +14,12 @@ use Illuminate\Queue\SerializesModels;
 /**
  * https://maizzle.com/docs/components // todo
  */
-class ActionReminderMail extends Mailable
+final class ActionReminderMail extends Mailable
 {
     use Queueable, SerializesModels;
 
     public ?string $logo = null;
+
     public string $content;
 
     public function __construct(public readonly Action $action, array $data)
@@ -44,7 +45,7 @@ class ActionReminderMail extends Mailable
     public function content(): Content
     {
         $this->logo = public_path('images/Marche_logo.png');
-        if (!file_exists($this->logo)) {
+        if (! file_exists($this->logo)) {
             $this->logo = null;
         }
 
@@ -58,5 +59,4 @@ class ActionReminderMail extends Mailable
             ],
         );
     }
-
 }

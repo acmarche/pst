@@ -4,8 +4,8 @@ namespace App\Enums;
 
 enum ActionSynergyEnum: string
 {
-    case YES = "YES";
-    case NO = "NO";
+    case YES = 'YES';
+    case NO = 'NO';
 
     public static function toArray(): array
     {
@@ -22,6 +22,7 @@ enum ActionSynergyEnum: string
         return match ($this) {
             self::YES => 'Oui',
             self::NO => 'Non',
+            default => 'Non déterminé'
         };
     }
 }

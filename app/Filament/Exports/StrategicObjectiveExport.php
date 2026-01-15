@@ -15,11 +15,13 @@ use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 use Maatwebsite\Excel\Concerns\WithStyles;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
-class StrategicObjectiveExport implements FromCollection, ShouldAutoSize, WithStyles
+final class StrategicObjectiveExport implements FromCollection, ShouldAutoSize, WithStyles
 {
-    protected static ?string $model = StrategicObjective::class;
-    protected array $styles = [];
-    protected array $titles = [
+    private static ?string $model = StrategicObjective::class;
+
+    private array $styles = [];
+
+    private array $titles = [
         'OS',
         'OO',
         'Actions',
@@ -35,9 +37,19 @@ class StrategicObjectiveExport implements FromCollection, ShouldAutoSize, WithSt
         'Synergie Ville-Cpas',
     ];
 
-    public function __construct(private readonly string $department)
-    {
+    public function __construct(private readonly string $department) {}
 
+    public static function getCompletedNotificationBody(Export $export): string
+    {
+        $body = 'Your strategic objective export has completed and '.number_format($export->successful_rows).' '.str(
+            'row'
+        )->plural($export->successful_rows).' exported.';
+
+        if ($failedRowsCount = $export->getFailedRowsCount()) {
+            $body .= ' '.number_format($failedRowsCount).' '.str('row')->plural($failedRowsCount).' failed to export.';
+        }
+
+        return $body;
     }
 
     public function collection(): Collection
@@ -51,7 +63,7 @@ class StrategicObjectiveExport implements FromCollection, ShouldAutoSize, WithSt
         foreach ($strategicObjectives as $strategic) {
             // Strategic Objective row
             $data->push([
-                "O.S ".$strategic->position,
+                'O.S '.$strategic->position,
                 null,
                 $strategic->name,
                 null,
@@ -72,7 +84,7 @@ class StrategicObjectiveExport implements FromCollection, ShouldAutoSize, WithSt
                 // Operational Objective row
                 $data->push([
                     null,
-                    "O.O ".$strategic->position.'.'.$operational->position,
+                    'O.O '.$strategic->position.'.'.$operational->position,
                     $operational->name,
                     null,
                     null,
@@ -123,16 +135,16 @@ class StrategicObjectiveExport implements FromCollection, ShouldAutoSize, WithSt
                     // Action row
                     $data->push([
                         null,
-                        "Action ".$action->id,
+                        'Action '.$action->id,
                         $action->name,
                         $type,
-                        join(',', $mandatairesNames->toArray()),
-                        join(',', $agentsNames->toArray()),
-                        join(',', $servicesPorteursNames->toArray()),
-                        join(',', $servicesPartenairesNames->toArray()),
-                        join(',', $partenairesNames->toArray()),
+                        implode(',', $mandatairesNames->toArray()),
+                        implode(',', $agentsNames->toArray()),
+                        implode(',', $servicesPorteursNames->toArray()),
+                        implode(',', $servicesPartenairesNames->toArray()),
+                        implode(',', $partenairesNames->toArray()),
                         $etatavancement,
-                        join(',', $oddsNames->toArray()),
+                        implode(',', $oddsNames->toArray()),
                         $roadmap,
                         $synergie,
                     ]);
@@ -163,18 +175,5 @@ class StrategicObjectiveExport implements FromCollection, ShouldAutoSize, WithSt
             // Styling an entire column.
             // 'C'  => ['font' => ['size' => 16]],
         ];
-    }
-
-    public static function getCompletedNotificationBody(Export $export): string
-    {
-        $body = 'Your strategic objective export has completed and '.number_format($export->successful_rows).' '.str(
-                'row'
-            )->plural($export->successful_rows).' exported.';
-
-        if ($failedRowsCount = $export->getFailedRowsCount()) {
-            $body .= ' '.number_format($failedRowsCount).' '.str('row')->plural($failedRowsCount).' failed to export.';
-        }
-
-        return $body;
     }
 }

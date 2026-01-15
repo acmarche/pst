@@ -7,9 +7,9 @@ use Filament\Support\Contracts\HasLabel;
 
 enum DepartmentEnum: string implements HasColor, HasLabel
 {
-    case CPAS = "CPAS";
-    case VILLE = "VILLE";
-    case COMMON = "COMMUN";
+    case CPAS = 'CPAS';
+    case VILLE = 'VILLE';
+    case COMMON = 'COMMUN';
 
     public static function toArray(): array
     {

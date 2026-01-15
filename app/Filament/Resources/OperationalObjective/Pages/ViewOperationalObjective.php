@@ -9,7 +9,7 @@ use Filament\Actions;
 use Filament\Resources\Pages\ViewRecord;
 use Filament\Schemas\Schema;
 
-class ViewOperationalObjective extends ViewRecord
+final class ViewOperationalObjective extends ViewRecord
 {
     protected static string $resource = OperationalObjectiveResource::class;
 
@@ -30,6 +30,15 @@ class ViewOperationalObjective extends ViewRecord
         ];
     }
 
+    /**
+     * no form in view
+     */
+    public function form(Schema $schema): Schema
+    {
+        return $schema
+            ->schema([]);
+    }
+
     protected function getHeaderActions(): array
     {
         return [
@@ -38,15 +47,6 @@ class ViewOperationalObjective extends ViewRecord
             Actions\DeleteAction::make()
                 ->icon('tabler-trash'),
         ];
-    }
-
-    /**
-     * no form in view
-     */
-    public function form(Schema $schema): Schema
-    {
-        return $schema
-            ->schema([]);
     }
 
     protected function getAllRelationManagers(): array

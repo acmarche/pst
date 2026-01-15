@@ -6,7 +6,7 @@ use Filament\Forms;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 
-class OddForm
+final class OddForm
 {
     public static function configure(Schema $schema): Schema
     {

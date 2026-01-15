@@ -43,6 +43,7 @@ final class ViewService extends ViewRecord
                 ->icon('tabler-trash'),
         ];
     }
+
     protected function getAllRelationManagers(): array
     {
         $relations = $this->getResource()::getRelations();

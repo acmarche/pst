@@ -12,7 +12,7 @@ use Illuminate\Queue\SerializesModels;
 /**
  * https://maizzle.com/docs/components // todo
  */
-class ContactMessage extends Mailable
+final class ContactMessage extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -37,7 +37,7 @@ class ContactMessage extends Mailable
     public function content(): Content
     {
         $this->logo = public_path('images/Marche_logo.png');
-        if (!file_exists($this->logo)) {
+        if (! file_exists($this->logo)) {
             $this->logo = null;
         }
 
@@ -50,5 +50,4 @@ class ContactMessage extends Mailable
             ],
         );
     }
-
 }

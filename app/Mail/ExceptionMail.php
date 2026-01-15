@@ -8,14 +8,11 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class ExceptionMail extends Mailable
+final class ExceptionMail extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public function __construct(private readonly string $htmlString)
-    {
-
-    }
+    public function __construct(private readonly string $htmlString) {}
 
     public function envelope(): Envelope
     {
@@ -30,5 +27,4 @@ class ExceptionMail extends Mailable
             htmlString: $this->htmlString
         );
     }
-
 }

@@ -2,22 +2,36 @@
 
 namespace App\Console\Commands;
 
-class ImportDto
+final class ImportDto
 {
     public ?string $osNum = null;
+
     public ?string $ooNum = null;
+
     public ?string $actionNum = null;
+
     public ?string $name = null;
+
     public ?string $type = null;
+
     public ?string $mandataire = null;
+
     public ?string $agentPilote = null;
+
     public ?string $servicePorteur = null;
+
     public ?string $servicePartenaire = null;
+
     public ?string $partners = null;
+
     public ?string $etat = null;
+
     public ?string $odd = null;
+
     public ?string $feuilleDeRoute = null;
+
     public ?string $synergie = null;
+
     public ?string $notes = null;
 
     public function __construct(

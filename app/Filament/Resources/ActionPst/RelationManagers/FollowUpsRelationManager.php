@@ -8,11 +8,18 @@ use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Schemas\Schema;
 use Filament\Tables\Table;
 
-class FollowUpsRelationManager extends RelationManager
+final class FollowUpsRelationManager extends RelationManager
 {
     protected static string $relationship = 'followups';
+
     protected static ?string $title = 'Suivi';
+
     protected static ?string $label = 'Suivi';
+
+    public function isReadOnly(): bool
+    {
+        return false;
+    }
 
     public function form(Schema $schema): Schema
     {
@@ -27,6 +34,6 @@ class FollowUpsRelationManager extends RelationManager
 
     public function table(Table $table): Table
     {
-        return FollowupTables::configure($table);
+        return FollowUpTables::configure($table);
     }
 }

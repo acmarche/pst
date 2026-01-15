@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Repository\UserRepository;
 use Illuminate\Http\RedirectResponse;
 
-class SelectDepartmentController extends Controller
+final class SelectDepartmentController extends Controller
 {
     public function select(string $department): RedirectResponse
     {

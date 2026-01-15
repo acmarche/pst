@@ -6,7 +6,7 @@ use App\Enums\RoleEnum;
 use App\Models\Partner;
 use App\Models\User;
 
-class PartnerPolicy
+final class PartnerPolicy
 {
     /**
      * Determine whether the user can view any models.

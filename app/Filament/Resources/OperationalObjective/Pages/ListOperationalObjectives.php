@@ -6,7 +6,7 @@ use App\Filament\Resources\OperationalObjective\OperationalObjectiveResource;
 use Filament\Actions;
 use Filament\Resources\Pages\ListRecords;
 
-class ListOperationalObjectives extends ListRecords
+final class ListOperationalObjectives extends ListRecords
 {
     protected static string $resource = OperationalObjectiveResource::class;
 
@@ -14,8 +14,8 @@ class ListOperationalObjectives extends ListRecords
     {
         return [
             Actions\CreateAction::make()
-            ->label('Ajouter un objectif opérationnel')
-            ->icon('tabler-plus'),
+                ->label('Ajouter un objectif opérationnel')
+                ->icon('tabler-plus'),
         ];
     }
 }

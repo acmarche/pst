@@ -6,7 +6,7 @@ use App\Filament\Resources\Odd\OddResource;
 use Filament\Actions;
 use Filament\Resources\Pages\EditRecord;
 
-class EditOdd extends EditRecord
+final class EditOdd extends EditRecord
 {
     protected static string $resource = OddResource::class;
 

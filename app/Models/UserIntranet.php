@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 final class UserIntranet extends Model
 {
     protected $connection = 'intranet';
+
     protected $table = 'users';
 
     protected $fillable = [

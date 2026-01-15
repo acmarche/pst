@@ -8,6 +8,7 @@ use App\Filament\Resources\ActionPst\RelationManagers\MediasRelationManager;
 use App\Filament\Resources\ActionPst\Schemas\ActionForm;
 use App\Filament\Resources\ActionPst\Tables\ActionTables;
 use App\Models\Action;
+use BackedEnum;
 use Filament\Resources\RelationManagers\RelationGroup;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
@@ -15,15 +16,18 @@ use Filament\Tables\Table;
 use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Database\Eloquent\Model;
 
-//https://www.youtube.com/watch?v=85uRvsUvwJQ&list=PLqDySLfPKRn6fgrrdg4_SmsSxWzVlUQJo&index=23
-//https://filamentphp.com/content/leandrocfe-navigating-filament-pages-with-previous-and-next-buttons
-class ActionPstResource extends Resource
+// https://www.youtube.com/watch?v=85uRvsUvwJQ&list=PLqDySLfPKRn6fgrrdg4_SmsSxWzVlUQJo&index=23
+// https://filamentphp.com/content/leandrocfe-navigating-filament-pages-with-previous-and-next-buttons
+final class ActionPstResource extends Resource
 {
     protected static ?string $model = Action::class;
 
-    protected static string|null|\BackedEnum $navigationIcon = 'tabler-bolt';
+    protected static string|null|BackedEnum $navigationIcon = 'tabler-bolt';
+
     protected static ?string $recordTitleAttribute = 'name';
+
     protected static ?int $navigationSort = 4;
+
     protected static ?string $navigationLabel = 'Liste des actions';
 
     public static function shouldRegisterNavigation(): bool
@@ -71,6 +75,6 @@ class ActionPstResource extends Resource
 
     public static function getGlobalSearchResultUrl(Model $record): string
     {
-        return ActionPstResource::getUrl('view', ['record' => $record]);
+        return self::getUrl('view', ['record' => $record]);
     }
 }

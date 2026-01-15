@@ -31,6 +31,7 @@ final class ActionTables
         return $table
             ->defaultSort('name')
             ->defaultPaginationPageOption(50)
+            ->persistFiltersInSession()
             ->recordUrl(fn (Action $record) => ActionPstResource::getUrl('view', [$record]))
             ->columns(self::getColumns())
             ->filters(self::getFilters())
@@ -210,6 +211,7 @@ final class ActionTables
         return $table
             ->defaultSort('name')
             ->defaultPaginationPageOption(50)
+            ->persistFiltersInSession()
             ->recordUrl(fn (Action $record) => ActionPstResource::getUrl('view', [$record]))
             ->columns($columns)
             ->filters(self::getFilters())
@@ -241,8 +243,8 @@ final class ActionTables
             SelectFilter::make('isInternal')
                 ->label('Volet interne')
                 ->options([
-                    true => 'Oui',
-                    false => 'Non',
+                    '1' => 'Oui',
+                    '0' => 'Non',
                 ])
                 ->query(function (Builder $query, array $data): Builder {
                     return $query->when(
