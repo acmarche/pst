@@ -38,6 +38,14 @@ final class Partner extends Model
     }
 
     /**
+     * Get the name of the index associated with the model.
+     */
+    public function searchableAs(): string
+    {
+        return 'pst_partners_index';
+    }
+
+    /**
      * @return BelongsToMany<Action>
      */
     public function actions(): BelongsToMany

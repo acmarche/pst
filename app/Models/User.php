@@ -87,6 +87,14 @@ final class User extends Authenticatable implements FilamentUser, HasName
         ];
     }
 
+    /**
+     * Get the name of the index associated with the model.
+     */
+    public function searchableAs(): string
+    {
+        return 'pst_users_index';
+    }
+
     public function canAccessPanel(Panel $panel): bool
     {
         if ($panel->getId() === 'admin') {

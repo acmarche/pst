@@ -35,6 +35,14 @@ final class Service extends Model
         ];
     }
 
+    /**
+     * Get the name of the index associated with the model.
+     */
+    public function searchableAs(): string
+    {
+        return 'pst_services_index';
+    }
+
     public function users(): BelongsToMany
     {
         return $this->belongsToMany(User::class);

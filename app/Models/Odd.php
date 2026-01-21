@@ -40,6 +40,14 @@ final class Odd extends Model
     }
 
     /**
+     * Get the name of the index associated with the model.
+     */
+    public function searchableAs(): string
+    {
+        return 'pst_odds_index';
+    }
+
+    /**
      * @return BelongsToMany<Action>
      */
     public function actions(): BelongsToMany

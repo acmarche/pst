@@ -23,6 +23,28 @@ final class OperationalObjective extends Model
         'department',
     ];
 
+    /**
+     * Get the indexable data array for the model.
+     *
+     * @return array<string, mixed>
+     */
+    public function toSearchableArray(): array
+    {
+        return [
+            'id' => $this->id,
+            'name' => $this->name,
+            'department' => $this->department,
+        ];
+    }
+
+    /**
+     * Get the name of the index associated with the model.
+     */
+    public function searchableAs(): string
+    {
+        return 'pst_operational_objectives_index';
+    }
+
     public function isInternal(): bool
     {
         return $this->strategicObjective()->first()->isInternal();

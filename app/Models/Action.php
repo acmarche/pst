@@ -94,6 +94,14 @@ final class Action extends Model
         ];
     }
 
+    /**
+     * Get the name of the index associated with the model.
+     */
+    public function searchableAs(): string
+    {
+        return 'pst_actions_index';
+    }
+
     public function isInternal(): bool
     {
         return $this->operationalObjective()->first()->strategicObjective()->first()->isInternal();

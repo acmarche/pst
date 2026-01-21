@@ -37,6 +37,14 @@ final class StrategicObjective extends Model
         ];
     }
 
+    /**
+     * Get the name of the index associated with the model.
+     */
+    public function searchableAs(): string
+    {
+        return 'pst_strategic_objectives_index';
+    }
+
     public function isInternal(): bool
     {
         return $this->is_internal;
