@@ -51,7 +51,6 @@ final class OddResource extends Resource
         ];
     }
 
-
     public static function getGlobalSearchResults(string $search): Collection
     {
         return self::getGlobalSearchEloquentQuery()
