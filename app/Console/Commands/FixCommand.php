@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Models\Action;
 use Illuminate\Console\Command;
 use Symfony\Component\Console\Command\Command as SfCommand;
 
@@ -23,6 +24,11 @@ final class FixCommand extends Command
 
     public function handle(): int
     {
+
+        $orders = Action::search('salles')->get();
+        foreach ($orders as $order) {
+            $this->info($order->name);
+        }
 
         return SfCommand::SUCCESS;
     }

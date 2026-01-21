@@ -9,6 +9,7 @@ use App\Filament\Resources\ActionPst\Schemas\ActionForm;
 use App\Filament\Resources\ActionPst\Tables\ActionTables;
 use App\Models\Action;
 use BackedEnum;
+use Filament\GlobalSearch\GlobalSearchResult;
 use Filament\Resources\RelationManagers\RelationGroup;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
@@ -73,16 +74,6 @@ final class ActionPstResource extends Resource
         ];
     }
 
-    public static function getGlobalSearchResultTitle(Model $record): string|Htmlable
-    {
-        return $record->name;
-    }
-
-    public static function getGlobalSearchResultUrl(Model $record): string
-    {
-        return self::getUrl('view', ['record' => $record]);
-    }
-
     /**
      * Shows department and objective in results
      *
@@ -102,13 +93,26 @@ final class ActionPstResource extends Resource
         return parent::getGlobalSearchEloquentQuery()->with(['operationalObjective']);
     }
 
-    // Uses Scout to search instead of default Eloquent
     public static function getGlobalSearchResults(string $search): Collection
     {
-        $query = self::getGlobalSearchEloquentQuery()
+        return self::getGlobalSearchEloquentQuery()
             ->whereKey(Action::search($search)->keys())
-            ->limit(self::$globalSearchResultsLimit);
+            ->limit(self::$globalSearchResultsLimit)
+            ->get()
+            ->map(function (Model $record): ?GlobalSearchResult {
+                $url = self::getGlobalSearchResultUrl($record);
 
-        return self::transformGlobalSearchResults($query->get());
+                if (blank($url)) {
+                    return null;
+                }
+
+                return new GlobalSearchResult(
+                    title: self::getGlobalSearchResultTitle($record),
+                    url: $url,
+                    details: self::getGlobalSearchResultDetails($record),
+                    actions: self::getGlobalSearchResultActions($record),
+                );
+            })
+            ->filter();
     }
 }
