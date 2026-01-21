@@ -78,6 +78,22 @@ final class Action extends Model
         $query->where('to_validate', true);
     }
 
+    /**
+     * Get the indexable data array for the model.
+     *
+     * @return array<string, mixed>
+     */
+    public function toSearchableArray(): array
+    {
+        return [
+            'id' => $this->id,
+            'name' => $this->name,
+            'description' => $this->description,
+            'department' => $this->department,
+            'note' => $this->note,
+        ];
+    }
+
     public function isInternal(): bool
     {
         return $this->operationalObjective()->first()->strategicObjective()->first()->isInternal();

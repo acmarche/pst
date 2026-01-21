@@ -14,7 +14,9 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Tables\Table;
 use Illuminate\Contracts\Support\Htmlable;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Collection;
 
 // https://www.youtube.com/watch?v=85uRvsUvwJQ&list=PLqDySLfPKRn6fgrrdg4_SmsSxWzVlUQJo&index=23
 // https://filamentphp.com/content/leandrocfe-navigating-filament-pages-with-previous-and-next-buttons
@@ -25,6 +27,9 @@ final class ActionPstResource extends Resource
     protected static string|null|BackedEnum $navigationIcon = 'tabler-bolt';
 
     protected static ?string $recordTitleAttribute = 'name';
+
+    // Scout handles term splitting
+    protected static ?bool $shouldSplitGlobalSearchTerms = false;
 
     protected static ?int $navigationSort = 4;
 
@@ -76,5 +81,34 @@ final class ActionPstResource extends Resource
     public static function getGlobalSearchResultUrl(Model $record): string
     {
         return self::getUrl('view', ['record' => $record]);
+    }
+
+    /**
+     * Shows department and objective in results
+     *
+     * @return array<string, string|null>
+     */
+    public static function getGlobalSearchResultDetails(Model $record): array
+    {
+        return [
+            'Département' => $record->department,
+            'Objectif opérationnel' => $record->operationalObjective?->name,
+        ];
+    }
+
+    // Eager loads the operationalObjective relationship
+    public static function getGlobalSearchEloquentQuery(): Builder
+    {
+        return parent::getGlobalSearchEloquentQuery()->with(['operationalObjective']);
+    }
+
+    // Uses Scout to search instead of default Eloquent
+    public static function getGlobalSearchResults(string $search): Collection
+    {
+        $query = self::getGlobalSearchEloquentQuery()
+            ->whereKey(Action::search($search)->keys())
+            ->limit(self::$globalSearchResultsLimit);
+
+        return self::transformGlobalSearchResults($query->get());
     }
 }
