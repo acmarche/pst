@@ -5,9 +5,11 @@ namespace App\Filament\Resources\OperationalObjective;
 use App\Filament\Resources\OperationalObjective\Tables\OperationalObjectiveTables;
 use App\Models\OperationalObjective;
 use BackedEnum;
+use Filament\GlobalSearch\GlobalSearchResult;
 use Filament\Resources\Resource;
 use Filament\Tables\Table;
 use Illuminate\Contracts\Support\Htmlable;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 
 final class OperationalObjectiveResource extends Resource
@@ -40,8 +42,26 @@ final class OperationalObjectiveResource extends Resource
         ];
     }
 
-    public static function getGlobalSearchResultTitle(Model $record): string|Htmlable
+    public static function getGlobalSearchResults(string $search): Collection
     {
-        return $record->name;
+        return self::getGlobalSearchEloquentQuery()
+            ->whereKey(OperationalObjective::search($search)->keys())
+            ->limit(self::$globalSearchResultsLimit)
+            ->get()
+            ->map(function (Model $record): ?GlobalSearchResult {
+                $url = self::getGlobalSearchResultUrl($record);
+
+                if (blank($url)) {
+                    return null;
+                }
+
+                return new GlobalSearchResult(
+                    title: self::getGlobalSearchResultTitle($record),
+                    url: $url,
+                    details: self::getGlobalSearchResultDetails($record),
+                    actions: self::getGlobalSearchResultActions($record),
+                );
+            })
+            ->filter();
     }
 }

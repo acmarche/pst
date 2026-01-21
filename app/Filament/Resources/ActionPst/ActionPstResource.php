@@ -14,7 +14,6 @@ use Filament\Resources\RelationManagers\RelationGroup;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Tables\Table;
-use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
@@ -27,6 +26,7 @@ final class ActionPstResource extends Resource
 
     protected static string|null|BackedEnum $navigationIcon = 'tabler-bolt';
 
+    // required for global search
     protected static ?string $recordTitleAttribute = 'name';
 
     // Scout handles term splitting

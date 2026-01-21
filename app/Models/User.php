@@ -15,11 +15,12 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Lab404\Impersonate\Models\Impersonate;
+use Laravel\Scout\Searchable;
 
 #[UseFactory(UserFactory::class)]
 final class User extends Authenticatable implements FilamentUser, HasName
 {
-    use HasFactory, Impersonate, Notifiable;
+    use HasFactory, Impersonate, Notifiable,Searchable;
 
     protected $fillable = [
         'name',
@@ -71,6 +72,21 @@ final class User extends Authenticatable implements FilamentUser, HasName
         ];
     }
 
+    /**
+     * Get the indexable data array for the model.
+     *
+     * @return array<string, mixed>
+     */
+    public function toSearchableArray(): array
+    {
+        return [
+            'id' => $this->id,
+            'first_name' => $this->first_name,
+            'last_name' => $this->last_name,
+            'username' => $this->username,
+        ];
+    }
+
     public function canAccessPanel(Panel $panel): bool
     {
         if ($panel->getId() === 'admin') {
@@ -80,7 +96,7 @@ final class User extends Authenticatable implements FilamentUser, HasName
         return false;
     }
 
-    public function name(): string
+    public function fullName(): string
     {
         return $this->last_name.' '.$this->first_name;
     }
@@ -92,7 +108,7 @@ final class User extends Authenticatable implements FilamentUser, HasName
 
     public function getFilamentName(): string
     {
-        return $this->name();
+        return $this->fullName();
     }
 
     /**

@@ -6,10 +6,11 @@ use App\Filament\Resources\Odd\Schemas\OddForm;
 use App\Filament\Resources\Odd\Tables\OddTables;
 use App\Models\Odd;
 use BackedEnum;
+use Filament\GlobalSearch\GlobalSearchResult;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Tables\Table;
-use Illuminate\Contracts\Support\Htmlable;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 
 // todo try https://github.com/LaravelDaily/FilamentExamples-Projects/tree/main/tables/table-reorderable-position
@@ -50,8 +51,27 @@ final class OddResource extends Resource
         ];
     }
 
-    public static function getGlobalSearchResultTitle(Model $record): string|Htmlable
+
+    public static function getGlobalSearchResults(string $search): Collection
     {
-        return $record->name;
+        return self::getGlobalSearchEloquentQuery()
+            ->whereKey(Odd::search($search)->keys())
+            ->limit(self::$globalSearchResultsLimit)
+            ->get()
+            ->map(function (Model $record): ?GlobalSearchResult {
+                $url = self::getGlobalSearchResultUrl($record);
+
+                if (blank($url)) {
+                    return null;
+                }
+
+                return new GlobalSearchResult(
+                    title: self::getGlobalSearchResultTitle($record),
+                    url: $url,
+                    details: self::getGlobalSearchResultDetails($record),
+                    actions: self::getGlobalSearchResultActions($record),
+                );
+            })
+            ->filter();
     }
 }

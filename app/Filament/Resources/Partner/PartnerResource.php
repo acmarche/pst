@@ -7,21 +7,24 @@ use App\Filament\Resources\Partner\Schemas\PartnerForm;
 use App\Filament\Resources\Partner\Tables\PartnerTables;
 use App\Models\Partner;
 use BackedEnum;
+use Filament\GlobalSearch\GlobalSearchResult;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Model;
 use UnitEnum;
 
 final class PartnerResource extends Resource
 {
     protected static ?string $model = Partner::class;
 
-    protected static ?string $recordTitleAttribute = 'name';
-
     protected static string|null|BackedEnum $navigationIcon = Heroicon::OutlinedUserGroup;
 
     protected static string|UnitEnum|null $navigationGroup = NavigationGroupEnum::Settings;
+
+    protected static ?string $recordTitleAttribute = 'name';
 
     public static function getNavigationLabel(): string
     {
@@ -58,5 +61,28 @@ final class PartnerResource extends Resource
             'view' => Pages\ViewPartner::route('/{record}'),
             'edit' => Pages\EditPartner::route('/{record}/edit'),
         ];
+    }
+
+    public static function getGlobalSearchResults(string $search): Collection
+    {
+        return self::getGlobalSearchEloquentQuery()
+            ->whereKey(Partner::search($search)->keys())
+            ->limit(self::$globalSearchResultsLimit)
+            ->get()
+            ->map(function (Model $record): ?GlobalSearchResult {
+                $url = self::getGlobalSearchResultUrl($record);
+
+                if (blank($url)) {
+                    return null;
+                }
+
+                return new GlobalSearchResult(
+                    title: self::getGlobalSearchResultTitle($record),
+                    url: $url,
+                    details: self::getGlobalSearchResultDetails($record),
+                    actions: self::getGlobalSearchResultActions($record),
+                );
+            })
+            ->filter();
     }
 }
