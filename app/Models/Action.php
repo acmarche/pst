@@ -21,12 +21,14 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Auth;
+use Laravel\Scout\Searchable;
 
 #[ObservedBy([ActionObserver::class])]
 #[UseFactory(ActionFactory::class)]
 final class Action extends Model
 {
     use HasFactory, Notifiable;
+    use Searchable;
 
     protected $fillable = [
         'name',
