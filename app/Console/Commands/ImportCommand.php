@@ -18,6 +18,7 @@ use App\Models\Service;
 use App\Models\StrategicObjective;
 use App\Models\User;
 use Carbon\Carbon;
+use DateTimeInterface;
 use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Support\Str;
@@ -300,7 +301,7 @@ final class ImportCommand extends Command
         ActionTypeEnum $actionTypeEnum,
         int $actionNum,
         int $evolutionPercentage,
-        \DateTimeInterface $dueDate,
+        DateTimeInterface $dueDate,
         string $notes,
         ActionRoadmapEnum $actionRoadmapEnum,
         array $oddObjects,
@@ -379,9 +380,10 @@ final class ImportCommand extends Command
                 continue;
             }
             $partner = Partner::where('name', $name)->orWhere('initials', $name)->first();
-            if ($partner) {
-                $data['partners'][] = $partner;
+            if (! $partner) {
+                $partner = Partner::create(['name' => $name]);
             }
+            $data['partners'][] = $partner;
         }
 
         return $data;
