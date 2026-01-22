@@ -308,6 +308,7 @@ final class ActionTables
                 ->label('Id'),
             TextColumn::make('position')
                 ->searchable()
+                ->toggleable(isToggledHiddenByDefault: true)
                 ->sortable()
                 ->numeric()
                 ->label('Numéro'),
