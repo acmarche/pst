@@ -192,7 +192,7 @@ final class ImportCommand extends Command
 
                 continue;
             }
-            $this->info('---- Action '.$actionName);
+            $this->info('---- Action '.$actionNum.') '.$actionName);
             $ooEmpty = $row[2];
             $badNa = $row[3];
             $row[4] = str_replace('PAIX, JUSTICE', 'PAIX JUSTICE', $row[4]);
@@ -323,6 +323,7 @@ final class ImportCommand extends Command
                 'position' => $actionNum,
                 'roadmap' => $actionRoadmapEnum->value,
                 'operational_objective_id' => $this->lastOo,
+                'to_validate' => false,
             ]);
         } catch (Exception $exception) {
             $this->error($exception->getMessage());
