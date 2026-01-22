@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Filament\Resources\Odd\Tables;
 
+use App\Enums\RoleEnum;
 use App\Filament\Resources\Odd\OddResource;
 use App\Models\Odd;
 use Filament\Actions\BulkActionGroup;
@@ -20,6 +21,7 @@ final class OddTables
     {
         return $table
             ->defaultSort('position')
+            ->reorderable('position', auth()->user()->hasRole(RoleEnum::ADMIN->value))
             ->defaultPaginationPageOption(50)
             ->recordUrl(fn (Odd $record) => OddResource::getUrl('view', [$record]))
             ->columns([
