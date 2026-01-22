@@ -114,7 +114,7 @@ final class ActionForm
                             RoleEnum::ADMIN->value
                         )
                     )
-                    ->maxLength(250),
+                    ->maxLength(255),
                 Forms\Components\ToggleButtons::make('to_validate')
                     ->label('Validée')
                     ->options([0 => 'Oui', 1 => 'Non'])
