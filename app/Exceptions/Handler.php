@@ -5,6 +5,7 @@ namespace App\Exceptions;
 use App;
 use App\Mail\ExceptionMail;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Throwable;
 
@@ -30,7 +31,10 @@ final class Handler extends ExceptionHandler
             try {
                 Mail::to($email)->send(new ExceptionMail($body));
             } catch (Throwable $th) {
-                //
+                Log::error('Failed to send exception email', [
+                    'error' => $th->getMessage(),
+                    'original_exception' => $exception->getMessage(),
+                ]);
             }
         }
     }
