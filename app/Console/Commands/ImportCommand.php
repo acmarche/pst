@@ -140,7 +140,7 @@ final class ImportCommand extends Command
         foreach ($this->oos as $position => $oo) {
             $strategicObjectiveId = $osIds[$oo['os']] ?? null;
 
-            if (!$strategicObjectiveId) {
+            if (! $strategicObjectiveId) {
                 $this->warn("OS {$oo['os']} not found for OO: {$oo['name']}");
 
                 continue;
@@ -176,10 +176,18 @@ final class ImportCommand extends Command
 
                 continue;
             }
-            $actionNum = (int)$row[0];
-            $actionName = $row[1];
+            $actionNum = (int) $row[0];
+            $actionName = mb_trim($row[1]);
+            if (! $actionName) {
+                $this->error('no action name '.$actionNum);
+
+                continue;
+            }
+            $this->info('---- Action '.$actionName);
             $ooEmpty = $row[2];
             $badNa = $row[3];
+            $row[4] = str_replace('PAIX, JUSTICE', 'PAIX JUSTICE', $row[4]);
+
             $odds = explode(',', $row[4]);
             $oddObjects = $this->findOdds($odds);
             $rhEmpty = $row[5];
@@ -188,12 +196,12 @@ final class ImportCommand extends Command
                 $actionState = ActionStateEnum::PENDING;
             } else {
                 $actionType = ActionTypeEnum::PST;
-                $actionState = ActionStateEnum::from($row[6]);
+                $actionState = $this->findState($row[6]);
             }
-            $evolutionPercentage = (int)$row[7];
+            $evolutionPercentage = (int) $row[7];
             $dueDate = Carbon::createFromFormat('d/m/Y', $row[8]);
-            if (!$dueDate) {
-                dump('no due date '.$actionName);
+            if (! $dueDate) {
+                $this->error('no due date '.$actionName);
             }
             $responsable =
                 match ($row[9]) {
@@ -249,12 +257,11 @@ final class ImportCommand extends Command
                 $agentPilote,
                 $responsable
             );
-            dd('end odd');
         }
     }
 
     /**
-     * @param array<int,Odd> $odds
+     * @param  array<int,Odd>  $odds
      */
     public function addExtraData(
         Action $action,
@@ -280,41 +287,57 @@ final class ImportCommand extends Command
         ActionStateEnum $actionStateEnum,
         ActionTypeEnum $actionTypeEnum,
         int $actionNum,
-        string $notes,
         int $evolutionPercentage,
+        string $notes,
         ActionRoadmapEnum $actionRoadmapEnum,
         array $oddObjects,
         array $servicesAndPartners,
         ?User $agentPilote,
         ?User $responsable
     ): void {
-        $this->info('---- Action '.$name);
 
-        $action = Action::create([
-            'name' => $name,
-            'department' => DepartmentEnum::CPAS->value,
-            'state' => $actionStateEnum->value,
-            'type' => $actionTypeEnum->value,
-            'state_percentage' => $evolutionPercentage,
-            'user_add' => 'import',
-            'note' => $notes,
-            'position' => $actionNum,
-            'roadmap' => $actionRoadmapEnum->value,
-            'operational_objective_id' => $this->lastOo,
-        ]);
+        /*   $action = Action::create([
+               'name' => $name,
+               'department' => DepartmentEnum::CPAS->value,
+               'state' => $actionStateEnum->value,
+               'type' => $actionTypeEnum->value,
+               'state_percentage' => $evolutionPercentage,
+               'user_add' => 'import',
+               'note' => $notes,
+               'position' => $actionNum,
+               'roadmap' => $actionRoadmapEnum->value,
+               'operational_objective_id' => $this->lastOo,
+           ]);
 
-        $this->addExtraData($action, $oddObjects, $servicesAndPartners, $agentPilote, $responsable);
+           $this->addExtraData($action, $oddObjects, $servicesAndPartners, $agentPilote, $responsable);*/
+    }
+
+    private function findState(string $name): ?ActionStateEnum
+    {
+        return match ($name) {
+            'Suspendu' => ActionStateEnum::SUSPENDED,
+            'En cours' => ActionStateEnum::PENDING,
+            'Terminé' => ActionStateEnum::FINISHED,
+            'A démarrer', 'À démarrer' => ActionStateEnum::START,
+            default => null,
+        };
     }
 
     private function findOdds(array $odds): array
     {
         $oddObjects = [];
         foreach ($odds as $odd) {
-            $oddName = mb_trim(mb_substr($odd, mb_strpos($odd, '.') + 1));
-            // $odd = Odd::where('name', 'LIKE', $odd)->first();
-            $odd = Odd::whereRaw('LOWER(name) = ?', [mb_strtolower($oddName)])->first();
-            if (!$odd) {
-                dump('not found odd '.$oddName);
+            if (str_contains($odd, 'PAIX JUSTICE')) {
+                $odd = Odd::find(16);
+            } else {
+                $oddName = mb_trim(mb_substr($odd, mb_strpos($odd, '.') + 1));
+                // $odd = Odd::where('name', 'LIKE', $odd)->first();
+                $odd = Odd::whereRaw('LOWER(name) = ?', [mb_strtolower($oddName)])->first();
+            }
+            if (! $odd) {
+                $this->error('not found odd '.$oddName);
+
+                continue;
             }
             $oddObjects[] = $odd;
         }
