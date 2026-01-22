@@ -30,7 +30,7 @@ final class ImportCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'pst:import';
+    protected $signature = 'pst:import {filename : The CSV file to import}';
 
     /**
      * The console command description.
@@ -111,7 +111,7 @@ final class ImportCommand extends Command
 
     public function handle(): int
     {
-        $csvFile = $this->dir.'PSTCPAS.csv';
+        $csvFile = $this->dir.$this->argument('filename');
         $this->department = DepartmentEnum::CPAS->value;
         // $this->importO();
         $this->importCsv($csvFile);
