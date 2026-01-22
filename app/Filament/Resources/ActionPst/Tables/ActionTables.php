@@ -29,7 +29,7 @@ final class ActionTables
     public static function configure(Table $table): Table
     {
         return $table
-            ->defaultSort('name')
+            ->defaultSort('position')
             ->defaultPaginationPageOption(50)
             ->persistFiltersInSession()
             ->recordUrl(fn (Action $record) => ActionPstResource::getUrl('view', [$record]))
@@ -302,6 +302,11 @@ final class ActionTables
     {
         return [
             TextColumn::make('id')
+                ->searchable()
+                ->sortable()
+                ->numeric()
+                ->label('Id'),
+            TextColumn::make('position')
                 ->searchable()
                 ->sortable()
                 ->numeric()
