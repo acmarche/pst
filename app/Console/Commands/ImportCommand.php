@@ -18,7 +18,9 @@ use App\Models\Service;
 use App\Models\StrategicObjective;
 use App\Models\User;
 use Carbon\Carbon;
+use Exception;
 use Illuminate\Console\Command;
+use Illuminate\Support\Str;
 use Symfony\Component\Console\Command\Command as SfCommand;
 
 final class ImportCommand extends Command
@@ -39,11 +41,9 @@ final class ImportCommand extends Command
 
     protected string $dir = __DIR__.'/../../../data/';
 
-    private int $lastSo = 0;
-
     private int $lastOo = 0;
 
-    private ImportDto $actionDto;
+    private int $lastSo;
 
     private string $department;
 
@@ -140,7 +140,7 @@ final class ImportCommand extends Command
         foreach ($this->oos as $position => $oo) {
             $strategicObjectiveId = $osIds[$oo['os']] ?? null;
 
-            if (! $strategicObjectiveId) {
+            if (!$strategicObjectiveId) {
                 $this->warn("OS {$oo['os']} not found for OO: {$oo['name']}");
 
                 continue;
@@ -160,25 +160,33 @@ final class ImportCommand extends Command
     public function importCsv($csvFile, $delimiter = '|'): void
     {
         $file_handle = fopen($csvFile, 'r');
+        $firstLine = true;
+
         while ($row = fgetcsv($file_handle, null, $delimiter)) {
             if ($row[0] === "Numéro d'action ") {
                 continue;
             }
-            $so = StrategicObjective::where('name', $row[0])->first();
-            if ($so) {
-                $this->lastSo = $so->id;
+            if ($firstLine) {
+                $firstLine = false;
+                $so = StrategicObjective::where('name', $row[0])->first();
+                if ($so) {
+                    $this->lastSo = $so->id;
 
-                continue;
+                    continue;
+                }
             }
-            $oo = OperationalObjective::where('name', $row[0])->first();
-            if ($oo) {
-                $this->lastOo = $oo->id;
 
-                continue;
-            }
-            $actionNum = (int) $row[0];
+            $actionNum = (int)$row[0];
             $actionName = mb_trim($row[1]);
-            if (! $actionName) {
+            if ($actionNum === 0 && $actionName === '') {
+                $oo = OperationalObjective::where('name', $row[0])->first();
+                if ($oo) {
+                    $this->lastOo = $oo->id;
+
+                    continue;
+                }
+            }
+            if (!$actionName) {
                 $this->error('no action name '.$actionNum);
 
                 continue;
@@ -198,9 +206,10 @@ final class ImportCommand extends Command
                 $actionType = ActionTypeEnum::PST;
                 $actionState = $this->findState($row[6]);
             }
-            $evolutionPercentage = (int) $row[7];
+            $evolutionPercentage = (int)$row[7];
+
             $dueDate = Carbon::createFromFormat('d/m/Y', $row[8]);
-            if (! $dueDate) {
+            if (!$dueDate) {
                 $this->error('no due date '.$actionName);
             }
             $responsable =
@@ -261,7 +270,7 @@ final class ImportCommand extends Command
     }
 
     /**
-     * @param  array<int,Odd>  $odds
+     * @param array<int,Odd> $odds
      */
     public function addExtraData(
         Action $action,
@@ -276,7 +285,9 @@ final class ImportCommand extends Command
         $action->odds()->sync($odds);
         $action->leaderServices()->sync($services);
         $action->partners()->sync($partners);
-        $responsable?->addRole(Role::where('name', RoleEnum::RESPONSIBLE->value)->first());
+        if ($responsable && !$responsable->hasRole(RoleEnum::RESPONSIBLE->value)) {
+            $responsable->addRole(Role::where('name', RoleEnum::RESPONSIBLE->value)->first());
+        }
         if ($agentPilote) {
             $action->users()->attach($agentPilote);
         }
@@ -295,21 +306,29 @@ final class ImportCommand extends Command
         ?User $agentPilote,
         ?User $responsable
     ): void {
+        $name = Str::limit($name, 250, '...');
+        try {
+            $action = Action::create([
+                'name' => $name,
+                'department' => DepartmentEnum::CPAS->value,
+                'state' => $actionStateEnum->value,
+                'type' => $actionTypeEnum->value,
+                'state_percentage' => $evolutionPercentage,
+                'user_add' => 'import',
+                'note' => $notes,
+                'position' => $actionNum,
+                'roadmap' => $actionRoadmapEnum->value,
+                'operational_objective_id' => $this->lastOo,
+            ]);
+        } catch (Exception $exception) {
+            $this->error($exception->getMessage());
+            dump($this->lastOo);
+            dd('stop');
 
-        /*   $action = Action::create([
-               'name' => $name,
-               'department' => DepartmentEnum::CPAS->value,
-               'state' => $actionStateEnum->value,
-               'type' => $actionTypeEnum->value,
-               'state_percentage' => $evolutionPercentage,
-               'user_add' => 'import',
-               'note' => $notes,
-               'position' => $actionNum,
-               'roadmap' => $actionRoadmapEnum->value,
-               'operational_objective_id' => $this->lastOo,
-           ]);
+            return;
+        }
 
-           $this->addExtraData($action, $oddObjects, $servicesAndPartners, $agentPilote, $responsable);*/
+        $this->addExtraData($action, $oddObjects, $servicesAndPartners, $agentPilote, $responsable);
     }
 
     private function findState(string $name): ?ActionStateEnum
@@ -326,15 +345,16 @@ final class ImportCommand extends Command
     private function findOdds(array $odds): array
     {
         $oddObjects = [];
-        foreach ($odds as $odd) {
-            if (str_contains($odd, 'PAIX JUSTICE')) {
+        foreach ($odds as $oddName) {
+            $odd = null;
+            if (str_contains($oddName, 'PAIX JUSTICE')) {
                 $odd = Odd::find(16);
             } else {
-                $oddName = mb_trim(mb_substr($odd, mb_strpos($odd, '.') + 1));
+                $oddName = mb_trim(mb_substr($oddName, mb_strpos($oddName, '.') + 1));
                 // $odd = Odd::where('name', 'LIKE', $odd)->first();
                 $odd = Odd::whereRaw('LOWER(name) = ?', [mb_strtolower($oddName)])->first();
             }
-            if (! $odd) {
+            if (!$odd) {
                 $this->error('not found odd '.$oddName);
 
                 continue;
