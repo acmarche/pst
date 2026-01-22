@@ -153,7 +153,7 @@ final class ActionInfolist
             TextEntry::make('due_date')
                 ->label('Date d\'échéance')
                 ->visible(fn (?DateTimeImmutable $date) => $date instanceof DateTimeImmutable)
-                ->dateTime(),
+                ->date(),
             TextEntry::make('synergy')
                 ->label('Synergie Cpas / Ville')
                 ->formatStateUsing(fn (?ActionSynergyEnum $state) => $state?->getLabel() ?? '-'),
