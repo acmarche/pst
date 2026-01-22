@@ -58,6 +58,7 @@ final class Action extends Model
         'type' => ActionTypeEnum::class,
         'synergy' => ActionSynergyEnum::class,
         'roadmap' => ActionRoadmapEnum::class,
+        'to_validate' => 'boolean',
     ];
 
     #[Scope]
@@ -216,7 +217,9 @@ final class Action extends Model
                 $user = Auth::user();
                 $model->user_add = $user->username;
             }
-            $model->to_validate = true;
+            if (! isset($model->to_validate)) {
+                $model->to_validate = true;
+            }
         });
     }
 }
