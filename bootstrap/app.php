@@ -19,7 +19,11 @@ return Application::configure(basePath: dirname(__DIR__))
         //
     })
     ->withExceptions(function (Exceptions $exceptions): void {
-        $exceptions->report(function (Throwable $e): void {
+        $email = config('MAIL_IT_ADDRESS', null);
+        if (!$email) {
+            return;
+        }
+        $exceptions->report(function (Throwable $e) use ($email): void {
             if (app()->environment('production')) {
                 $url = request()->fullUrl();
                 $method = request()->method();
@@ -29,38 +33,52 @@ return Application::configure(basePath: dirname(__DIR__))
                 $file = $e->getFile();
                 $line = $e->getLine();
                 $class = get_class($e);
-
-                Mail::raw(
-                    "Exception: {$e->getMessage()}\n\n".
-                    "class: {$class}\n\n".
-                    "file: {$file}\n\n".
-                    "line: {$line}\n\n".
-                    "URL: {$method} {$url}\n".
-                    "IP: {$ip}\n".
-                    "User Agent: {$userAgent}\n".
-                    'User: '.($user ? $user->email : 'Guest')."\n\n".
-                    "Stack Trace:\n{$e->getTraceAsString()}",
-                    function ($message) use ($e) {
-                        $message->to(env('MAIL_IT_ADDRESS', config('mail.from.address')))
-                            ->subject('Pst [500 Error] '.class_basename($e).': '.Str::limit($e->getMessage(), 50));
-                    }
-                );
+                try {
+                    Mail::raw(
+                        "Exception: {$e->getMessage()}\n\n".
+                        "class: {$class}\n\n".
+                        "file: {$file}\n\n".
+                        "line: {$line}\n\n".
+                        "URL: {$method} {$url}\n".
+                        "IP: {$ip}\n".
+                        "User Agent: {$userAgent}\n".
+                        'User: '.($user ? $user->email : 'Guest')."\n\n".
+                        "Stack Trace:\n{$e->getTraceAsString()}",
+                        function ($message) use ($e, $email) {
+                            $message->to($email)
+                                ->subject('Pst [500 Error] '.class_basename($e).': '.Str::limit($e->getMessage(), 50));
+                        }
+                    );
+                } catch (Throwable $th) {
+                    Log::error('Failed to send exception email', [
+                        'error' => $th->getMessage(),
+                        'original_exception' => $th->getMessage(),
+                    ]);
+                }
             }
         });
-        $exceptions->report(function (QueryException $e) {
+        $exceptions->report(function (QueryException $e) use ($email): void {
             $rawSql = $e->getRawSql();
             $user = auth()->user();
-            Mail::raw(
-                "Exception: {$e->getMessage()}\n\n".
-                'sql: '.$rawSql."\n\n".
-                'connection:'.$e->getConnectionName()."\n\n".
-                'code: '.$e->getCode()."\n\n".
-                'User: '.($user ? $user->email : 'Guest')."\n\n".
-                "Stack Trace:\n{$e->getTraceAsString()}",
-                function ($message) use ($e) {
-                    $message->to(env('MAIL_IT_ADDRESS', config('mail.from.address')))
-                        ->subject('Pst [Sql Error] '.class_basename($e).': '.Str::limit($e->getMessage(), 50));
-                }
-            );
+
+            try {
+                Mail::raw(
+                    "Exception: {$e->getMessage()}\n\n".
+                    'sql: '.$rawSql."\n\n".
+                    'connection:'.$e->getConnectionName()."\n\n".
+                    'code: '.$e->getCode()."\n\n".
+                    'User: '.($user ? $user->email : 'Guest')."\n\n".
+                    "Stack Trace:\n{$e->getTraceAsString()}",
+                    function ($message) use ($e, $email) {
+                        $message->to($email)
+                            ->subject('Pst [Sql Error] '.class_basename($e).': '.Str::limit($e->getMessage(), 50));
+                    }
+                );
+            } catch (Throwable $th) {
+                Log::error('Failed to send exception email', [
+                    'error' => $th->getMessage(),
+                    'original_exception' => $th->getMessage(),
+                ]);
+            }
         });
     })->create();
