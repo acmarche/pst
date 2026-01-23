@@ -40,7 +40,6 @@ final class OddTables
                     Tables\Columns\TextColumn::make('name')
                         ->weight(FontWeight::Bold)
                         ->size(TextSize::Large)
-                        ->searchable()
                         ->alignment(Alignment::Center)
                         ->extraAttributes(['class' => 'mt-3']),
                     Tables\Columns\TextColumn::make('description')
