@@ -29,7 +29,7 @@ final class OddPolicy
      */
     public function create(User $user): bool
     {
-        return $this->hasRoles($user);
+        return false;
     }
 
     /**
