@@ -213,37 +213,12 @@ final class ImportCommand extends Command
             if (! $dueDate) {
                 $this->error('no due date '.$actionName);
             }
-            $responsable =
-                match ($row[9]) {
-                    'CD' => User::where('last_name', 'Dermience')->first(),
-                    'GS' => User::where('last_name', 'Santer')->first(),
-                    'MH' => User::where('last_name', 'Heinen')->first(),
-                    'NW' => User::where('last_name', 'Dermience')->first(),
-                    'MDu' => User::where('last_name', 'Dermience')->first(),
-                    'VB' => User::where('last_name', 'Dermience')->first(),
-                    'FD' => User::where('last_name', 'Dermience')->first(),
-                    'CL' => User::where('last_name', 'Dermience')->first(),
-                    'ILI' => User::where('last_name', 'Dermience')->first(),
-                    'BM' => User::where('last_name', 'Dermience')->first(),
-                    default => null,
-                };
+            $responsable = $this->findAgent($row[9]);
             $serviceSociopro = null;
             if ($row[9] === 'insertion sociopro.' or $row[9] === "service d'insertion socio-professionnelle") {
                 $serviceSociopro = Service::where('name', 'insertion socioprofessionnelle')->first();
             }
-            $agentPilote = match ($row[10]) {
-                'CD' => User::where('last_name', 'Dermience')->first(),
-                'GS' => User::where('last_name', 'Santer')->first(),
-                'MH' => User::where('last_name', 'Heinen')->first(),
-                'NW' => User::where('last_name', 'Dermience')->first(),
-                'MDu' => User::where('last_name', 'Dermience')->first(),
-                'VB' => User::where('last_name', 'Dermience')->first(),
-                'FD' => User::where('last_name', 'Dermience')->first(),
-                'CL' => User::where('last_name', 'Dermience')->first(),
-                'ILI' => User::where('last_name', 'Dermience')->first(),
-                'BM' => User::where('last_name', 'Dermience')->first(),
-                default => null,
-            };
+            $agentPilote = $this->findAgent($row[14]);
             $servicesAndPartners = $this->findServicesOrPartners($row[11]);
             $notes = mb_trim($row[12]);
             $roadMap = match ($row[13]) {
@@ -388,5 +363,30 @@ final class ImportCommand extends Command
         }
 
         return $data;
+    }
+
+    private function findAgent(?string $name): ?User
+    {
+        if (! $name) {
+            return null;
+        }
+
+        return match ($name) {
+            'CD' => User::where('last_name', 'LIKE', 'Dermience')->first(),
+            'GS' => User::where('last_name', 'Santer')->first(),
+            'MH' => User::where('last_name', 'HEINEN')->first(),
+            'NW' => User::where('last_name', 'WECHSELER')->first(),
+            'MDu' => User::where('last_name', 'DUYVEWAARDT')->first(),
+            'VB' => User::where('last_name', 'BARVAUX')->first(),
+            'FD' => User::where('last_name', 'DESERT')->first(),
+            'CL' => User::where('last_name', 'LAVAL')->first(),
+            'BM' => User::where('last_name', 'MATERNE')->first(),
+            'FM' => User::where('last_name', 'MARCHAL')->first(),
+            'GW' => User::where('last_name', 'WERY')->first(),
+            'LD' => User::where('last_name', 'DEVILLERS')->first(),
+            'FP' => User::where('last_name', 'PONCELET')->first(),
+            'PW' => User::where('last_name', 'WOUTERS')->first(),
+            default => null,
+        };
     }
 }
