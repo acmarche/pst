@@ -49,6 +49,7 @@ final class Action extends Model
         'synergy',
         'position',
         'to_validate',
+        'is_internal',
     ];
 
     protected $casts = [
@@ -59,6 +60,7 @@ final class Action extends Model
         'synergy' => ActionSynergyEnum::class,
         'roadmap' => ActionRoadmapEnum::class,
         'to_validate' => 'boolean',
+        'is_internal'=> 'boolean',
     ];
 
     #[Scope]
