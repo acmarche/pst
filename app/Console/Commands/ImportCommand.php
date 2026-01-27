@@ -110,10 +110,15 @@ final class ImportCommand extends Command
         ],
     ];
 
+    private bool $is_internal = false;
+
     public function handle(): int
     {
         $csvFile = $this->dir.$this->argument('filename');
         $this->department = DepartmentEnum::CPAS->value;
+        if ($csvFile === 'Interne.csv') {
+            $this->is_internal = true;
+        }
         // $this->importO();
         $this->importCsv($csvFile);
         $this->info('Update');
@@ -141,7 +146,7 @@ final class ImportCommand extends Command
         foreach ($this->oos as $position => $oo) {
             $strategicObjectiveId = $osIds[$oo['os']] ?? null;
 
-            if (! $strategicObjectiveId) {
+            if (!$strategicObjectiveId) {
                 $this->warn("OS {$oo['os']} not found for OO: {$oo['name']}");
 
                 continue;
@@ -177,7 +182,7 @@ final class ImportCommand extends Command
                 }
             }
 
-            $actionNum = (int) $row[0];
+            $actionNum = (int)$row[0];
             $actionName = mb_trim($row[1]);
             if ($actionNum === 0 && $actionName === '') {
                 $oo = OperationalObjective::where('name', $row[0])->first();
@@ -187,7 +192,7 @@ final class ImportCommand extends Command
                     continue;
                 }
             }
-            if (! $actionName) {
+            if (!$actionName) {
                 $this->error('no action name '.$actionNum);
 
                 continue;
@@ -208,10 +213,10 @@ final class ImportCommand extends Command
                 $actionType = ActionTypeEnum::PST;
                 $actionState = $this->findState($row[6]);
             }
-            $evolutionPercentage = (int) $row[7];
+            $evolutionPercentage = (int)$row[7];
 
             $dueDate = Carbon::createFromFormat('d/m/Y', $row[8]);
-            if (! $dueDate) {
+            if (!$dueDate) {
                 $this->error('no due date '.$actionName);
             }
             $responsable = null;
@@ -258,7 +263,7 @@ final class ImportCommand extends Command
     }
 
     /**
-     * @param  array<int,Odd>  $odds
+     * @param array<int,Odd> $odds
      */
     public function addExtraData(
         Action $action,
@@ -273,7 +278,7 @@ final class ImportCommand extends Command
         $action->odds()->sync($odds, false);
         $action->leaderServices()->sync($services, false);
         $action->partners()->sync($partners, false);
-        if ($responsable && ! $responsable->hasRole(RoleEnum::RESPONSIBLE->value)) {
+        if ($responsable && !$responsable->hasRole(RoleEnum::RESPONSIBLE->value)) {
             $responsable->addRole(Role::where('name', RoleEnum::RESPONSIBLE->value)->first());
         }
         if ($responsable) {
@@ -314,6 +319,7 @@ final class ImportCommand extends Command
                 'roadmap' => $actionRoadmapEnum->value,
                 'operational_objective_id' => $this->lastOo,
                 'to_validate' => false,
+                'is_internal' => $this->is_internal,
             ]);
         } catch (Exception $exception) {
             $this->error($exception->getMessage());
@@ -355,7 +361,7 @@ final class ImportCommand extends Command
             $oddName = mb_trim(mb_substr($oddName, mb_strpos($oddName, '.') + 1));
             $odd = Odd::whereRaw('LOWER(name) = ?', [mb_strtolower($oddName)])->first();
 
-            if (! $odd) {
+            if (!$odd) {
                 $this->error('not found odd '.$oddName);
 
                 continue;
@@ -379,7 +385,7 @@ final class ImportCommand extends Command
                 continue;
             }
             $partner = Partner::where('name', $name)->orWhere('initials', $name)->first();
-            if (! $partner) {
+            if (!$partner) {
                 $partner = Partner::create(['name' => $name]);
             }
             $data['partners'][] = $partner;
@@ -393,7 +399,7 @@ final class ImportCommand extends Command
      */
     private function findAgent(?string $name): ?User
     {
-        if (! $name) {
+        if (!$name) {
             return null;
         }
 
