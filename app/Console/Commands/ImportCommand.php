@@ -164,7 +164,7 @@ final class ImportCommand extends Command
         $firstLine = true;
 
         while ($row = fgetcsv($file_handle, null, $delimiter)) {
-            if ($row[0] === "Numéro d'action ") {
+            if (mb_trim($row[0]) === "Numéro d'action") {
                 continue;
             }
             if ($firstLine) {
@@ -196,6 +196,7 @@ final class ImportCommand extends Command
             $ooEmpty = $row[2];
             $badNa = $row[3];
             $row[4] = str_replace('PAIX, JUSTICE', 'PAIX JUSTICE', $row[4]);
+            $row[4] = str_replace('INDUSTRIE, INNOVATION', 'INDUSTRIE INNOVATION', $row[4]);
 
             $odds = explode(',', $row[4]);
             $oddObjects = $this->findOdds($odds);
@@ -341,11 +342,19 @@ final class ImportCommand extends Command
             $odd = null;
             if (str_contains($oddName, 'PAIX JUSTICE')) {
                 $odd = Odd::find(16);
-            } else {
-                $oddName = mb_trim(mb_substr($oddName, mb_strpos($oddName, '.') + 1));
-                // $odd = Odd::where('name', 'LIKE', $odd)->first();
-                $odd = Odd::whereRaw('LOWER(name) = ?', [mb_strtolower($oddName)])->first();
+                $oddObjects[] = $odd;
+
+                continue;
             }
+            if (str_contains($oddName, 'INDUSTRIE INNOVATION')) {
+                $odd = Odd::find(9);
+                $oddObjects[] = $odd;
+
+                continue;
+            }
+            $oddName = mb_trim(mb_substr($oddName, mb_strpos($oddName, '.') + 1));
+            $odd = Odd::whereRaw('LOWER(name) = ?', [mb_strtolower($oddName)])->first();
+
             if (! $odd) {
                 $this->error('not found odd '.$oddName);
 
