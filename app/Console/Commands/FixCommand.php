@@ -25,9 +25,11 @@ final class FixCommand extends Command
     public function handle(): int
     {
 
-        $orders = Action::search('salles')->get();
-        foreach ($orders as $order) {
-            $this->info($order->name);
+        $actions = Action::all();
+        foreach ($actions as $action) {
+            if ($action->isInternal()) {
+                $action->update(['is_internal' => true]);
+            }
         }
 
         return SfCommand::SUCCESS;
