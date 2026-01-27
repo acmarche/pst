@@ -213,12 +213,22 @@ final class ImportCommand extends Command
             if (! $dueDate) {
                 $this->error('no due date '.$actionName);
             }
-            $responsable = $this->findAgent($row[9]);
-            $serviceSociopro = null;
+            $responsable = null;
+            try {
+                $responsable = $this->findAgent($row[9]);
+            } catch (Exception $e) {
+                $this->error($e->getMessage());
+            }
+
+            $serviceSociopro = $agentPilote = null;
             if ($row[9] === 'insertion sociopro.' or $row[9] === "service d'insertion socio-professionnelle") {
                 $serviceSociopro = Service::where('name', 'insertion socioprofessionnelle')->first();
             }
-            $agentPilote = $this->findAgent($row[14]);
+            try {
+                $agentPilote = $this->findAgent($row[10]);
+            } catch (Exception $e) {
+                $this->error($e->getMessage());
+            }
             $servicesAndPartners = $this->findServicesOrPartners($row[11]);
             $notes = mb_trim($row[12]);
             $roadMap = match ($row[13]) {
@@ -256,17 +266,21 @@ final class ImportCommand extends Command
         ?User $agentPilote,
         ?User $responsable
     ): void {
-        $action->odds()->sync($odds);
+        $action->odds()->sync($odds, false);
         $services = $servicesAndPartners['services'] ?? [];
         $partners = $servicesAndPartners['partners'] ?? [];
-        $action->odds()->sync($odds);
-        $action->leaderServices()->sync($services);
-        $action->partners()->sync($partners);
+        $action->odds()->sync($odds, false);
+        $action->leaderServices()->sync($services, false);
+        $action->partners()->sync($partners, false);
         if ($responsable && ! $responsable->hasRole(RoleEnum::RESPONSIBLE->value)) {
             $responsable->addRole(Role::where('name', RoleEnum::RESPONSIBLE->value)->first());
         }
+        if ($responsable) {
+            $this->info($responsable->first_name);
+            $action->users()->sync($responsable, false);
+        }
         if ($agentPilote) {
-            $action->users()->attach($agentPilote);
+            $action->users()->sync($agentPilote, false);
         }
     }
 
@@ -365,6 +379,9 @@ final class ImportCommand extends Command
         return $data;
     }
 
+    /**
+     * @throws Exception
+     */
     private function findAgent(?string $name): ?User
     {
         if (! $name) {
@@ -386,7 +403,7 @@ final class ImportCommand extends Command
             'LD' => User::where('last_name', 'DEVILLERS')->first(),
             'FP' => User::where('last_name', 'PONCELET')->first(),
             'PW' => User::where('last_name', 'WOUTERS')->first(),
-            default => null,
+            default => throw new Exception('agent not found '.$name),
         };
     }
 }
