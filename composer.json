@@ -29,7 +29,7 @@
     "require-dev": {
         "barryvdh/laravel-debugbar": "^v4.0.0",
         "fakerphp/faker": "^1.23",
-
+        "filament/blueprint": "^1.0",
         "larastan/larastan": "^3.0",
         "laravel/boost": "^v2.0",
         "laravel/pail": "^1.2.2",
