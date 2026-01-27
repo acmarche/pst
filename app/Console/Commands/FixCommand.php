@@ -24,7 +24,6 @@ final class FixCommand extends Command
 
     public function handle(): int
     {
-
         $actions = Action::all();
         foreach ($actions as $action) {
             if ($action->isInternal()) {
