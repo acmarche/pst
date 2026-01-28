@@ -9,6 +9,6 @@ final class PdfExportController extends Controller
 {
     public function download(Action $action)
     {
-        return PdfExport::exportAcion($action); // returns BinaryFileResponse
+        return PdfExport::exportAction($action); // returns BinaryFileResponse
     }
 }
