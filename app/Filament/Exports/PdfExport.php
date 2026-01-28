@@ -14,14 +14,10 @@ final class PdfExport
         return Pdf::html(view('pdf.action', [
             'action' => $action,
         ]))
-            ->withBrowsershot(function (Browsershot $browsershot): void {
-                if ($path = config('pdf.node_modules_path')) {
-                    $browsershot->setNodeModulePath($path);
-                }
-                if ($path = config('pdf.chrome_path')) {
-                    $browsershot->setChromePath($path);
-                }
-            })
+              ->withBrowsershot(fn (Browsershot $browsershot) => $browsershot
+                ->setNodeModulePath('/var/www/puppeteer/node_modules')
+                ->setChromePath('/usr/bin/chromium')
+            )
             ->download('action-'.$action->id.'.pdf');
         // ->save('action-'.$action->id.'.pdf');
     }
