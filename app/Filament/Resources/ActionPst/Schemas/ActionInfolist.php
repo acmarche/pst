@@ -15,12 +15,15 @@ use App\Models\Partner;
 use App\Models\Service;
 use App\Models\User;
 use DateTimeImmutable;
+use Filament\Infolists\Components\IconEntry;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Schemas\Components\Component;
 use Filament\Schemas\Components\Fieldset;
 use Filament\Schemas\Components\Flex;
+use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
+use Filament\Support\Enums\IconSize;
 use Filament\Support\Enums\TextSize;
 
 final class ActionInfolist
@@ -34,9 +37,9 @@ final class ActionInfolist
                         ->label(null)
                         ->schema(self::informations())
                         ->grow(),
-                    Section::make('Etat')
+                    Section::make('Statut')
                         ->label(null)
-                        ->schema(self::etat())
+                        ->schema(self::statut())
                         ->grow(false),
                 ])->from('md')
                     ->columnSpanFull(),
@@ -45,26 +48,22 @@ final class ActionInfolist
 
     private static function odd(): Component
     {
-        return
-            Fieldset::make('odd_tab')
-                ->label('Objectifs de développement durable')
-                ->schema([
-                    TextEntry::make('odds')
-                        ->label(null)
-                        ->formatStateUsing(
-                            fn (Odd $state): string => '<span class="p-2 text-lg">'.$state->name.'</span>'
-                        )
-                        ->html(true)
-                        ->size(TextSize::Large)
-                        ->color('secondary')
-                        ->badge(),
-                ]);
+        return TextEntry::make('odds')
+            ->label('Objectifs de développement durable')
+            ->formatStateUsing(
+                fn (Odd $state): string => $state->name
+            )
+            ->size(TextSize::Medium)
+            ->color('gray')
+            ->badge();
     }
 
     private static function budget(): Component
     {
         return Fieldset::make('budget')
             ->label('Financement')
+            ->columns(2)
+            ->columnSpanFull()
             ->schema([
                 TextEntry::make('budget_estimate')
                     ->markdown()
@@ -75,98 +74,140 @@ final class ActionInfolist
                     ->label('Mode de financement')
                     ->prose(),
             ]);
-
     }
 
     private static function informations(): array
     {
         return [
             TextEntry::make('description')
-                ->label(null)
+                ->label('Description')
                 ->html()
                 ->prose()
+                ->columnSpanFull()
                 ->visible(fn (?string $state) => $state !== null && $state !== ''),
+
             TextEntry::make('note')
-                ->label(null)
+                ->label('Notes')
                 ->html()
                 ->prose()
+                ->columnSpanFull()
                 ->visible(fn (?string $state) => $state !== null && $state !== ''),
+
             Fieldset::make('team')
-                ->label('Team')
+                ->label('Équipe')
+                ->columns(['default' => 1, 'md' => 2, 'lg' => 3])
+                ->columnSpanFull()
                 ->schema([
                     TextEntry::make('users')
                         ->label('Agents pilotes')
                         ->badge()
+                        ->color('success')
                         ->formatStateUsing(
                             fn (User $state): string => $state->last_name.' '.$state->first_name
                         ),
                     TextEntry::make('mandataries')
                         ->label('Mandataires')
                         ->badge()
+                        ->color('warning')
                         ->formatStateUsing(
                             fn (User $state): string => $state->last_name.' '.$state->first_name
                         ),
                     TextEntry::make('leaderServices')
                         ->label('Services porteurs')
                         ->badge()
+                        ->color('primary')
                         ->formatStateUsing(fn (Service $state): string => $state->name),
                     TextEntry::make('partnerServices')
                         ->label('Services partenaires')
                         ->badge()
+                        ->color('info')
                         ->formatStateUsing(fn (Service $state): string => $state->name),
                     TextEntry::make('partners')
                         ->label('Partenaires externes')
                         ->badge()
+                        ->color('gray')
                         ->formatStateUsing(fn (Partner $state): string => $state->name),
                 ]),
+
             self::odd(),
+
             self::budget(),
-            TextEntry::make('work_plan')
-                ->label('Plan de travail')
-                ->html()
-                ->prose(),
-            TextEntry::make('evaluation_indicator')
-                ->label('Indicateur d\'évaluation')
-                ->html()
-                ->prose(),
+
+            Grid::make(['default' => 1, 'lg' => 2])
+                ->columnSpanFull()
+                ->schema([
+                    TextEntry::make('work_plan')
+                        ->label('Plan de travail')
+                        ->html()
+                        ->prose(),
+                    TextEntry::make('evaluation_indicator')
+                        ->label('Indicateur d\'évaluation')
+                        ->html()
+                        ->prose(),
+                ]),
         ];
     }
 
-    private static function etat(): array
+    private static function statut(): array
     {
         return [
-            TextEntry::make('type')
-                ->label('Type')
-                ->formatStateUsing(fn (ActionTypeEnum $state) => $state->getLabel())
-                ->icon(fn (ActionTypeEnum $state) => $state->getIcon())
-                ->color(fn (ActionTypeEnum $state) => $state->getColor()),
-            TextEntry::make('isInternal')
-                ->label('Interne')
-                ->state(fn (Action $record) => $record->isInternal() ? 'Oui' : 'Non'),
-            TextEntry::make('state')
-                ->label('Etat d\'avancement')
-                ->formatStateUsing(fn (ActionStateEnum $state) => $state->getLabel())
-                ->icon(fn (ActionStateEnum $state) => $state->getIcon())
-                ->color(fn (ActionStateEnum $state) => $state->getColor()),
-            ProgressEntry::make('state_percentage')
-                ->label('Pourcentage d\'avancement'),
-            TextEntry::make('due_date')
-                ->label('Date d\'échéance')
-                ->visible(fn (?DateTimeImmutable $date) => $date instanceof DateTimeImmutable)
-                ->date(),
-            TextEntry::make('synergy')
-                ->label('Synergie Cpas / Ville')
-                ->formatStateUsing(fn (?ActionSynergyEnum $state) => $state?->getLabel() ?? '-'),
-            TextEntry::make('created_at')
-                ->label('Créé le')
-                ->dateTime(),
-            TextEntry::make('user_add')
-                ->label('Créé par'),
-            TextEntry::make('department')
-                ->label('Département'),
-            TextEntry::make('roadmap')
-                ->label('Feuille de route')
-                ->formatStateUsing(fn (?ActionRoadmapEnum $state) => $state?->getLabel() ?? '-'),
+            Section::make('Classification')
+                ->compact()
+                ->schema([
+                    TextEntry::make('type')
+                        ->label('Type')
+                        ->formatStateUsing(fn (ActionTypeEnum $state) => $state->getLabel())
+                        ->icon(fn (ActionTypeEnum $state) => $state->getIcon())
+                        ->color(fn (ActionTypeEnum $state) => $state->getColor())
+                        ->badge(),
+                    IconEntry::make('isInternal')
+                        ->label('Interne')
+                        ->state(fn (Action $record) => $record->isInternal())
+                        ->boolean()
+                        ->size(IconSize::Medium),
+                    TextEntry::make('roadmap')
+                        ->label('Feuille de route')
+                        ->formatStateUsing(fn (?ActionRoadmapEnum $state) => $state?->getLabel() ?? '-')
+                        ->badge()
+                        ->color('gray'),
+                ]),
+
+            Section::make('Avancement')
+                ->compact()
+                ->schema([
+                    TextEntry::make('state')
+                        ->label('État')
+                        ->formatStateUsing(fn (ActionStateEnum $state) => $state->getLabel())
+                        ->icon(fn (ActionStateEnum $state) => $state->getIcon())
+                        ->color(fn (ActionStateEnum $state) => $state->getColor())
+                        ->badge(),
+                    ProgressEntry::make('state_percentage')
+                        ->label('Progression'),
+                    TextEntry::make('due_date')
+                        ->label('Échéance')
+                        ->visible(fn (?DateTimeImmutable $date) => $date instanceof DateTimeImmutable)
+                        ->date()
+                        ->icon('heroicon-o-calendar')
+                        ->color('danger'),
+                ]),
+
+            Section::make('Métadonnées')
+                ->compact()
+                ->collapsed()
+                ->schema([
+                    TextEntry::make('synergy')
+                        ->label('Synergie Cpas / Ville')
+                        ->formatStateUsing(fn (?ActionSynergyEnum $state) => $state?->getLabel() ?? '-'),
+                    TextEntry::make('department')
+                        ->label('Département'),
+                    TextEntry::make('created_at')
+                        ->label('Créé le')
+                        ->dateTime()
+                        ->icon('heroicon-o-clock'),
+                    TextEntry::make('user_add')
+                        ->label('Créé par')
+                        ->icon('heroicon-o-user'),
+                ]),
         ];
     }
 }
