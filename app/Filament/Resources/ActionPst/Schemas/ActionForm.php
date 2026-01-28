@@ -171,6 +171,11 @@ final class ActionForm
                         ->options(ActionRoadmapEnum::class)
                         ->visible(fn () => auth()->user()->hasRole(RoleEnum::ADMIN->value))
                         ->inline(),
+                    Forms\Components\ToggleButtons::make('is_internal')
+                        ->label('Action interne')
+                        ->required(false)
+                        ->options(ActionRoadmapEnum::class)
+                        ->inline(),
                     Forms\Components\ToggleButtons::make('synergy')
                         ->label('Synergie CPAS / VILLLE')
                         ->required(false)
