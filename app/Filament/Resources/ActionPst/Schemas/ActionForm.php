@@ -9,6 +9,7 @@ use App\Enums\ActionTypeEnum;
 use App\Enums\RoleEnum;
 use App\Enums\YesOrNoEnum;
 use App\Models\OperationalObjective;
+use App\Models\User;
 use Filament\Actions\Action;
 use Filament\Forms;
 use Filament\Schemas\Components\Fieldset;
@@ -84,6 +85,16 @@ final class ActionForm
     {
         return
             [
+                Forms\Components\Select::make('recipients')
+                    ->label('Destinataires')
+                    ->options(fn () => User::query()
+                        ->orderBy('last_name')
+                        ->orderBy('first_name')
+                        ->get()
+                        ->mapWithKeys(fn ($user) => [$user->id => "{$user->last_name} {$user->first_name}"]))
+                    ->multiple()
+                    ->searchable()
+                    ->required(),
                 Forms\Components\TextInput::make('subject')
                     ->label('Sujet')
                     ->required(),

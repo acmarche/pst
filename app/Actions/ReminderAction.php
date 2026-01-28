@@ -7,7 +7,7 @@ namespace App\Actions;
 use App\Filament\Resources\ActionPst\Schemas\ActionForm;
 use App\Mail\ActionReminderMail;
 use App\Models\Action as ActionModel;
-use App\Repository\ActionRepository;
+use App\Models\User;
 use Exception;
 use Filament\Actions\Action as ActionAction;
 use Illuminate\Database\Eloquent\Model;
@@ -18,6 +18,8 @@ final class ReminderAction
 {
     public static function createAction(Model|ActionModel $action): ActionAction
     {
+        $defaultRecipients = $action->users()->pluck('users.id')->toArray();
+
         return ActionAction::make('reminder')
             ->label('Houspiller')
             ->icon('tabler-school-bell')
@@ -25,19 +27,23 @@ final class ReminderAction
             ->modalDescription('Envoyer un mail aux agents')
             ->modalHeading('Où en sommes-nous actuellement ?')
             ->modalContentFooter(new HtmlString('Un lien vers l\'action sera automatiquement ajouté'))
-            ->modalContent(
-                view('filament.resources.action-resource.reminder-modal-description', [
-                    'emails' => ActionRepository::findByActionEmailAgents($action->id),
-                ])
-            )
             ->schema(
                 ActionForm::fieldsReminder()
             )
+            ->fillForm([
+                'recipients' => $defaultRecipients,
+            ])
             ->action(function (array $data, ActionModel $action) {
-                $emails = ActionRepository::findByActionEmailAgents($action->id);
-                if ($emails->count() === 0) {
-                    $emails = ['jf@marche.be'];
+                $emails = User::query()
+                    ->whereIn('id', $data['recipients'])
+                    ->pluck('email')
+                    ->unique()
+                    ->values();
+
+                if ($emails->isEmpty()) {
+                    $emails = collect(['jf@marche.be']);
                 }
+
                 try {
                     Mail::to($emails)
                         ->send(new ActionReminderMail($action, $data));
