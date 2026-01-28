@@ -18,6 +18,7 @@ final class PdfExport
         ]))
             ->withBrowsershot(fn (Browsershot $browsershot) => $browsershot
                 ->setNodeModulePath('/var/www/puppeteer/node_modules')
+                ->setChromePath('/usr/bin/chromium')
             )
             ->download('action-'.$action->id.'.pdf');
         // ->save('action-'.$action->id.'.pdf');
