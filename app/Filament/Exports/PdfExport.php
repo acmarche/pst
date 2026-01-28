@@ -12,8 +12,6 @@ final class PdfExport
     public static function exportAction(Action $action): PdfBuilder
     {
         return Pdf::html(view('pdf.action', [
-            'invoiceNumber' => '1234',
-            'customerName' => 'Grumpy Cat',
             'action' => $action,
         ]))
             ->withBrowsershot(function (Browsershot $browsershot): void {
