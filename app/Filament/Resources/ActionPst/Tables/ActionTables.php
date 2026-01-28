@@ -240,32 +240,12 @@ final class ActionTables
                         ->mapWithKeys(fn (ActionTypeEnum $action) => [$action->value => $action->getLabel()])
                         ->toArray()
                 ),
-            SelectFilter::make('isInternal')
+            SelectFilter::make('is_internal')
                 ->label('Volet interne')
                 ->options([
                     '1' => 'Oui',
                     '0' => 'Non',
-                ])
-                ->query(function (Builder $query, array $data): Builder {
-                    return $query->when(
-                        $data['value'] !== null,
-                        function (Builder $query) use ($data): Builder {
-                            $isInternal = $data['value'] === true;
-
-                            return $query->whereHas(
-                                'operationalObjective',
-                                function (Builder $query) use ($isInternal) {
-                                    $query->whereHas(
-                                        'strategicObjective',
-                                        function (Builder $query) use ($isInternal) {
-                                            $query->where('is_internal', $isInternal);
-                                        }
-                                    );
-                                }
-                            );
-                        }
-                    );
-                }),
+                ]),
             SelectFilter::make('department')
                 ->label('Département')
                 ->options(UserRepository::listDepartmentOfCurrentUser())
