@@ -23,6 +23,7 @@ use Filament\Schemas\Components\Flex;
 use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
+use Filament\Support\Colors\Color;
 use Filament\Support\Enums\IconSize;
 use Filament\Support\Enums\TextSize;
 
@@ -53,8 +54,8 @@ final class ActionInfolist
             ->formatStateUsing(
                 fn (Odd $state): string => $state->name
             )
-            ->size(TextSize::Medium)
-            ->color('gray')
+            ->size(TextSize::Large)
+            ->color(Color::Pink)
             ->badge();
     }
 
