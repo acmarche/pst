@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use Auth;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 
@@ -25,7 +24,7 @@ trait TracksHistoryTrait
                 History::create(
                     [
                         'action_id' => $id,
-                        'user_add' => Auth::user()->username,
+                        'user_add' => auth()->user()?->username ?? 'import',
                     ] + $fields
                 );
             });
