@@ -5,7 +5,7 @@ namespace Database\Factories;
 use App\Models\FollowUp;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-class FollowUpFactory extends Factory
+final class FollowUpFactory extends Factory
 {
     protected $model = FollowUp::class;
 

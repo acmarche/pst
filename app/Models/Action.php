@@ -60,7 +60,7 @@ final class Action extends Model
         'synergy' => ActionSynergyEnum::class,
         'roadmap' => ActionRoadmapEnum::class,
         'to_validate' => 'boolean',
-        'is_internal'=> 'boolean',
+        'is_internal' => 'boolean',
     ];
 
     #[Scope]
@@ -107,7 +107,7 @@ final class Action extends Model
 
     public function isInternal(): bool
     {
-        return (bool)$this->is_internal;
+        return (bool) $this->is_internal;
     }
 
     /**

@@ -20,7 +20,7 @@ return Application::configure(basePath: dirname(__DIR__))
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         $email = config('MAIL_IT_ADDRESS', null);
-        if (!$email) {
+        if (! $email) {
             return;
         }
         $exceptions->report(function (Throwable $e) use ($email): void {

@@ -5,9 +5,10 @@ namespace Database\Factories;
 use App\Models\Partner;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-class PartnerFactory extends Factory
+final class PartnerFactory extends Factory
 {
     protected $model = Partner::class;
+
     /**
      * Define the model's default state.
      *

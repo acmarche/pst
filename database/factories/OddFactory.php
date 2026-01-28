@@ -5,7 +5,7 @@ namespace Database\Factories;
 use App\Models\Odd;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-class OddFactory extends Factory
+final class OddFactory extends Factory
 {
     protected $model = Odd::class;
 
