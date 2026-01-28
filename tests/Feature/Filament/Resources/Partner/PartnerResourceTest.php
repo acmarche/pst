@@ -1,0 +1,228 @@
+<?php
+
+declare(strict_types=1);
+
+use App\Enums\RoleEnum;
+use App\Filament\Resources\Partner\Pages\CreatePartner;
+use App\Filament\Resources\Partner\Pages\EditPartner;
+use App\Filament\Resources\Partner\Pages\ListPartners;
+use App\Filament\Resources\Partner\Pages\ViewPartner;
+use App\Models\Partner;
+use App\Models\Role;
+use App\Models\User;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\Testing\TestAction;
+use Illuminate\Support\Str;
+use Livewire\Livewire;
+
+use function Pest\Laravel\assertDatabaseHas;
+use function Pest\Laravel\assertDatabaseMissing;
+
+beforeEach(function () {
+    $adminRole = Role::factory()->create(['name' => RoleEnum::ADMIN->value]);
+    $this->adminUser = User::factory()->create();
+    $this->adminUser->roles()->attach($adminRole);
+
+    $this->actingAs($this->adminUser);
+});
+
+describe('page rendering', function () {
+    it('can render the index page', function () {
+        Livewire::test(ListPartners::class)
+            ->assertOk();
+    });
+
+    it('can render the create page', function () {
+        Livewire::test(CreatePartner::class)
+            ->assertOk();
+    });
+
+    it('can render the view page', function () {
+        $record = Partner::factory()->create();
+
+        Livewire::test(ViewPartner::class, [
+            'record' => $record->id,
+        ])
+            ->assertOk();
+    });
+
+    it('can render the edit page', function () {
+        $record = Partner::factory()->create();
+
+        Livewire::test(EditPartner::class, [
+            'record' => $record->id,
+        ])
+            ->assertOk()
+            ->assertSchemaStateSet([
+                'name' => $record->name,
+            ]);
+    });
+});
+
+describe('table columns', function () {
+    it('has column', function (string $column) {
+        Livewire::test(ListPartners::class)
+            ->assertTableColumnExists($column);
+    })->with(['name', 'initials', 'email', 'phone']);
+
+    it('can render column', function (string $column) {
+        Partner::factory()->create();
+
+        Livewire::test(ListPartners::class)
+            ->loadTable()
+            ->assertCanRenderTableColumn($column);
+    })->with(['name', 'email', 'phone']);
+
+    it('can sort by name', function () {
+        $records = Partner::factory(3)->create();
+
+        Livewire::test(ListPartners::class)
+            ->loadTable()
+            ->sortTable('name')
+            ->assertCanSeeTableRecords($records->sortBy('name'), inOrder: true);
+    });
+
+    it('can search by name', function () {
+        $records = Partner::factory(3)->create();
+        $searchRecord = $records->first();
+
+        Livewire::test(ListPartners::class)
+            ->loadTable()
+            ->searchTable($searchRecord->name)
+            ->assertCanSeeTableRecords($records->where('name', $searchRecord->name));
+    });
+});
+
+describe('crud operations', function () {
+    it('can create a partner', function () {
+        $newData = Partner::factory()->make();
+
+        Livewire::test(CreatePartner::class)
+            ->fillForm([
+                'name' => $newData->name,
+                'email' => 'test@example.com',
+                'phone' => '+32123456789',
+            ])
+            ->call('create')
+            ->assertNotified()
+            ->assertRedirect();
+
+        assertDatabaseHas(Partner::class, [
+            'name' => $newData->name,
+            'email' => 'test@example.com',
+        ]);
+    });
+
+    it('can update a partner', function () {
+        $record = Partner::factory()->create();
+        $newData = Partner::factory()->make();
+
+        Livewire::test(EditPartner::class, [
+            'record' => $record->id,
+        ])
+            ->fillForm([
+                'name' => $newData->name,
+            ])
+            ->call('save')
+            ->assertNotified();
+
+        assertDatabaseHas(Partner::class, [
+            'id' => $record->id,
+            'name' => $newData->name,
+        ]);
+    });
+
+    it('can delete a partner', function () {
+        $record = Partner::factory()->create();
+
+        Livewire::test(EditPartner::class, [
+            'record' => $record->id,
+        ])
+            ->callAction(DeleteAction::class)
+            ->assertNotified()
+            ->assertRedirect();
+
+        assertDatabaseMissing($record);
+    });
+
+    it('can bulk delete partners', function () {
+        $records = Partner::factory(3)->create();
+
+        Livewire::test(ListPartners::class)
+            ->loadTable()
+            ->assertCanSeeTableRecords($records)
+            ->selectTableRecords($records)
+            ->callAction(TestAction::make(DeleteBulkAction::class)->table()->bulk())
+            ->assertNotified()
+            ->assertCanNotSeeTableRecords($records);
+
+        $records->each(fn (Partner $record) => assertDatabaseMissing($record));
+    });
+});
+
+describe('form validation', function () {
+    it('validates the form data on create', function (array $data, array $errors) {
+        $newData = Partner::factory()->make();
+
+        Livewire::test(CreatePartner::class)
+            ->fillForm([
+                'name' => $newData->name,
+                ...$data,
+            ])
+            ->call('create')
+            ->assertHasFormErrors($errors)
+            ->assertNotNotified();
+    })->with([
+        '`name` is required' => [['name' => null], ['name' => 'required']],
+        '`name` is max 255 characters' => [['name' => Str::random(256)], ['name' => 'max']],
+        '`email` must be valid email' => [['email' => 'invalid-email'], ['email' => 'email']],
+        '`initials` is max 30 characters' => [['initials' => Str::random(31)], ['initials' => 'max']],
+    ]);
+
+    it('validates the form data on edit', function (array $data, array $errors) {
+        $record = Partner::factory()->create();
+
+        Livewire::test(EditPartner::class, [
+            'record' => $record->id,
+        ])
+            ->fillForm([
+                'name' => $record->name,
+                ...$data,
+            ])
+            ->call('save')
+            ->assertHasFormErrors($errors)
+            ->assertNotNotified();
+    })->with([
+        '`name` is required' => [['name' => null], ['name' => 'required']],
+        '`name` is max 255 characters' => [['name' => Str::random(256)], ['name' => 'max']],
+        '`email` must be valid email' => [['email' => 'invalid-email'], ['email' => 'email']],
+    ]);
+});
+
+describe('form fields', function () {
+    it('has name field', function () {
+        Livewire::test(CreatePartner::class)
+            ->assertFormFieldExists('name');
+    });
+
+    it('has initials field', function () {
+        Livewire::test(CreatePartner::class)
+            ->assertFormFieldExists('initials');
+    });
+
+    it('has email field', function () {
+        Livewire::test(CreatePartner::class)
+            ->assertFormFieldExists('email');
+    });
+
+    it('has phone field', function () {
+        Livewire::test(CreatePartner::class)
+            ->assertFormFieldExists('phone');
+    });
+
+    it('has description field', function () {
+        Livewire::test(CreatePartner::class)
+            ->assertFormFieldExists('description');
+    });
+});
