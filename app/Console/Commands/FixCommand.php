@@ -27,7 +27,7 @@ final class FixCommand extends Command
         $actions = Action::all();
         foreach ($actions as $action) {
             if ($action->isInternal()) {
-                $action->update(['is_internal' => true]);
+              //  $action->update(['is_internal' => true]);
             }
         }
 
