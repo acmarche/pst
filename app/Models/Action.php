@@ -107,7 +107,7 @@ final class Action extends Model
 
     public function isInternal(): bool
     {
-        return $this->operationalObjective()->first()->strategicObjective()->first()->isInternal();
+        return (bool)$this->is_internal;
     }
 
     /**
