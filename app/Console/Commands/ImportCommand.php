@@ -119,8 +119,8 @@ final class ImportCommand extends Command
         if ($csvFile === 'Interne.csv') {
             $this->is_internal = true;
         }
-        // $this->importO();
-        $this->importCsv($csvFile);
+        $this->importO();
+        //$this->importCsv($csvFile);
         $this->info('Update');
 
         return SfCommand::SUCCESS;
