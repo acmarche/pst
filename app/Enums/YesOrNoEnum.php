@@ -2,17 +2,17 @@
 
 namespace App\Enums;
 
+use BackedEnum;
 use Filament\Support\Contracts\HasColor;
 use Filament\Support\Contracts\HasIcon;
 use Filament\Support\Contracts\HasLabel;
 use Filament\Support\Icons\Heroicon;
 use Illuminate\Contracts\Support\Htmlable;
-use BackedEnum;
 
-enum ActionSynergyEnum: string implements HasLabel,HasColor,HasIcon
+enum YesOrNoEnum: int implements HasColor, HasIcon, HasLabel
 {
-    case YES = 'YES';
-    case NO = 'NO';
+    case YES = 1;
+    case NO = 0;
 
     public static function toArray(): array
     {
@@ -29,9 +29,9 @@ enum ActionSynergyEnum: string implements HasLabel,HasColor,HasIcon
         return match ($this) {
             self::YES => 'Oui',
             self::NO => 'Non',
-            default => 'Non déterminé'
         };
     }
+
     public function getColor(): string|array|null
     {
         return match ($this) {
@@ -39,6 +39,7 @@ enum ActionSynergyEnum: string implements HasLabel,HasColor,HasIcon
             self::NO => 'primary',
         };
     }
+
     public function getIcon(): string|BackedEnum|Htmlable|null
     {
         return match ($this) {

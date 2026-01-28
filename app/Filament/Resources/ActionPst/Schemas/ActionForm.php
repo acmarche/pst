@@ -7,15 +7,15 @@ use App\Enums\ActionStateEnum;
 use App\Enums\ActionSynergyEnum;
 use App\Enums\ActionTypeEnum;
 use App\Enums\RoleEnum;
+use App\Enums\YesOrNoEnum;
 use App\Models\OperationalObjective;
 use Filament\Actions\Action;
 use Filament\Forms;
 use Filament\Schemas\Components\Fieldset;
 use Filament\Schemas\Components\Flex;
-use Filament\Schemas\Components\Grid;
+use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Wizard;
 use Filament\Schemas\Schema;
-use Filament\Support\Enums\Width;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Gate;
@@ -104,57 +104,64 @@ final class ActionForm
     private static function fieldsProject(Model|OperationalObjective|null $owner): array
     {
         return [
-            Flex::make([
-                Forms\Components\TextInput::make('name')
-                    // ->prefix('CPAS') todo ?
-                    ->label('Intitulé')
-                    ->required()
-                    ->readOnly(
-                        fn (?string $operation = null) => $operation === 'edit' && ! auth()->user()->hasRole(
-                            RoleEnum::ADMIN->value
-                        )
-                    )
-                    ->maxLength(255),
-                Forms\Components\ToggleButtons::make('to_validate')
-                    ->label('Validée')
-                    ->options([0 => 'Oui', 1 => 'Non'])
-                    ->colors([
-                        0 => 'success',
-                        1 => 'warning',
+            Section::make('Identification')
+                ->columns(2)
+                ->schema([
+                    Flex::make([
+                        Forms\Components\TextInput::make('name')
+                            ->label('Intitulé')
+                            ->required()
+                            ->readOnly(
+                                fn (?string $operation = null) => $operation === 'edit' && ! auth()->user()->hasRole(
+                                    RoleEnum::ADMIN->value
+                                )
+                            )
+                            ->maxLength(255),
+                        Forms\Components\ToggleButtons::make('to_validate')
+                            ->label('Validée')
+                            ->boolean('Oui', 'Non')
+                            ->colors([
+                                true => 'success',
+                                false => 'warning',
+                            ])
+                            ->inline()
+                            ->visible(fn () => auth()->user()->hasRole(RoleEnum::ADMIN->value))
+                            ->grow(false),
                     ])
-                    ->inline()
-                    ->visible(fn () => auth()->user()->hasRole(RoleEnum::ADMIN->value))
-                    ->grow(false),
-            ])
-                ->grow(true),
-            Forms\Components\Select::make('operational_objective_id')
-                ->label('Objectif opérationel')
-                ->relationship(
-                    name: 'operationalObjective',
-                    titleAttribute: 'name',
-                    modifyQueryUsing: fn (Builder $query) => $query->orderBy('name', 'asc')
-                )
-                ->searchable(['name'])
-                ->disabled(
-                    fn (?string $operation = null) => $operation === 'edit' && ! auth()->user()->hasRole(
-                        RoleEnum::ADMIN->value
-                    )
-                )
-                ->preload()
-                ->required()
-                ->visible(fn () => $owner === null),
-            Grid::make(3)
+                        ->grow(true)
+                        ->columnSpanFull(),
+                    Forms\Components\Select::make('operational_objective_id')
+                        ->label('Objectif opérationnel')
+                        ->relationship(
+                            name: 'operationalObjective',
+                            titleAttribute: 'name',
+                            modifyQueryUsing: fn (Builder $query) => $query->orderBy('name', 'asc')
+                        )
+                        ->searchable(['name'])
+                        ->disabled(
+                            fn (?string $operation = null) => $operation === 'edit' && ! auth()->user()->hasRole(
+                                RoleEnum::ADMIN->value
+                            )
+                        )
+                        ->preload()
+                        ->required()
+                        ->visible(fn () => $owner === null)
+                        ->columnSpanFull(),
+                ]),
+            Section::make('Progression')
+                ->columns(3)
                 ->schema([
                     Forms\Components\Select::make('state')
-                        ->label('Etat d\'avancement')
+                        ->label('État d\'avancement')
                         ->required()
                         ->options(ActionStateEnum::class)
                         ->suffixIcon('tabler-ladder'),
                     Forms\Components\TextInput::make('state_percentage')
-                        ->label('Pourcentage d\'avancement')
+                        ->label('Pourcentage')
                         ->suffixIcon('tabler-percentage')
                         ->integer()
-                        ->maxWidth(Width::ExtraSmall),
+                        ->minValue(0)
+                        ->maxValue(100),
                     Forms\Components\ToggleButtons::make('type')
                         ->label('Type')
                         ->default(ActionTypeEnum::PST->value)
@@ -165,20 +172,21 @@ final class ActionForm
                             )
                         )
                         ->inline(),
+                ]),
+            Section::make('Options')
+                ->columns(4)
+                ->schema([
                     Forms\Components\ToggleButtons::make('roadmap')
                         ->label('Feuille de route')
-                        ->required(false)
                         ->options(ActionRoadmapEnum::class)
                         ->visible(fn () => auth()->user()->hasRole(RoleEnum::ADMIN->value))
                         ->inline(),
                     Forms\Components\ToggleButtons::make('is_internal')
                         ->label('Action interne')
-                        ->required(false)
-                        ->options(ActionRoadmapEnum::class)
+                        ->options(YesOrNoEnum::class)
                         ->inline(),
                     Forms\Components\ToggleButtons::make('synergy')
-                        ->label('Synergie CPAS / VILLLE')
-                        ->required(false)
+                        ->label('Synergie CPAS / Ville')
                         ->options(ActionSynergyEnum::class)
                         ->inline(),
                     Forms\Components\DatePicker::make('due_date')
