@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Enums\ActionScopeEnum;
+use App\Enums\DepartmentEnum;
 use App\Models\Scopes\DepartmentScope;
 use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Builder;
@@ -21,6 +23,7 @@ final class OperationalObjective extends Model
         'position',
         'strategic_objective_id',
         'department',
+        'scope',
     ];
 
     /**
@@ -82,5 +85,16 @@ final class OperationalObjective extends Model
     public function byDepartment(Builder $builder, string $department): void
     {
         $builder->where('department', $department);
+    }
+
+    /**
+     * @return array<string, class-string>
+     */
+    protected function casts(): array
+    {
+        return [
+            'scope' => ActionScopeEnum::class,
+            'department' => DepartmentEnum::class,
+        ];
     }
 }

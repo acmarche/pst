@@ -7,6 +7,7 @@ use App\Enums\ActionScopeEnum;
 use App\Enums\ActionStateEnum;
 use App\Enums\ActionSynergyEnum;
 use App\Enums\ActionTypeEnum;
+use App\Enums\DepartmentEnum;
 use App\Enums\RoleEnum;
 use App\Enums\YesOrNoEnum;
 use App\Observers\ActionObserver;
@@ -57,6 +58,7 @@ final class Action extends Model
     protected $casts = [
         'medias' => 'array',
         'due_date' => 'datetime',
+        'department' => DepartmentEnum::class,
         'state' => ActionStateEnum::class,
         'type' => ActionTypeEnum::class,
         'synergy' => ActionSynergyEnum::class,
