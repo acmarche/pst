@@ -27,22 +27,22 @@ final class OperationalObjectiveTables
             ->defaultSort('position')
             ->defaultPaginationPageOption(50)
             ->modifyQueryUsing(
-                fn(Builder $query) => OperationalObjectiveRepository::findByDepartmentWithOosAndActions(
+                fn (Builder $query) => OperationalObjectiveRepository::findByDepartmentWithOosAndActions(
                     UserRepository::departmentSelected()
                 )
             )
-            ->recordUrl(fn(OperationalObjective $record) => OperationalObjectiveResource::getUrl('view', [$record]))
+            ->recordUrl(fn (OperationalObjective $record) => OperationalObjectiveResource::getUrl('view', [$record]))
             ->columns([
                 TextColumn::make('position')
                     ->label('Numéro')
                     ->state(
-                        fn(OperationalObjective $objective
+                        fn (OperationalObjective $objective
                         ): string => $objective->strategicObjective?->position.'.'.' '.$objective->position
                     )->toggleable()
                     ->sortable(),
                 TextColumn::make('os')
                     ->label('Os')
-                    ->state(fn() => 'Os')
+                    ->state(fn () => 'Os')
                     ->tooltip(function (TextColumn $column): ?string {
                         $record = $column->getRecord();
 
@@ -52,9 +52,9 @@ final class OperationalObjectiveTables
                 TextColumn::make('name')
                     ->label('Nom')
                     ->searchable()
-                    ->icon(fn(OperationalObjective $record) => $record->isInternal() ? Heroicon::LightBulb : false)
+                    ->icon(fn (OperationalObjective $record) => $record->isInternal() ? Heroicon::LightBulb : false)
                     ->iconPosition(IconPosition::After)
-                    ->suffix(fn(OperationalObjective $record) => $record->isInternal() ? '(Interne)' : '')
+                    ->suffix(fn (OperationalObjective $record) => $record->isInternal() ? '(Interne)' : '')
                     ->sortable()
                     ->limit(85)
                     ->tooltip(function (TextColumn $column): ?string {
@@ -73,7 +73,7 @@ final class OperationalObjectiveTables
                     ->sortable(),
                 TextColumn::make('isInternal')
                     ->label('Interne')
-                    ->state(fn(OperationalObjective $record) => $record->isInternal() ? 'Oui' : 'Non')
+                    ->state(fn (OperationalObjective $record) => $record->isInternal() ? 'Oui' : 'Non')
                     ->toggleable(),
                 TextColumn::make('department')
                     ->label('Département')
@@ -133,7 +133,7 @@ final class OperationalObjectiveTables
             ->recordActions([
                 ViewAction::make()
                     ->url(
-                        fn(OperationalObjective $record): string => OperationalObjectiveResource::getUrl(
+                        fn (OperationalObjective $record): string => OperationalObjectiveResource::getUrl(
                             'view',
                             ['record' => $record]
                         )

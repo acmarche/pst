@@ -74,14 +74,14 @@ final class AdminPanelProvider extends PanelProvider
             ->userMenuItems([
                 Action::make('view-ville')
                     ->label('Ville')
-                    ->url(fn() => route('select.department', ['department' => DepartmentEnum::VILLE->value]))
+                    ->url(fn () => route('select.department', ['department' => DepartmentEnum::VILLE->value]))
                     ->icon('tabler-switch')
-                    ->visible(fn() => count(auth()->user()->departments) > 1),
+                    ->visible(fn () => count(auth()->user()->departments) > 1),
                 Action::make('view-cpas')
                     ->label('Cpas')
-                    ->url(fn() => route('select.department', ['department' => DepartmentEnum::CPAS->value]))
+                    ->url(fn () => route('select.department', ['department' => DepartmentEnum::CPAS->value]))
                     ->icon('tabler-switch')
-                    ->visible(fn() => count(auth()->user()->departments) > 1),
+                    ->visible(fn () => count(auth()->user()->departments) > 1),
             ]);
     }
 }

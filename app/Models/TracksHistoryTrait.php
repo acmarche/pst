@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use BackedEnum;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 
@@ -32,7 +33,7 @@ trait TracksHistoryTrait
 
     protected function getHistoryBody($value, $field): array
     {
-        $displayValue = $value instanceof \BackedEnum ? $value->value : $value;
+        $displayValue = $value instanceof BackedEnum ? $value->value : $value;
 
         return [
             'body' => "Updated {$field} to {$displayValue}",

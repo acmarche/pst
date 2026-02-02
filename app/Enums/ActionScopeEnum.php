@@ -5,7 +5,7 @@ namespace App\Enums;
 use Filament\Support\Contracts\HasColor;
 use Filament\Support\Contracts\HasLabel;
 
-enum ActionScopeEnum: string implements HasLabel,HasColor
+enum ActionScopeEnum: string implements HasColor, HasLabel
 {
     case INTERNAL = 'INTERNAL';
     case EXTERNAL = 'EXTERNAL';
