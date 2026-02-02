@@ -8,6 +8,7 @@ use App\Enums\ActionStateEnum;
 use App\Enums\ActionSynergyEnum;
 use App\Enums\ActionTypeEnum;
 use App\Enums\RoleEnum;
+use App\Enums\YesOrNoEnum;
 use App\Observers\ActionObserver;
 use App\Repository\UserRepository;
 use Database\Factories\ActionFactory;
@@ -60,7 +61,7 @@ final class Action extends Model
         'type' => ActionTypeEnum::class,
         'synergy' => ActionSynergyEnum::class,
         'roadmap' => ActionRoadmapEnum::class,
-        'to_validate' => 'boolean',
+        'to_validate' => YesOrNoEnum::class,
         'scope' => ActionScopeEnum::class,
     ];
 
@@ -220,7 +221,7 @@ final class Action extends Model
                 $user = Auth::user();
                 $model->user_add = $user->username;
             }
-            if (! isset($model->to_validate)) {
+            if (!isset($model->to_validate)) {
                 $model->to_validate = true;
             }
         });

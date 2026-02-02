@@ -132,10 +132,7 @@ final class ActionForm
                         Forms\Components\ToggleButtons::make('to_validate')
                             ->label('A valider')
                             ->options(YesOrNoEnum::class)
-                            ->colors([
-                                true => 'success',
-                                false => 'warning',
-                            ])
+
                             ->inline()
                             ->visible(fn () => auth()->user()->hasRole(RoleEnum::ADMIN->value))
                             ->grow(false),

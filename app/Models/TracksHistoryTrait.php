@@ -32,10 +32,12 @@ trait TracksHistoryTrait
 
     protected function getHistoryBody($value, $field): array
     {
+        $displayValue = $value instanceof \BackedEnum ? $value->value : $value;
+
         return [
-            'body' => "Updated {$field} to {$value}",
+            'body' => "Updated {$field} to {$displayValue}",
             'property' => $field,
-            'new_value' => $value,
+            'new_value' => $displayValue,
         ];
     }
 
