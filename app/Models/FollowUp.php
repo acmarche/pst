@@ -2,11 +2,14 @@
 
 namespace App\Models;
 
+use Database\Factories\FollowUpFactory;
+use Illuminate\Database\Eloquent\Attributes\UseFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Facades\Auth;
 
+#[UseFactory(FollowUpFactory::class)]
 final class FollowUp extends Model
 {
     use HasFactory;

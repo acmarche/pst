@@ -12,7 +12,9 @@ final class HistoryFactory extends Factory
     public function definition(): array
     {
         return [
-
+            'property' => fake()->name(),
+            'body' => fake()->text(),
+            'user_add' => fake()->userName(),
         ];
     }
 }

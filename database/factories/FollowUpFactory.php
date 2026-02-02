@@ -12,7 +12,7 @@ final class FollowUpFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => fake()->name(),
+            'content' => fake()->text(),
             'user_add' => fake()->userName(),
         ];
     }

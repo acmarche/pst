@@ -2,11 +2,14 @@
 
 namespace App\Models;
 
+use Database\Factories\HistoryFactory;
+use Illuminate\Database\Eloquent\Attributes\UseFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Facades\Auth;
 
+#[UseFactory(HistoryFactory::class)]
 final class History extends Model
 {
     use HasFactory;
