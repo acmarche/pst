@@ -11,8 +11,6 @@ final class FollowUp extends Model
 {
     use HasFactory;
 
-    public $timestamps = false;
-
     protected $fillable = ['content', 'user_add'];
 
     /**
