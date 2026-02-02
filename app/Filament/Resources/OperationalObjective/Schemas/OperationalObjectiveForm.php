@@ -7,6 +7,8 @@ use App\Enums\ActionSynergyEnum;
 use App\Enums\DepartmentEnum;
 use App\Repository\UserRepository;
 use Filament\Forms;
+use Filament\Schemas\Components\Grid;
+use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 
 final class OperationalObjectiveForm
@@ -16,30 +18,49 @@ final class OperationalObjectiveForm
         return $form
             ->columns(1)
             ->schema([
-                Forms\Components\TextInput::make('name')
-                    ->required()
-                    ->label('Intitulé')
-                    ->maxLength(255),
-                Forms\Components\Select::make('strategic_objective_id')
-                    ->relationship('strategicObjective', 'name')
-                    ->label('Objectif Opérationnel')
-                    // ->default($owner?->id)
-                    ->required(),
-                Forms\Components\ToggleButtons::make('department')
-                    ->label('Département')
-                    ->required()
-                    ->columns(4)
-                    ->default(UserRepository::departmentSelected())
-                    ->options(DepartmentEnum::class)
-                    ->enum(DepartmentEnum::class),
-                Forms\Components\ToggleButtons::make('scope')
-                    ->label('Volet')
-                    ->options(ActionScopeEnum::class)
-                    ->inline(),
-                Forms\Components\ToggleButtons::make('synergy')
-                    ->label('Synergie CPAS / Ville')
-                    ->options(ActionSynergyEnum::class)
-                    ->inline(),
+                Section::make('Identification')
+                    ->icon('tabler-target')
+                    ->columns(1)
+                    ->columnSpanFull()
+                    ->schema([
+                        Forms\Components\TextInput::make('name')
+                            ->required()
+                            ->label('Intitulé')
+                            ->placeholder('Saisissez l\'intitulé de l\'objectif opérationnel')
+                            ->prefixIcon('tabler-file-text')
+                            ->maxLength(255),
+                        Forms\Components\Select::make('strategic_objective_id')
+                            ->relationship('strategicObjective', 'name')
+                            ->label('Objectif Stratégique')
+                            ->prefixIcon('tabler-hierarchy')
+                            ->searchable()
+                            ->preload()
+                            ->required(),
+                    ]),
+
+                Section::make('Configuration')
+                    ->icon('tabler-settings')
+                    ->columnSpanFull()
+                    ->schema([
+                        Grid::make(3)
+                            ->schema([
+                                Forms\Components\ToggleButtons::make('department')
+                                    ->label('Département')
+                                    ->required()
+                                    ->default(UserRepository::departmentSelected())
+                                    ->options(DepartmentEnum::class)
+                                    ->enum(DepartmentEnum::class)
+                                    ->grouped(),
+                                Forms\Components\ToggleButtons::make('scope')
+                                    ->label('Volet')
+                                    ->options(ActionScopeEnum::class)
+                                    ->grouped(),
+                                Forms\Components\ToggleButtons::make('synergy')
+                                    ->label('Synergie CPAS / Ville')
+                                    ->options(ActionSynergyEnum::class)
+                                    ->grouped(),
+                            ]),
+                    ]),
             ]);
     }
 }
