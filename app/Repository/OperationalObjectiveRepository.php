@@ -2,7 +2,7 @@
 
 namespace App\Repository;
 
-use App\Enums\DepartmentEnum;
+use App\Enums\ActionScopeEnum;
 use App\Models\OperationalObjective;
 use Illuminate\Database\Eloquent\Builder;
 
@@ -15,8 +15,11 @@ final class OperationalObjectiveRepository
 
     public static function findByDepartmentWithOosAndActions(string $department): Builder
     {
-        return OperationalObjective::query()->whereIn('department', [$department, DepartmentEnum::COMMON->value])
-            // ->withoutGlobalScope(DepartmentScope::class)
+        return OperationalObjective::query()
+            ->where(function (Builder $query) use ($department): void {
+                $query->whereIn('department', [$department])
+                    ->orWhere('scope', ActionScopeEnum::INTERNAL);
+            })
             ->with('actions')
             ->with('actions.leaderServices')
             ->with('actions.partnerServices')
