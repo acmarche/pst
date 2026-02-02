@@ -79,6 +79,7 @@ final class ActionTables
         return $table
             ->defaultPaginationPageOption(50)
             ->defaultSort('name')
+            ->reorderable('position')
             ->recordUrl(fn (Action $record) => ActionPstResource::getUrl('view', [$record]))
             ->columns([
                 TextColumn::make('name')
@@ -86,6 +87,9 @@ final class ActionTables
                     ->limit(120)
                     ->sortable()
                     ->searchable(),
+                TextColumn::make('position')
+                    ->label('Numérotation')
+                    ->sortable(),
             ])
             ->filters([
 
