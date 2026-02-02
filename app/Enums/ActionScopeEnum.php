@@ -5,10 +5,10 @@ namespace App\Enums;
 use Filament\Support\Contracts\HasColor;
 use Filament\Support\Contracts\HasLabel;
 
-enum DepartmentEnum: string implements HasColor, HasLabel
+enum ActionScopeEnum: string implements HasLabel,HasColor
 {
-    case CPAS = 'CPAS';
-    case VILLE = 'VILLE';
+    case INTERNAL = 'INTERNAL';
+    case EXTERNAL = 'EXTERNAL';
 
     public static function toArray(): array
     {
@@ -23,16 +23,16 @@ enum DepartmentEnum: string implements HasColor, HasLabel
     public function getLabel(): string
     {
         return match ($this) {
-            self::CPAS => 'Cpas',
-            self::VILLE => 'Ville',
+            self::INTERNAL => 'Interne',
+            self::EXTERNAL => 'Externe',
         };
     }
 
     public function getColor(): string|array|null
     {
         return match ($this) {
-            self::CPAS => 'primary',
-            self::VILLE => 'success',
+            self::INTERNAL => 'secondary',
+            self::EXTERNAL => 'primary',
         };
     }
 }

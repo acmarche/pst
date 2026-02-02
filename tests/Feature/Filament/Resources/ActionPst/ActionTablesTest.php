@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Filament\Resources\ActionPst;
 
+use App\Enums\ActionScopeEnum;
 use App\Enums\RoleEnum;
 use App\Filament\Resources\ActionPst\Pages\ListActions;
 use App\Models\Action;
@@ -38,24 +39,24 @@ final class ActionTablesTest extends TestCase
             ->assertOk();
     }
 
-    public function test_is_internal_filter_exists(): void
+    public function test_scope_filter_exists(): void
     {
         $this->actingAs($this->adminUser);
 
         Livewire::test(ListActions::class)
-            ->assertTableFilterExists('isInternal');
+            ->assertTableFilterExists('scope');
     }
 
-    public function test_can_filter_actions_by_is_internal_true(): void
+    public function test_can_filter_actions_by_scope_internal(): void
     {
         $this->actingAs($this->adminUser);
 
         $internalStrategicObjective = StrategicObjective::factory()->create([
-            'is_internal' => true,
+            'scope' => ActionScopeEnum::INTERNAL->value,
             'department' => 'VILLE',
         ]);
         $externalStrategicObjective = StrategicObjective::factory()->create([
-            'is_internal' => false,
+            'scope' => ActionScopeEnum::EXTERNAL->value,
             'department' => 'VILLE',
         ]);
 
@@ -70,30 +71,32 @@ final class ActionTablesTest extends TestCase
             'operational_objective_id' => $internalOperationalObjective->id,
             'department' => 'VILLE',
             'to_validate' => false,
+            'scope' => ActionScopeEnum::INTERNAL->value,
         ]);
         $externalActions = Action::factory()->count(2)->create([
             'operational_objective_id' => $externalOperationalObjective->id,
             'department' => 'VILLE',
             'to_validate' => false,
+            'scope' => ActionScopeEnum::EXTERNAL->value,
         ]);
 
         Livewire::test(ListActions::class)
             ->loadTable()
-            ->filterTable('isInternal', '1')
+            ->filterTable('scope', ActionScopeEnum::INTERNAL->value)
             ->assertCanSeeTableRecords($internalActions)
             ->assertCanNotSeeTableRecords($externalActions);
     }
 
-    public function test_can_filter_actions_by_is_internal_false(): void
+    public function test_can_filter_actions_by_scope_external(): void
     {
         $this->actingAs($this->adminUser);
 
         $internalStrategicObjective = StrategicObjective::factory()->create([
-            'is_internal' => true,
+            'scope' => ActionScopeEnum::INTERNAL->value,
             'department' => 'VILLE',
         ]);
         $externalStrategicObjective = StrategicObjective::factory()->create([
-            'is_internal' => false,
+            'scope' => ActionScopeEnum::EXTERNAL->value,
             'department' => 'VILLE',
         ]);
 
@@ -108,16 +111,18 @@ final class ActionTablesTest extends TestCase
             'operational_objective_id' => $internalOperationalObjective->id,
             'department' => 'VILLE',
             'to_validate' => false,
+            'scope' => ActionScopeEnum::INTERNAL->value,
         ]);
         $externalActions = Action::factory()->count(2)->create([
             'operational_objective_id' => $externalOperationalObjective->id,
             'department' => 'VILLE',
             'to_validate' => false,
+            'scope' => ActionScopeEnum::EXTERNAL->value,
         ]);
 
         Livewire::test(ListActions::class)
             ->loadTable()
-            ->filterTable('isInternal', '0')
+            ->filterTable('scope', ActionScopeEnum::EXTERNAL->value)
             ->assertCanSeeTableRecords($externalActions)
             ->assertCanNotSeeTableRecords($internalActions);
     }

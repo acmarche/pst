@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\ActionPst\Schemas;
 
 use App\Enums\ActionRoadmapEnum;
+use App\Enums\ActionScopeEnum;
 use App\Enums\ActionStateEnum;
 use App\Enums\ActionSynergyEnum;
 use App\Enums\ActionTypeEnum;
@@ -129,8 +130,8 @@ final class ActionForm
                             )
                             ->maxLength(255),
                         Forms\Components\ToggleButtons::make('to_validate')
-                            ->label('Validée')
-                            ->boolean('Oui', 'Non')
+                            ->label('A valider')
+                            ->options(YesOrNoEnum::class)
                             ->colors([
                                 true => 'success',
                                 false => 'warning',
@@ -192,9 +193,9 @@ final class ActionForm
                         ->options(ActionRoadmapEnum::class)
                         ->visible(fn () => auth()->user()->hasRole(RoleEnum::ADMIN->value))
                         ->inline(),
-                    Forms\Components\ToggleButtons::make('is_internal')
-                        ->label('Action interne')
-                        ->options(YesOrNoEnum::class)
+                    Forms\Components\ToggleButtons::make('scope')
+                        ->label('Volet')
+                        ->options(ActionScopeEnum::class)
                         ->inline(),
                     Forms\Components\ToggleButtons::make('synergy')
                         ->label('Synergie CPAS / Ville')

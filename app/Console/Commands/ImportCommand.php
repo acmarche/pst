@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Console\Commands;
 
 use App\Enums\ActionRoadmapEnum;
+use App\Enums\ActionScopeEnum;
 use App\Enums\ActionStateEnum;
 use App\Enums\ActionTypeEnum;
 use App\Enums\DepartmentEnum;
@@ -110,14 +111,14 @@ final class ImportCommand extends Command
         ],
     ];
 
-    private bool $is_internal = false;
+    private ActionScopeEnum $scope = ActionScopeEnum::EXTERNAL;
 
     public function handle(): int
     {
         $csvFile = $this->dir.$this->argument('filename');
         $this->department = DepartmentEnum::CPAS->value;
         if ($csvFile === 'Interne.csv') {
-            $this->is_internal = true;
+            $this->scope = ActionScopeEnum::INTERNAL;
         }
         $this->importO();
         // $this->importCsv($csvFile);
@@ -319,7 +320,7 @@ final class ImportCommand extends Command
                 'roadmap' => $actionRoadmapEnum->value,
                 'operational_objective_id' => $this->lastOo,
                 'to_validate' => false,
-                'is_internal' => $this->is_internal,
+                'scope' => $this->scope->value,
             ]);
         } catch (Exception $exception) {
             $this->error($exception->getMessage());

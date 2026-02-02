@@ -2,7 +2,6 @@
 
 namespace App\Console\Commands;
 
-use App\Models\Action;
 use Illuminate\Console\Command;
 use Symfony\Component\Console\Command\Command as SfCommand;
 
@@ -24,12 +23,7 @@ final class FixCommand extends Command
 
     public function handle(): int
     {
-        $actions = Action::all();
-        foreach ($actions as $action) {
-            if ($action->isInternal()) {
-                //  $action->update(['is_internal' => true]);
-            }
-        }
+        $this->info('Migration handles the is_internal to scope conversion.');
 
         return SfCommand::SUCCESS;
     }

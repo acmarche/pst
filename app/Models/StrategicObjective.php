@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\ActionScopeEnum;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -16,11 +17,11 @@ final class StrategicObjective extends Model
         'name',
         'position',
         'department',
-        'is_internal',
+        'scope',
     ];
 
     protected $casts = [
-        'is_internal' => 'boolean',
+        'scope' => ActionScopeEnum::class,
     ];
 
     /**
@@ -47,7 +48,7 @@ final class StrategicObjective extends Model
 
     public function isInternal(): bool
     {
-        return $this->is_internal;
+        return $this->scope === ActionScopeEnum::INTERNAL;
     }
 
     /**

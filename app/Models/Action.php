@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\ActionRoadmapEnum;
+use App\Enums\ActionScopeEnum;
 use App\Enums\ActionStateEnum;
 use App\Enums\ActionSynergyEnum;
 use App\Enums\ActionTypeEnum;
@@ -49,7 +50,7 @@ final class Action extends Model
         'synergy',
         'position',
         'to_validate',
-        'is_internal',
+        'scope',
     ];
 
     protected $casts = [
@@ -60,7 +61,7 @@ final class Action extends Model
         'synergy' => ActionSynergyEnum::class,
         'roadmap' => ActionRoadmapEnum::class,
         'to_validate' => 'boolean',
-        'is_internal' => 'boolean',
+        'scope' => ActionScopeEnum::class,
     ];
 
     #[Scope]
@@ -107,7 +108,7 @@ final class Action extends Model
 
     public function isInternal(): bool
     {
-        return (bool) $this->is_internal;
+        return $this->scope === ActionScopeEnum::INTERNAL;
     }
 
     /**

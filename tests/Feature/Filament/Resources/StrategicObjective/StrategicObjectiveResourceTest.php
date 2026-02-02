@@ -116,7 +116,7 @@ describe('crud operations', function () {
             ->fillForm([
                 'name' => $newData->name,
                 'department' => $newData->department,
-                'is_internal' => $newData->is_internal ? 0 : 1,
+                'scope' => $newData->scope,
                 'position' => $newData->position,
             ])
             ->call('create')
@@ -235,9 +235,9 @@ describe('form fields', function () {
             ->assertFormFieldHidden('department');
     });
 
-    it('has is_internal field', function () {
+    it('has scope field', function () {
         Livewire::test(CreateStrategicObjective::class)
-            ->assertFormFieldExists('is_internal');
+            ->assertFormFieldExists('scope');
     });
 });
 

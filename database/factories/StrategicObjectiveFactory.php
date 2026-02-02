@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Enums\ActionScopeEnum;
 use App\Models\StrategicObjective;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -15,7 +16,7 @@ final class StrategicObjectiveFactory extends Factory
             'name' => fake()->sentence(3),
             'position' => fake()->numberBetween(1, 100),
             'department' => 'VILLE',
-            'is_internal' => fake()->boolean(),
+            'scope' => fake()->randomElement(ActionScopeEnum::cases())->value,
         ];
     }
 }

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Filament\Resources\ActionPst\Tables;
 
+use App\Enums\ActionScopeEnum;
 use App\Enums\ActionStateEnum;
 use App\Enums\ActionTypeEnum;
 use App\Filament\Resources\ActionPst\ActionPstResource;
@@ -240,19 +241,17 @@ final class ActionTables
                         ->mapWithKeys(fn (ActionTypeEnum $action) => [$action->value => $action->getLabel()])
                         ->toArray()
                 ),
-            SelectFilter::make('is_internal')
-                ->label('Volet interne')
-                ->options([
-                    '1' => 'Oui',
-                    '0' => 'Non',
-                ]),
+            SelectFilter::make('scope')
+                ->label('Volet')
+                ->options(ActionScopeEnum::class),
             SelectFilter::make('department')
                 ->label('Département')
                 ->options(UserRepository::listDepartmentOfCurrentUser())
+                ->visible(fn (): bool => count(auth()->user()->departments ?? []) > 1)
                 ->default(
                     count(
-                        UserRepository::listDepartmentOfCurrentUser(false)
-                    ) > 0 ? array_values(UserRepository::listDepartmentOfCurrentUser(false))[0] : null
+                        UserRepository::listDepartmentOfCurrentUser()
+                    ) > 0 ? array_values(UserRepository::listDepartmentOfCurrentUser())[0] : null
                 ),
             SelectFilter::make('users')
                 ->label('Agents')

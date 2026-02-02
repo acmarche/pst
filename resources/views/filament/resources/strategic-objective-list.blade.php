@@ -23,7 +23,7 @@
                                             tag="a">
                             Détails
                         </x-filament::button>
-                        @if($os->is_internal)
+                        @if($os->isInternal())
                             <x-filament::badge size="lg" color="success" icon="tabler-shield-check">
                                 Interne
                             </x-filament::badge>

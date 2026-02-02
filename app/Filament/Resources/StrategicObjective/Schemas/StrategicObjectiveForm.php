@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\StrategicObjective\Schemas;
 
+use App\Enums\ActionScopeEnum;
 use App\Enums\DepartmentEnum;
 use App\Repository\UserRepository;
 use Filament\Forms;
@@ -25,9 +26,9 @@ final class StrategicObjectiveForm
                     ->options(DepartmentEnum::class)
                     ->enum(DepartmentEnum::class)
                     ->visible($schema->getOperation() === 'create'),
-                Forms\Components\ToggleButtons::make('is_internal')
-                    ->label('Volet interne')
-                    ->options([0 => 'Oui', 1 => 'Non'])
+                Forms\Components\ToggleButtons::make('scope')
+                    ->label('Volet')
+                    ->options(ActionScopeEnum::class)
                     ->inline(),
                 Forms\Components\TextInput::make('position')
                     ->required()
