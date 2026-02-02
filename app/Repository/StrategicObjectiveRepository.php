@@ -2,7 +2,7 @@
 
 namespace App\Repository;
 
-use App\Enums\DepartmentEnum;
+use App\Enums\ActionScopeEnum;
 use App\Models\StrategicObjective;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
@@ -24,8 +24,11 @@ final class StrategicObjectiveRepository
      */
     public static function findByDepartmentWithOosAndActions(string $department): Builder
     {
-        return StrategicObjective::query()->whereIn('department', [$department, DepartmentEnum::COMMON->value])
-            // ->withoutGlobalScope(DepartmentScope::class)
+        return StrategicObjective::query()
+            ->where(function (Builder $query) use ($department): void {
+                $query->whereIn('department', [$department])
+                    ->orWhereHas('oos.actions', fn (Builder $q): Builder => $q->where('scope', ActionScopeEnum::INTERNAL));
+            })
             ->with('oos')
             ->with('oos.actions')
             ->with('oos.actions.leaderServices')
