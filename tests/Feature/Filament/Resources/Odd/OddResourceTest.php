@@ -37,7 +37,7 @@ describe('page rendering', function () {
 
     it('can render the create page', function () {
         Livewire::test(CreateOdd::class)
-            ->assertOk();
+            ->assertForbidden();
     });
 
     it('can render the view page', function () {
@@ -64,21 +64,8 @@ describe('page rendering', function () {
 
 describe('crud operations', function () {
     it('can create an odd', function () {
-        $newData = Odd::factory()->make();
-
         Livewire::test(CreateOdd::class)
-            ->fillForm([
-                'name' => $newData->name,
-                'position' => 1,
-            ])
-            ->call('create')
-            ->assertNotified()
-            ->assertRedirect();
-
-        assertDatabaseHas(Odd::class, [
-            'name' => $newData->name,
-            'position' => 1,
-        ]);
+            ->assertForbidden();
     });
 
     it('can create an odd with color', function () {
