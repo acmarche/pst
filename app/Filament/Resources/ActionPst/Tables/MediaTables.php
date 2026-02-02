@@ -25,7 +25,9 @@ final class MediaTables
                     ->state('Télécharger')
                     ->icon('tabler-download')
                     ->action(fn (Media $media) => Storage::disk('public')->download($media->file_name)),
-                TextColumn::make('size'),
+                TextColumn::make('size')
+                    ->label('Taille')
+                    ->suffix('Ko'),
                 TextColumn::make('mime_type'),
             ])
             ->filters([
