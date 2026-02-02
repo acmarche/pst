@@ -23,7 +23,7 @@ final class OperationalObjectiveFactory extends Factory
     public function internal(): self
     {
         return $this->state([
-            'department' => 'COMMUN',
+            'department' => null,
             'scope' => ActionScopeEnum::INTERNAL,
         ]);
     }
