@@ -87,6 +87,15 @@ final class OperationalObjective extends Model
         $builder->where('department', $department);
     }
 
+    protected static function booted(): void
+    {
+        self::saving(function (OperationalObjective $model) {
+            if ($model->scope === ActionScopeEnum::INTERNAL) {
+                $model->department = null;
+            }
+        });
+    }
+
     /**
      * @return array<string, class-string>
      */

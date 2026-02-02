@@ -36,7 +36,7 @@ final class StrategicObjectiveResource extends Resource
 
     public static function table(Table $table): Table
     {
-        return StrategicObjectiveTables::configure($table);
+        return $table;
     }
 
     public static function getRelations(): array

@@ -17,12 +17,17 @@ use Illuminate\Database\Eloquent\Builder;
 
 final class StrategicObjectiveTables
 {
+    /**
+     * @deprecated
+     */
     public static function configure(Table $table): Table
     {
         return $table
             ->defaultPaginationPageOption(50)
             ->modifyQueryUsing(
-                fn (Builder $query) => StrategicObjectiveRepository::findByDepartmentWithOosAndActions(UserRepository::departmentSelected())
+                fn (Builder $query) => StrategicObjectiveRepository::findByDepartmentWithOosAndActions(
+                    UserRepository::departmentSelected()
+                )
             )
             ->recordTitleAttribute('name')
             ->recordUrl(fn (StrategicObjective $record) => StrategicObjectiveResource::getUrl('view', [$record]))
@@ -30,7 +35,8 @@ final class StrategicObjectiveTables
             ->columns([
                 TextColumn::make('position')
                     ->label('Numéro')
-                    ->sortable(),
+                    ->sortable()
+                    ->toggleable(),
                 TextColumn::make('name')
                     ->label('Intitulé')
                     ->limit(90)
@@ -49,7 +55,11 @@ final class StrategicObjectiveTables
                 TextColumn::make('oos_count')
                     ->label('Objectifs Opérationnels (OO)')
                     ->tooltip('Objectif Opérationnel')
-                    ->counts('oos'),
+                    ->counts('oos')->toggleable(),
+                TextColumn::make('isInternal')
+                    ->label('Interne')
+                    ->state(fn (StrategicObjective $record) => $record->isInternal() ? 'Oui' : 'Non')
+                    ->toggleable(),
                 TextColumn::make('department')
                     ->label('Département')
                     ->sortable()
