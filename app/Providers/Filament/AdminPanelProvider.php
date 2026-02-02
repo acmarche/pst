@@ -5,9 +5,7 @@ declare(strict_types=1);
 namespace App\Providers\Filament;
 
 use App\Enums\DepartmentEnum;
-use App\Filament\Pages\Auth\EditProfile;
 use App\Filament\Pages\Auth\Login;
-use App\Filament\Widgets\ActionsWidget;
 use App\Http\Middleware\FilamentPanelColorMiddleware;
 use App\Repository\UserRepository;
 use Filament\Actions\Action;
@@ -38,9 +36,7 @@ final class AdminPanelProvider extends PanelProvider
             ->id('admin')
             ->path('admin')
             ->login(Login::class)
-            ->profile(EditProfile::class)
             ->spa()
-            ->profile()
             ->resourceCreatePageRedirect('view')
             ->resourceEditPageRedirect('view')
             ->sidebarCollapsibleOnDesktop()
@@ -78,14 +74,14 @@ final class AdminPanelProvider extends PanelProvider
             ->userMenuItems([
                 Action::make('view-ville')
                     ->label('Ville')
-                    ->url(fn () => route('select.department', ['department' => DepartmentEnum::VILLE->value]))
+                    ->url(fn() => route('select.department', ['department' => DepartmentEnum::VILLE->value]))
                     ->icon('tabler-switch')
-                    ->visible(fn () => count(auth()->user()->departments) > 1),
+                    ->visible(fn() => count(auth()->user()->departments) > 1),
                 Action::make('view-cpas')
                     ->label('Cpas')
-                    ->url(fn () => route('select.department', ['department' => DepartmentEnum::CPAS->value]))
+                    ->url(fn() => route('select.department', ['department' => DepartmentEnum::CPAS->value]))
                     ->icon('tabler-switch')
-                    ->visible(fn () => count(auth()->user()->departments) > 1),
+                    ->visible(fn() => count(auth()->user()->departments) > 1),
             ]);
     }
 }
