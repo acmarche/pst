@@ -11,11 +11,11 @@ final class FollowUpForm
     {
         return $schema
             ->schema([
-                Forms\Components\TextInput::make('name')
+                Forms\Components\TextInput::make('content')
                     ->required()
                     ->maxLength(255),
                 Forms\Components\FileUpload::make('icon')
-                    ->label('Icone'),
+                    ->label('Icône'),
             ]);
     }
 }

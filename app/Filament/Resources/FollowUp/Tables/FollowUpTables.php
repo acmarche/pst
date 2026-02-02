@@ -18,7 +18,6 @@ final class FollowUpTables
     public static function configure(Table $table): Table
     {
         return $table
-            ->recordTitleAttribute('name')
             ->columns([
                 TextColumn::make('content')
                     ->label('Contenu')
