@@ -143,12 +143,30 @@ final class ActionTablesTest extends TestCase
             ->assertTableFilterExists('type');
     }
 
-    public function test_department_filter_exists(): void
+    public function test_department_filter_visible_when_user_has_ville_and_cpas(): void
     {
-        $this->actingAs($this->adminUser);
+        $userWithBothDepartments = User::factory()->create([
+            'departments' => ['VILLE', 'CPAS'],
+        ]);
+        $userWithBothDepartments->roles()->attach($this->adminRole);
+
+        $this->actingAs($userWithBothDepartments);
 
         Livewire::test(ListActions::class)
             ->assertTableFilterExists('department');
+    }
+
+    public function test_department_filter_hidden_when_user_has_single_department(): void
+    {
+        $userWithSingleDepartment = User::factory()->create([
+            'departments' => ['VILLE'],
+        ]);
+        $userWithSingleDepartment->roles()->attach($this->adminRole);
+
+        $this->actingAs($userWithSingleDepartment);
+
+        Livewire::test(ListActions::class)
+            ->assertTableFilterHidden('department');
     }
 
     public function test_operational_objectives_filter_exists(): void
