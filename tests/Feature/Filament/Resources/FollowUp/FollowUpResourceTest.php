@@ -92,6 +92,7 @@ describe('relation manager', function () {
             'ownerRecord' => $this->action,
             'pageClass' => ViewAction::class,
         ])
+            ->loadTable()
             ->assertCanSeeTableRecords($followups);
     });
 
