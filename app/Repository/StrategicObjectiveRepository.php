@@ -27,7 +27,7 @@ final class StrategicObjectiveRepository
         return StrategicObjective::query()
             ->where(function (Builder $query) use ($department): void {
                 $query->whereIn('department', [$department])
-                    ->orWhereHas('oos.actions', fn (Builder $q): Builder => $q->where('scope', ActionScopeEnum::INTERNAL));
+                    ->orWhere('scope', ActionScopeEnum::INTERNAL);
             })
             ->with('oos')
             ->with('oos.actions')
