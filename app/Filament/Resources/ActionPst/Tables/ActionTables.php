@@ -145,20 +145,6 @@ final class ActionTables
             )
             ->toggleable(isToggledHiddenByDefault: true);
 
-        $columns[] = TextColumn::make('leaderServices.name')
-            ->label('Services porteurs')
-            ->listWithLineBreaks()
-            ->limitList(2)
-            ->expandableLimitedList()
-            ->toggleable(isToggledHiddenByDefault: true);
-
-        $columns[] = TextColumn::make('partnerServices.name')
-            ->label('Services partenaires')
-            ->listWithLineBreaks()
-            ->limitList(2)
-            ->expandableLimitedList()
-            ->toggleable(isToggledHiddenByDefault: true);
-
         $columns[] = TextColumn::make('partners.name')
             ->label('Partenaires externes')
             ->listWithLineBreaks()
@@ -282,7 +268,8 @@ final class ActionTables
                 ->searchable()
                 ->sortable()
                 ->numeric()
-                ->label('Id'),
+                ->label('Id')
+                ->toggleable(),
             TextColumn::make('position')
                 ->searchable()
                 ->toggleable(isToggledHiddenByDefault: true)
@@ -296,7 +283,8 @@ final class ActionTables
                     $record = $column->getRecord();
 
                     return $record->operationalObjective?->name;
-                }),
+                })
+                ->toggleable(),
             TextColumn::make('name')
                 ->searchable()
                 ->sortable()
@@ -314,10 +302,12 @@ final class ActionTables
                 }),
             TextColumn::make('state')
                 ->label('État d\'avancement')
-                ->formatStateUsing(fn(ActionStateEnum $state) => $state->getLabel() ?? 'Unknown'),
+                ->formatStateUsing(fn(ActionStateEnum $state) => $state->getLabel() ?? 'Unknown')
+                ->toggleable(),
             TextColumn::make('isInternal')
                 ->label('Interne')
-                ->state(fn(Action $record) => $record->isInternal() ? 'Oui' : 'Non'),
+                ->state(fn(Action $record) => $record->isInternal() ? 'Oui' : 'Non')
+                ->toggleable(),
             TextColumn::make('type')
                 ->formatStateUsing(fn(ActionTypeEnum $state) => $state->getLabel() ?? 'Unknown')
                 ->toggleable(isToggledHiddenByDefault: true),
@@ -329,6 +319,18 @@ final class ActionTables
             TextColumn::make('department')
                 ->label('Département')
                 ->sortable()
+                ->toggleable(isToggledHiddenByDefault: true),
+            TextColumn::make('leaderServices.name')
+                ->label('Services porteurs')
+                ->listWithLineBreaks()
+                ->limitList(2)
+                ->expandableLimitedList()
+                ->toggleable(isToggledHiddenByDefault: true),
+            TextColumn::make('partnerServices.name')
+                ->label('Services partenaires')
+                ->listWithLineBreaks()
+                ->limitList(2)
+                ->expandableLimitedList()
                 ->toggleable(isToggledHiddenByDefault: true),
             TextColumn::make('due_date')
                 ->label('Date échéance')
