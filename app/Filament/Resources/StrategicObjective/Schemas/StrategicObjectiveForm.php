@@ -28,6 +28,7 @@ final class StrategicObjectiveForm
                     ->visible($schema->getOperation() === 'create'),
                 Forms\Components\ToggleButtons::make('scope')
                     ->label('Volet')
+                    ->helperText('Si interne, l\'objectif stratégique sera visible par la Ville et les CPAS.')
                     ->options(ActionScopeEnum::class)
                     ->inline(),
                 Forms\Components\TextInput::make('position')
