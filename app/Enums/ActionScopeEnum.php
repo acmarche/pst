@@ -2,10 +2,14 @@
 
 namespace App\Enums;
 
+use BackedEnum;
 use Filament\Support\Contracts\HasColor;
+use Filament\Support\Contracts\HasIcon;
 use Filament\Support\Contracts\HasLabel;
+use Filament\Support\Icons\Heroicon;
+use Illuminate\Contracts\Support\Htmlable;
 
-enum ActionScopeEnum: string implements HasColor, HasLabel
+enum ActionScopeEnum: string implements HasColor, HasIcon, HasLabel
 {
     case INTERNAL = 'INTERNAL';
     case EXTERNAL = 'EXTERNAL';
@@ -33,6 +37,14 @@ enum ActionScopeEnum: string implements HasColor, HasLabel
         return match ($this) {
             self::INTERNAL => 'secondary',
             self::EXTERNAL => 'primary',
+        };
+    }
+
+    public function getIcon(): string|BackedEnum|Htmlable|null
+    {
+        return match ($this) {
+            self::INTERNAL => Heroicon::Home,
+            self::EXTERNAL => Heroicon::GlobeAlt,
         };
     }
 }
