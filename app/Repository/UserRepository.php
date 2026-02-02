@@ -56,13 +56,9 @@ final class UserRepository
         return $users;
     }
 
-    public static function listDepartmentOfCurrentUser(bool $addCommon = true): array
+    public static function listDepartmentOfCurrentUser(): array
     {
-        if ($addCommon) {
-            $departments = [DepartmentEnum::COMMON->value => DepartmentEnum::COMMON->value];
-        } else {
-            $departments = [];
-        }
+        $departments = [];
         if (auth()->user()) {
             foreach (auth()->user()->departments as $department) {
                 $departments[$department] = $department;
