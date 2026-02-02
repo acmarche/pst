@@ -69,22 +69,8 @@ describe('crud operations', function () {
     });
 
     it('can create an odd with color', function () {
-        $newData = Odd::factory()->make();
-
         Livewire::test(CreateOdd::class)
-            ->fillForm([
-                'name' => $newData->name,
-                'position' => 1,
-                'color' => '#FF5733',
-            ])
-            ->call('create')
-            ->assertNotified()
-            ->assertRedirect();
-
-        assertDatabaseHas(Odd::class, [
-            'name' => $newData->name,
-            'color' => '#FF5733',
-        ]);
+            ->assertForbidden();
     });
 
     it('can update an odd', function () {
@@ -106,10 +92,23 @@ describe('crud operations', function () {
         ]);
     });
 
-    it('can delete an odd', function () {
+    it('cannot delete an odd', function () {
         $record = Odd::factory()->create(['position' => 1]);
 
         Livewire::test(EditOdd::class, [
+            'record' => $record->id,
+        ])
+            ->assertActionDoesNotExist(DeleteAction::class);
+
+        assertDatabaseHas(Odd::class, [
+            'id' => $record->id,
+        ]);
+    });
+
+    it('can delete an odd', function () {
+        $record = Odd::factory()->create(['position' => 1]);
+
+        Livewire::test(ViewOdd::class, [
             'record' => $record->id,
         ])
             ->callAction(DeleteAction::class)
@@ -121,26 +120,6 @@ describe('crud operations', function () {
 });
 
 describe('form validation', function () {
-    it('validates the form data on create', function (array $data, array $errors) {
-        $newData = Odd::factory()->make();
-
-        Livewire::test(CreateOdd::class)
-            ->fillForm([
-                'name' => $newData->name,
-                'position' => 1,
-                ...$data,
-            ])
-            ->call('create')
-            ->assertHasFormErrors($errors)
-            ->assertNotNotified();
-    })->with([
-        '`name` is required' => [['name' => null], ['name' => 'required']],
-        '`name` is max 255 characters' => [['name' => Str::random(256)], ['name' => 'max']],
-        '`position` is required' => [['position' => null], ['position' => 'required']],
-        '`position` must be numeric' => [['position' => 'abc'], ['position' => 'numeric']],
-        '`description` is max 255 characters' => [['description' => Str::random(256)], ['description' => 'max']],
-    ]);
-
     it('validates the form data on edit', function (array $data, array $errors) {
         $record = Odd::factory()->create(['position' => 1]);
 
@@ -159,33 +138,6 @@ describe('form validation', function () {
         '`name` is max 255 characters' => [['name' => Str::random(256)], ['name' => 'max']],
         '`position` is required' => [['position' => null], ['position' => 'required']],
     ]);
-});
-
-describe('form fields', function () {
-    it('has name field', function () {
-        Livewire::test(CreateOdd::class)
-            ->assertFormFieldExists('name');
-    });
-
-    it('has icon field', function () {
-        Livewire::test(CreateOdd::class)
-            ->assertFormFieldExists('icon');
-    });
-
-    it('has color field', function () {
-        Livewire::test(CreateOdd::class)
-            ->assertFormFieldExists('color');
-    });
-
-    it('has position field', function () {
-        Livewire::test(CreateOdd::class)
-            ->assertFormFieldExists('position');
-    });
-
-    it('has description field', function () {
-        Livewire::test(CreateOdd::class)
-            ->assertFormFieldExists('description');
-    });
 });
 
 describe('relation manager', function () {
@@ -222,6 +174,7 @@ describe('relation manager', function () {
             'ownerRecord' => $record,
             'pageClass' => ViewOdd::class,
         ])
+            ->loadTable()
             ->assertCanSeeTableRecords($actions);
     });
 });
