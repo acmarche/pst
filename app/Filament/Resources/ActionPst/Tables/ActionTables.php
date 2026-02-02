@@ -6,6 +6,7 @@ namespace App\Filament\Resources\ActionPst\Tables;
 
 use App\Enums\ActionScopeEnum;
 use App\Enums\ActionStateEnum;
+use App\Enums\ActionSynergyEnum;
 use App\Enums\ActionTypeEnum;
 use App\Filament\Resources\ActionPst\ActionPstResource;
 use App\Filament\Resources\ActionPst\Schemas\ActionForm;
@@ -244,6 +245,9 @@ final class ActionTables
             SelectFilter::make('scope')
                 ->label('Volet')
                 ->options(ActionScopeEnum::class),
+            SelectFilter::make('synergy')
+                ->label('Synergie CPAS/Ville')
+                ->options(ActionSynergyEnum::class),
             SelectFilter::make('department')
                 ->label('Département')
                 ->options(UserRepository::listDepartmentOfCurrentUser())
