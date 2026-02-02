@@ -16,7 +16,7 @@ final class LdapAuthService
     public static function checkPassword(string $username, string $password): ?User
     {
         $user = User::where('username', '=', $username)->first();
-        if (app()->environment('local')) {
+        if (app()->environment('local', 'testing')) {
 
             return $user;
         }

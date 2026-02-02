@@ -33,6 +33,8 @@ final class UserFactory extends Factory
             'departments' => [DepartmentEnum::VILLE->value],
             'password' => self::$password ??= Hash::make('password'),
             'remember_token' => Str::random(10),
+            'color_primary' => null,
+            'color_secondary' => null,
         ];
     }
 
