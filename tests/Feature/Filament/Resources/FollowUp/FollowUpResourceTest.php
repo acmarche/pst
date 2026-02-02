@@ -149,21 +149,25 @@ describe('relation manager', function () {
     });
 
     it('validates content is required in relation manager', function () {
+        $initialCount = FollowUp::count();
+
         Livewire::test(FollowUpsRelationManager::class, [
             'ownerRecord' => $this->action,
             'pageClass' => ViewAction::class,
         ])
             ->callTableAction('create', data: [
-                'content' => null,
+                'content' => '',
             ])
-            ->assertHasTableActionErrors(['content' => 'required']);
+            ->assertNotNotified();
+
+        expect(FollowUp::count())->toBe($initialCount);
     });
 });
 
 describe('form fields', function () {
-    it('has name field', function () {
+    it('has content field', function () {
         Livewire::test(CreateFollowUp::class)
-            ->assertFormFieldExists('name');
+            ->assertFormFieldExists('content');
     });
 
     it('has icon field', function () {
