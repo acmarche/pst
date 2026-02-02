@@ -70,13 +70,13 @@ final class ActionTablesTest extends TestCase
         $internalActions = Action::factory()->count(3)->create([
             'operational_objective_id' => $internalOperationalObjective->id,
             'department' => 'VILLE',
-            'to_validate' => false,
+            'validated' => true,
             'scope' => ActionScopeEnum::INTERNAL->value,
         ]);
         $externalActions = Action::factory()->count(2)->create([
             'operational_objective_id' => $externalOperationalObjective->id,
             'department' => 'VILLE',
-            'to_validate' => false,
+            'validated' => true,
             'scope' => ActionScopeEnum::EXTERNAL->value,
         ]);
 
@@ -110,13 +110,13 @@ final class ActionTablesTest extends TestCase
         $internalActions = Action::factory()->count(3)->create([
             'operational_objective_id' => $internalOperationalObjective->id,
             'department' => 'VILLE',
-            'to_validate' => false,
+            'validated' => true,
             'scope' => ActionScopeEnum::INTERNAL->value,
         ]);
         $externalActions = Action::factory()->count(2)->create([
             'operational_objective_id' => $externalOperationalObjective->id,
             'department' => 'VILLE',
-            'to_validate' => false,
+            'validated' => true,
             'scope' => ActionScopeEnum::EXTERNAL->value,
         ]);
 

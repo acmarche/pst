@@ -58,18 +58,18 @@ final class ListActions extends ListRecords
                 ),
         ];
         if (auth()->user()->hasRole(RoleEnum::ADMIN->value)) {
-            $tabs[1] = Tab::make('ToValidate')
-                ->label('A valider')
+            $tabs[1] = Tab::make('NotValidated')
+                ->label('Non validées')
                 ->badgeColor('warning')
                 ->icon('heroicon-m-exclamation-circle')
                 ->badge(
                     fn () => Action::query()
                         ->where('department', $department)
-                        ->toBeValidated()->count()
+                        ->notValidated()->count()
                 )
                 ->modifyQueryUsing(
                     fn (Builder $query) => $query
-                        ->toBeValidated()
+                        ->notValidated()
                 );
         }
         foreach (ActionStateEnum::cases() as $actionStateEnum) {

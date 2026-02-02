@@ -204,8 +204,8 @@ final class ActionTables
             ->limit(50)
             ->toggleable(isToggledHiddenByDefault: true);
 
-        $columns[] = TextColumn::make('to_validate')
-            ->label('À valider')
+        $columns[] = TextColumn::make('validated')
+            ->label('Validé')
             ->formatStateUsing(fn ($state) => $state ? 'Oui' : 'Non')
             ->toggleable(isToggledHiddenByDefault: true);
 

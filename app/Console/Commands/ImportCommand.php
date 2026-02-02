@@ -319,7 +319,7 @@ final class ImportCommand extends Command
                 'position' => $actionNum,
                 'roadmap' => $actionRoadmapEnum->value,
                 'operational_objective_id' => $this->lastOo,
-                'to_validate' => false,
+                'validated' => true,
                 'scope' => $this->scope->value,
             ]);
         } catch (Exception $exception) {

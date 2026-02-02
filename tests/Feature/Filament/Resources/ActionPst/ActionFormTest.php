@@ -48,20 +48,20 @@ final class ActionFormTest extends TestCase
         $this->action = $this->createAction();
     }
 
-    public function test_admin_can_see_to_validate_field_on_create(): void
+    public function test_admin_can_see_validated_field_on_create(): void
     {
         $this->actingAs($this->adminUser);
 
         Livewire::test(CreateAction::class)
-            ->assertFormFieldVisible('to_validate');
+            ->assertFormFieldVisible('validated');
     }
 
-    public function test_regular_user_cannot_see_to_validate_field_on_create(): void
+    public function test_regular_user_cannot_see_validated_field_on_create(): void
     {
         $this->actingAs($this->regularUser);
 
         Livewire::test(CreateAction::class)
-            ->assertFormFieldHidden('to_validate');
+            ->assertFormFieldHidden('validated');
     }
 
     public function test_admin_can_see_roadmap_field_on_create(): void

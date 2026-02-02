@@ -16,6 +16,6 @@ final class ValidatedScope implements Scope
      */
     public function apply(Builder $builder, Model $model): void
     {
-        $builder->where('to_validate', false);
+        $builder->where('validated', true);
     }
 }

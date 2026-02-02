@@ -36,15 +36,15 @@ final class ActionRepository
         return Action::query()->where('state', $state->value)->where('department', $department);
     }
 
-    public static function toValidate(): Builder
+    public static function notValidated(): Builder
     {
-        return Action::query()->where('to_validate', true);
+        return Action::query()->where('validated', false);
     }
 
-    public static function byDepartmentAndToValidateOrNot(string $department, bool $state = false): Builder
+    public static function byDepartmentAndValidated(string $department, bool $validated = true): Builder
     {
         return Action::query()
-            ->where('to_validate', '=', $state)
+            ->where('validated', '=', $validated)
             ->where('department', $department);
     }
 

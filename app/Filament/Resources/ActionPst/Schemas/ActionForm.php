@@ -129,10 +129,9 @@ final class ActionForm
                                 )
                             )
                             ->maxLength(255),
-                        Forms\Components\ToggleButtons::make('to_validate')
-                            ->label('A valider')
+                        Forms\Components\ToggleButtons::make('validated')
+                            ->label('Validée')
                             ->options(YesOrNoEnum::class)
-
                             ->inline()
                             ->visible(fn () => auth()->user()->hasRole(RoleEnum::ADMIN->value))
                             ->grow(false),

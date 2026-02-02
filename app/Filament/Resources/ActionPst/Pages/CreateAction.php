@@ -37,7 +37,7 @@ final class CreateAction extends CreateRecord
 
     protected function afterCreate(): void
     {
-        if ($this->record->to_validate === true) {
+        if ($this->record->validated === false) {
             ActionProcessed::dispatch($this->record);
         }
     }

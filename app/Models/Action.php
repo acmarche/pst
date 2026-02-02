@@ -50,7 +50,7 @@ final class Action extends Model
         'user_add',
         'synergy',
         'position',
-        'to_validate',
+        'validated',
         'scope',
     ];
 
@@ -61,7 +61,7 @@ final class Action extends Model
         'type' => ActionTypeEnum::class,
         'synergy' => ActionSynergyEnum::class,
         'roadmap' => ActionRoadmapEnum::class,
-        'to_validate' => YesOrNoEnum::class,
+        'validated' => YesOrNoEnum::class,
         'scope' => ActionScopeEnum::class,
     ];
 
@@ -74,13 +74,13 @@ final class Action extends Model
     #[Scope]
     public static function validated(Builder $query): void
     {
-        $query->where('to_validate', false);
+        $query->where('validated', true);
     }
 
     #[Scope]
-    public static function toBeValidated(Builder $query): void
+    public static function notValidated(Builder $query): void
     {
-        $query->where('to_validate', true);
+        $query->where('validated', false);
     }
 
     /**
@@ -221,8 +221,8 @@ final class Action extends Model
                 $user = Auth::user();
                 $model->user_add = $user->username;
             }
-            if (!isset($model->to_validate)) {
-                $model->to_validate = true;
+            if (! isset($model->validated)) {
+                $model->validated = false;
             }
         });
     }
