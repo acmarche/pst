@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Filament\Resources\ActionPst\Schemas;
 
 use App\Enums\ActionRoadmapEnum;
+use App\Enums\ActionScopeEnum;
 use App\Enums\ActionStateEnum;
 use App\Enums\ActionSynergyEnum;
 use App\Enums\ActionTypeEnum;
@@ -161,11 +162,14 @@ final class ActionInfolist
                         ->icon(fn (ActionTypeEnum $state) => $state->getIcon())
                         ->color(fn (ActionTypeEnum $state) => $state->getColor())
                         ->badge(),
-                    IconEntry::make('isInternal')
+                    IconEntry::make('scope')
                         ->label('Interne')
-                        ->state(fn (Action $record) => $record->isInternal())
+                        ->formatStateUsing(fn (?ActionScopeEnum $state) => $state?->getLabel() ?? '-')
                         ->boolean()
                         ->size(IconSize::Medium),
+                    TextEntry::make('synergy')
+                        ->label('Synergie Cpas / Ville')
+                        ->formatStateUsing(fn (?ActionSynergyEnum $state) => $state?->getLabel() ?? '-'),
                     TextEntry::make('roadmap')
                         ->label('Feuille de route')
                         ->formatStateUsing(fn (?ActionRoadmapEnum $state) => $state?->getLabel() ?? '-')
@@ -196,9 +200,6 @@ final class ActionInfolist
                 ->compact()
                 ->collapsed()
                 ->schema([
-                    TextEntry::make('synergy')
-                        ->label('Synergie Cpas / Ville')
-                        ->formatStateUsing(fn (?ActionSynergyEnum $state) => $state?->getLabel() ?? '-'),
                     TextEntry::make('department')
                         ->label('Département'),
                     TextEntry::make('created_at')
