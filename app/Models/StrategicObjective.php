@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\ActionScopeEnum;
+use App\Enums\ActionSynergyEnum;
 use App\Enums\DepartmentEnum;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -19,11 +20,13 @@ final class StrategicObjective extends Model
         'position',
         'department',
         'scope',
+        'synergy',
     ];
 
     protected $casts = [
         'scope' => ActionScopeEnum::class,
         'department' => DepartmentEnum::class,
+        'synergy' => ActionSynergyEnum::class,
     ];
 
     /**

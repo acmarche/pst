@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\ActionScopeEnum;
+use App\Enums\ActionSynergyEnum;
 use App\Enums\DepartmentEnum;
 use App\Models\Scopes\DepartmentScope;
 use Illuminate\Database\Eloquent\Attributes\Scope;
@@ -24,6 +25,7 @@ final class OperationalObjective extends Model
         'strategic_objective_id',
         'department',
         'scope',
+        'synergy',
     ];
 
     /**
@@ -104,6 +106,7 @@ final class OperationalObjective extends Model
         return [
             'scope' => ActionScopeEnum::class,
             'department' => DepartmentEnum::class,
+            'synergy' => ActionSynergyEnum::class,
         ];
     }
 }

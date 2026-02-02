@@ -2,7 +2,7 @@
 
 namespace App\Repository;
 
-use App\Enums\ActionScopeEnum;
+use App\Enums\ActionSynergyEnum;
 use App\Models\StrategicObjective;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
@@ -27,7 +27,7 @@ final class StrategicObjectiveRepository
         return StrategicObjective::query()
             ->where(function (Builder $query) use ($department): void {
                 $query->whereIn('department', [$department])
-                    ->orWhere('scope', ActionScopeEnum::INTERNAL);
+                    ->orWhere('synergy', ActionSynergyEnum::YES);
             })
             ->with('oos')
             ->with('oos.actions')

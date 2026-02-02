@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\StrategicObjective\Schemas;
 
 use App\Enums\ActionScopeEnum;
+use App\Enums\ActionSynergyEnum;
 use App\Enums\DepartmentEnum;
 use App\Repository\UserRepository;
 use Filament\Forms;
@@ -24,12 +25,14 @@ final class StrategicObjectiveForm
                     ->columns(4)
                     ->default(UserRepository::departmentSelected())
                     ->options(DepartmentEnum::class)
-                    ->enum(DepartmentEnum::class)
-                    ->visible($schema->getOperation() === 'create'),
+                    ->enum(DepartmentEnum::class),
                 Forms\Components\ToggleButtons::make('scope')
                     ->label('Volet')
-                    ->helperText('Si interne, l\'objectif stratégique sera visible par la Ville et les CPAS.')
                     ->options(ActionScopeEnum::class)
+                    ->inline(),
+                Forms\Components\ToggleButtons::make('synergy')
+                    ->label('Synergie CPAS / Ville')
+                    ->options(ActionSynergyEnum::class)
                     ->inline(),
                 Forms\Components\TextInput::make('position')
                     ->required()
