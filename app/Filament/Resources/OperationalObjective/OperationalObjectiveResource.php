@@ -2,11 +2,13 @@
 
 namespace App\Filament\Resources\OperationalObjective;
 
+use App\Filament\Resources\OperationalObjective\Schemas\OperationalObjectiveForm;
 use App\Filament\Resources\OperationalObjective\Tables\OperationalObjectiveTables;
 use App\Models\OperationalObjective;
 use BackedEnum;
 use Filament\GlobalSearch\GlobalSearchResult;
 use Filament\Resources\Resource;
+use Filament\Schemas\Schema;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
@@ -29,6 +31,11 @@ final class OperationalObjectiveResource extends Resource
     public static function table(Table $table): Table
     {
         return OperationalObjectiveTables::configure($table);
+    }
+
+    public static function form(Schema $schema): Schema
+    {
+        return OperationalObjectiveForm::configure($schema);
     }
 
     public static function getPages(): array

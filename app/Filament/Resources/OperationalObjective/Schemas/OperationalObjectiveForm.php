@@ -2,14 +2,16 @@
 
 namespace App\Filament\Resources\OperationalObjective\Schemas;
 
-use App\Models\OperationalObjective;
+use App\Enums\ActionScopeEnum;
+use App\Enums\ActionSynergyEnum;
+use App\Enums\DepartmentEnum;
+use App\Repository\UserRepository;
 use Filament\Forms;
 use Filament\Schemas\Schema;
-use Illuminate\Database\Eloquent\Model;
 
 final class OperationalObjectiveForm
 {
-    public static function formRelation(Schema $form, Model|OperationalObjective|null $owner = null): Schema
+    public static function configure(Schema $form): Schema
     {
         return $form
             ->columns(1)
@@ -21,10 +23,23 @@ final class OperationalObjectiveForm
                 Forms\Components\Select::make('strategic_objective_id')
                     ->relationship('strategicObjective', 'name')
                     ->label('Objectif Opérationnel')
-                    ->default($owner?->id)
+                    // ->default($owner?->id)
                     ->required(),
-                Forms\Components\Hidden::make('department')
-                    ->default($owner->department),
+                Forms\Components\ToggleButtons::make('department')
+                    ->label('Département')
+                    ->required()
+                    ->columns(4)
+                    ->default(UserRepository::departmentSelected())
+                    ->options(DepartmentEnum::class)
+                    ->enum(DepartmentEnum::class),
+                Forms\Components\ToggleButtons::make('scope')
+                    ->label('Volet')
+                    ->options(ActionScopeEnum::class)
+                    ->inline(),
+                Forms\Components\ToggleButtons::make('synergy')
+                    ->label('Synergie CPAS / Ville')
+                    ->options(ActionSynergyEnum::class)
+                    ->inline(),
             ]);
     }
 }
