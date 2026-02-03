@@ -18,11 +18,7 @@ final class OperationalObjectiveRepository
         return OperationalObjective::query()
             ->where(function (Builder $query) use ($department): void {
                 $query->where('department', '=', $department)
-                    ->orWhere('synergy', ActionSynergyEnum::YES)
-                    ->orWhere(function (Builder $q): void {
-                        $q->whereNull('department')
-                            ->where('synergy', ActionSynergyEnum::YES);
-                    });
+                    ->orWhere('synergy', ActionSynergyEnum::YES);
             })
             ->with('actions')
             ->with('actions.leaderServices')
