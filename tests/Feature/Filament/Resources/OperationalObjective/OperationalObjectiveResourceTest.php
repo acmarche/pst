@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+use App\Enums\ActionScopeEnum;
+use App\Enums\DepartmentEnum;
 use App\Enums\RoleEnum;
 use App\Filament\Resources\OperationalObjective\Pages\CreateOperationalObjective;
 use App\Filament\Resources\OperationalObjective\Pages\EditOperationalObjective;
@@ -117,14 +119,17 @@ describe('crud operations', function () {
             ->fillForm([
                 'name' => $newData->name,
                 'strategic_objective_id' => $this->strategicObjective->id,
-                'department' => $this->strategicObjective->department,
+                'department' => DepartmentEnum::VILLE,
+                'scope' => ActionScopeEnum::INTERNAL,
             ])
             ->call('create')
+            ->assertHasNoFormErrors()
             ->assertNotified()
             ->assertRedirect();
 
         assertDatabaseHas(OperationalObjective::class, [
             'name' => $newData->name,
+            'scope' => ActionScopeEnum::INTERNAL,
             'strategic_objective_id' => $this->strategicObjective->id,
         ]);
     });
@@ -155,7 +160,7 @@ describe('crud operations', function () {
             'strategic_objective_id' => $this->strategicObjective->id,
         ]);
 
-        Livewire::test(EditOperationalObjective::class, [
+        Livewire::test(ViewOperationalObjective::class, [
             'record' => $record->id,
         ])
             ->callAction(DeleteAction::class)
@@ -262,6 +267,7 @@ describe('relation manager', function () {
             'ownerRecord' => $record,
             'pageClass' => ViewOperationalObjective::class,
         ])
+            ->loadTable()
             ->assertCanSeeTableRecords($actions);
     });
 });
