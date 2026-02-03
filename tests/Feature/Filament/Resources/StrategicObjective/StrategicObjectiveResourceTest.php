@@ -128,8 +128,11 @@ describe('crud operations', function () {
             ->fillForm([
                 'name' => $newData->name,
                 'position' => $newData->position,
+                'department' => $newData->department,
+                'scope' => $newData->scope,
             ])
             ->call('save')
+            ->assertHasNoFormErrors()
             ->assertNotified();
 
         assertDatabaseHas(StrategicObjective::class, [
