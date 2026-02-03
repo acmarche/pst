@@ -230,7 +230,7 @@ final class ActionTables
                 ->label('Volet')
                 ->options(ActionScopeEnum::class),
             SelectFilter::make('synergy')
-                ->label('Synergie CPAS/Ville')
+                ->label(ActionSynergyEnum::getTitle())
                 ->options(ActionSynergyEnum::class),
             SelectFilter::make('department')
                 ->label('Département')
@@ -316,7 +316,7 @@ final class ActionTables
                 ->formatStateUsing(fn (ActionTypeEnum $state) => $state->getLabel() ?? 'Unknown')
                 ->toggleable(isToggledHiddenByDefault: true),
             TextColumn::make('synergy')
-                ->label('Synergie CPAS/Ville')
+                ->label(ActionSynergyEnum::getTitle())
                 ->formatStateUsing(fn ($state) => $state?->getLabel() ?? '-')
                 ->sortable()
                 ->toggleable(isToggledHiddenByDefault: true),
