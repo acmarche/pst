@@ -14,7 +14,7 @@ final class ActionsTableWidget extends BaseWidget
         $user = auth()->user();
         $table
             ->heading('Actions vous concernant')
-            ->description('Vous êtes agent pilote')
+            ->description('Vous êtes repris comme agent pilote')
             ->query(
                 ActionRepository::findByUser($user->id)
             );
