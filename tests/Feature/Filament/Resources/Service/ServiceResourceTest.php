@@ -72,7 +72,16 @@ describe('table columns', function () {
         Livewire::test(ListServices::class)
             ->loadTable()
             ->assertCanRenderTableColumn($column);
-    })->with(['name', 'users_count']);
+    })->with(['name']);
+
+    it('can render toggleable column hidden by default', function (string $column) {
+        Service::factory()->create();
+
+        Livewire::test(ListServices::class)
+            ->loadTable()
+            ->toggleAllTableColumns()
+            ->assertCanRenderTableColumn($column);
+    })->with(['users_count']);
 
     it('can sort by name', function () {
         $records = Service::factory(3)->create();
