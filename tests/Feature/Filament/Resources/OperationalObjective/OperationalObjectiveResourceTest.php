@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use App\Enums\ActionScopeEnum;
+use App\Enums\ActionSynergyEnum;
 use App\Enums\DepartmentEnum;
 use App\Enums\RoleEnum;
 use App\Filament\Resources\OperationalObjective\Pages\CreateOperationalObjective;
@@ -121,6 +122,7 @@ describe('crud operations', function () {
                 'strategic_objective_id' => $this->strategicObjective->id,
                 'department' => DepartmentEnum::VILLE,
                 'scope' => ActionScopeEnum::INTERNAL,
+                'synergy' => ActionSynergyEnum::NO,
             ])
             ->call('create')
             ->assertHasNoFormErrors()
@@ -145,6 +147,7 @@ describe('crud operations', function () {
         ])
             ->fillForm([
                 'name' => $newData->name,
+                'synergy' => ActionSynergyEnum::NO,
             ])
             ->call('save')
             ->assertNotified();

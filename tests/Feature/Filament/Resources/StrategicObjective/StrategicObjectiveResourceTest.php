@@ -113,6 +113,7 @@ describe('crud operations', function () {
                 'department' => $newData->department,
                 'scope' => $newData->scope,
                 'position' => $newData->position,
+                'synergy' => ActionSynergyEnum::NO,
             ])
             ->call('create')
             ->assertNotified()
