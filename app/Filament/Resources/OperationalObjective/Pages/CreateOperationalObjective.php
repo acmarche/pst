@@ -13,18 +13,6 @@ final class CreateOperationalObjective extends CreateRecord
 
     protected static bool $canCreateAnother = false;
 
-    public function mount(): void
-    {
-        Notification::make()
-            ->warning()
-            ->title('Création non autorisée')
-            ->body('Un objectif opérationnel doit être créé depuis la page de visualisation d\'un objectif stratégique.')
-            ->persistent()
-            ->send();
-
-        $this->redirect(StrategicObjectiveResource::getUrl('index'));
-    }
-
     public function getTitle(): string
     {
         return 'Nouvel objectif Opérationnel (Oo)';
