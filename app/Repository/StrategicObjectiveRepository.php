@@ -26,7 +26,7 @@ final class StrategicObjectiveRepository
     {
         return StrategicObjective::query()
             ->where(function (Builder $query) use ($department): void {
-                $query->whereIn('department', [$department])
+                $query->where('department', $department)
                     ->orWhere('synergy', ActionSynergyEnum::YES);
             })
             ->with('oos')
