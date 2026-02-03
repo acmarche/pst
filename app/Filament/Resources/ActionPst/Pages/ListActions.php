@@ -19,8 +19,6 @@ final class ListActions extends ListRecords
 
     public function getTitle(): string|Htmlable
     {
-        // $this->debugQuery();
-
         return $this->getAllTableRecordsCount().' actions';
     }
 
