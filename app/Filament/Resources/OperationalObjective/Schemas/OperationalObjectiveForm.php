@@ -53,6 +53,7 @@ final class OperationalObjectiveForm
                                     ->grouped(),
                                 Forms\Components\ToggleButtons::make('scope')
                                     ->label('Volet')
+                                    ->required()
                                     ->options(ActionScopeEnum::class)
                                     ->grouped(),
                                 Forms\Components\ToggleButtons::make('synergy')
