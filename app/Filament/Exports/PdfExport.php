@@ -3,15 +3,22 @@
 namespace App\Filament\Exports;
 
 use App\Models\Action;
+use Illuminate\Support\Facades\Storage;
 use Spatie\Browsershot\Browsershot;
 use Spatie\LaravelPdf\Facades\Pdf;
-use Spatie\LaravelPdf\PdfBuilder;
 
 final class PdfExport
 {
-    public static function exportAction(Action $action): PdfBuilder
+    public static function exportAction(Action $action): string
     {
-        return Pdf::html(view('pdf.action', [
+        $filename = 'action-'.$action->id.'-'.time().'.pdf';
+        $relativePath = 'pdf/'.$filename;
+
+        Storage::disk('public')->makeDirectory('pdf');
+
+        $fullPath = Storage::disk('public')->path($relativePath);
+
+        Pdf::html(view('pdf.action', [
             'action' => $action,
         ]))
             ->withBrowsershot(function (Browsershot $browsershot): void {
@@ -22,7 +29,8 @@ final class PdfExport
                     $browsershot->setChromePath($path);
                 }
             })
-            ->download('action-'.$action->id.'.pdf');
-        // ->save('action-'.$action->id.'.pdf');
+            ->save($fullPath);
+
+        return $relativePath;
     }
 }
