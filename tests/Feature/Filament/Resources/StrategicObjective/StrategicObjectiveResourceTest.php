@@ -211,7 +211,7 @@ describe('form fields', function () {
         Livewire::test(EditStrategicObjective::class, [
             'record' => $record->id,
         ])
-            ->assertFormFieldHidden('department');
+            ->assertFormFieldVisible('department');
     });
 
     it('has scope field', function () {
