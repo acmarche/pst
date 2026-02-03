@@ -2,20 +2,15 @@
 
 declare(strict_types=1);
 
+use App\Enums\DepartmentEnum;
 use App\Enums\RoleEnum;
 use App\Filament\Resources\Users\Pages\EditUser;
 use App\Filament\Resources\Users\Pages\ListUsers;
-use App\Filament\Resources\Users\Pages\ViewUser;
 use App\Models\Role;
 use App\Models\User;
-use Filament\Actions\DeleteAction;
-use Filament\Actions\DeleteBulkAction;
-use Filament\Actions\Testing\TestAction;
-use Illuminate\Support\Str;
 use Livewire\Livewire;
 
 use function Pest\Laravel\assertDatabaseHas;
-use function Pest\Laravel\assertDatabaseMissing;
 
 beforeEach(function () {
     $adminRole = Role::factory()->create(['name' => RoleEnum::ADMIN->value]);
@@ -38,8 +33,7 @@ it('can render the edit page', function () {
     ])
         ->assertOk()
         ->assertSchemaStateSet([
-            'name' => $user->name,
-            'email' => $user->email,
+            'departments' => $user->departments,
         ]);
 });
 
@@ -79,71 +73,35 @@ it('can search column', function (string $column) {
 
 it('can update a user', function () {
     $user = User::factory()->create();
-    $newUserData = User::factory()->make();
 
     Livewire::test(EditUser::class, [
         'record' => $user->id,
     ])
         ->fillForm([
-            'name' => $newUserData->name,
-            'email' => $newUserData->email,
+            'departments' => [DepartmentEnum::CPAS->value],
         ])
         ->call('save')
         ->assertNotified();
 
     assertDatabaseHas(User::class, [
         'id' => $user->id,
-        'name' => $newUserData->name,
-        'email' => $newUserData->email,
+        'departments' => json_encode([DepartmentEnum::CPAS->value]),
     ]);
-});
-
-it('can delete a user', function () {
-    $user = User::factory()->create();
-
-    Livewire::test(ViewUser::class, [
-        'record' => $user->id,
-    ])
-        ->callAction(DeleteAction::class)
-        ->assertNotified()
-        ->assertRedirect();
-
-    assertDatabaseMissing($user);
-});
-
-it('can bulk delete users', function () {
-    $users = User::factory()->count(5)->create();
-
-    Livewire::test(ListUsers::class)
-        ->loadTable()
-        ->assertCanSeeTableRecords($users)
-        ->selectTableRecords($users)
-        ->callAction(TestAction::make(DeleteBulkAction::class)->table()->bulk())
-        ->assertNotified()
-        ->assertCanNotSeeTableRecords($users);
-
-    $users->each(fn (User $user) => assertDatabaseMissing($user));
 });
 
 it('validates the form data', function (array $data, array $errors) {
     $user = User::factory()->create();
-    $newUserData = User::factory()->make();
 
     Livewire::test(EditUser::class, [
         'record' => $user->id,
     ])
         ->fillForm([
-            'name' => $newUserData->name,
-            'email' => $newUserData->email,
+            'departments' => [DepartmentEnum::VILLE->value],
             ...$data,
         ])
         ->call('save')
         ->assertHasFormErrors($errors)
         ->assertNotNotified();
 })->with([
-    '`name` is required' => [['name' => null], ['name' => 'required']],
-    '`name` is max 255 characters' => [['name' => Str::random(256)], ['name' => 'max']],
-    '`email` is a valid email address' => [['email' => Str::random()], ['email' => 'email']],
-    '`email` is required' => [['email' => null], ['email' => 'required']],
-    '`email` is max 255 characters' => [['email' => Str::random(256)], ['email' => 'max']],
+    '`departments` is required' => [['departments' => null], ['departments' => 'required']],
 ]);
