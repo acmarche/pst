@@ -4,6 +4,7 @@ namespace App\Filament\Resources\StrategicObjective;
 
 use App\Filament\Resources\StrategicObjective\RelationManagers\OosRelationManager;
 use App\Filament\Resources\StrategicObjective\Schemas\StrategicObjectiveForm;
+use App\Filament\Resources\StrategicObjective\Tables\StrategicObjectiveTables;
 use App\Models\StrategicObjective;
 use BackedEnum;
 use Filament\GlobalSearch\GlobalSearchResult;
@@ -35,7 +36,7 @@ final class StrategicObjectiveResource extends Resource
 
     public static function table(Table $table): Table
     {
-        return $table;
+        return StrategicObjectiveTables::configure($table);
     }
 
     public static function getRelations(): array

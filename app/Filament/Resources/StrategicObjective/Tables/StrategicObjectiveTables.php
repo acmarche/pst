@@ -17,9 +17,6 @@ use Illuminate\Database\Eloquent\Builder;
 
 final class StrategicObjectiveTables
 {
-    /**
-     * @deprecated
-     */
     public static function configure(Table $table): Table
     {
         return $table
@@ -32,43 +29,6 @@ final class StrategicObjectiveTables
             ->recordTitleAttribute('name')
             ->recordUrl(fn (StrategicObjective $record) => StrategicObjectiveResource::getUrl('view', [$record]))
             ->defaultSort('position')
-            ->columns([
-                TextColumn::make('position')
-                    ->label('Numéro')
-                    ->sortable()
-                    ->toggleable(),
-                TextColumn::make('name')
-                    ->label('Intitulé')
-                    ->limit(90)
-                    ->tooltip(function (TextColumn $column): ?string {
-                        $state = $column->getState();
-
-                        if (mb_strlen($state) <= $column->getCharacterLimit()) {
-                            return null;
-                        }
-
-                        // Only render the tooltip if the column content exceeds the length limit.
-                        return $state;
-                    })
-                    ->sortable()
-                    ->searchable(),
-                TextColumn::make('oos_count')
-                    ->label('Objectifs Opérationnels (OO)')
-                    ->tooltip('Objectif Opérationnel')
-                    ->counts('oos')->toggleable(),
-                TextColumn::make('isInternal')
-                    ->label('Interne')
-                    ->state(fn (StrategicObjective $record) => $record->isInternal() ? 'Oui' : 'Non')
-                    ->toggleable(),
-                TextColumn::make('department')
-                    ->label('Département')
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                TextColumn::make('created_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-            ])
             ->filters([
                 //
             ])
@@ -80,5 +40,46 @@ final class StrategicObjectiveTables
                     DeleteBulkAction::make(),
                 ]),
             ]);
+    }
+
+    private function saveColumns(Table $table): void
+    {
+        $table->columns([
+            TextColumn::make('position')
+                ->label('Numéro')
+                ->sortable()
+                ->toggleable(),
+            TextColumn::make('name')
+                ->label('Intitulé')
+                ->limit(90)
+                ->tooltip(function (TextColumn $column): ?string {
+                    $state = $column->getState();
+
+                    if (mb_strlen($state) <= $column->getCharacterLimit()) {
+                        return null;
+                    }
+
+                    // Only render the tooltip if the column content exceeds the length limit.
+                    return $state;
+                })
+                ->sortable()
+                ->searchable(),
+            TextColumn::make('oos_count')
+                ->label('Objectifs Opérationnels (OO)')
+                ->tooltip('Objectif Opérationnel')
+                ->counts('oos')->toggleable(),
+            TextColumn::make('isInternal')
+                ->label('Interne')
+                ->state(fn (StrategicObjective $record) => $record->isInternal() ? 'Oui' : 'Non')
+                ->toggleable(),
+            TextColumn::make('department')
+                ->label('Département')
+                ->sortable()
+                ->toggleable(isToggledHiddenByDefault: true),
+            TextColumn::make('created_at')
+                ->dateTime()
+                ->sortable()
+                ->toggleable(isToggledHiddenByDefault: true),
+        ]);
     }
 }
