@@ -205,7 +205,7 @@ describe('form fields', function () {
             ->assertFormFieldVisible('department');
     });
 
-    it('has department field hidden on edit', function () {
+    it('has department field visible on edit', function () {
         $record = StrategicObjective::factory()->create();
 
         Livewire::test(EditStrategicObjective::class, [
