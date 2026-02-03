@@ -24,10 +24,20 @@ final class ServiceTables
                     ->sortable(),
                 TextColumn::make('initials')
                     ->label('Initiales')
+                    ->toggleable(isToggledHiddenByDefault: true)
                     ->searchable(),
                 TextColumn::make('users_count')
                     ->label('Agents')
-                    ->counts('users'),
+                    ->counts('users')
+                    ->toggleable(isToggledHiddenByDefault: true),
+                TextColumn::make('leading_actions_count')
+                    ->label('Actions pilotées')
+                    ->counts('leadingActions')
+                    ->sortable(),
+                TextColumn::make('partnering_actions_count')
+                    ->label('Actions partenaires')
+                    ->counts('partneringActions')
+                    ->sortable(),
             ])
             ->filters([
                 //

@@ -26,6 +26,10 @@ final class PartnerTables
                 Tables\Columns\TextColumn::make('email'),
                 Tables\Columns\TextColumn::make('phone')
                     ->label('Téléphone'),
+                Tables\Columns\TextColumn::make('actions_count')
+                    ->label('Actions')
+                    ->counts('actions')
+                    ->sortable(),
             ])
             ->filters([
                 //
