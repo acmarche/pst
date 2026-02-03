@@ -13,7 +13,6 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Scout\Searchable;
 
-
 #[UseFactory(StrategicObjectiveFactory::class)]
 final class StrategicObjective extends Model
 {
