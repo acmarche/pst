@@ -21,7 +21,7 @@ enum ActionSynergyEnum: string implements HasColor, HasIcon, HasLabel
 
     public static function getDescription(): string
     {
-        return 'Les données sont mises en commun';
+        return 'Si oui, l\'action est mise en commun';
     }
 
     public static function toArray(): array

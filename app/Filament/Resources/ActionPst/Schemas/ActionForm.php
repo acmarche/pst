@@ -195,6 +195,7 @@ final class ActionForm
                         ->inline(),
                     Forms\Components\ToggleButtons::make('synergy')
                         ->label(ActionSynergyEnum::getTitle())
+                        ->helperText(ActionSynergyEnum::getDescription())
                         ->options(ActionSynergyEnum::class)
                         ->inline(),
                     Forms\Components\DatePicker::make('due_date')

@@ -168,6 +168,7 @@ final class ActionInfolist
                         ->size(IconSize::Medium),
                     TextEntry::make('synergy')
                         ->label(ActionSynergyEnum::getTitle())
+                        ->helperText(ActionSynergyEnum::getDescription())
                         ->formatStateUsing(fn (?ActionSynergyEnum $state) => $state?->getLabel() ?? '-'),
                     TextEntry::make('roadmap')
                         ->label('Feuille de route')
