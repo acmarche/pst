@@ -13,6 +13,7 @@ use App\Filament\Resources\ActionPst\Schemas\ActionForm;
 use App\Models\Action;
 use App\Models\OperationalObjective;
 use App\Models\Service;
+use App\Repository\ActionRepository;
 use App\Repository\UserRepository;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\CreateAction;
@@ -33,6 +34,11 @@ final class ActionTables
         return $table
             ->defaultSort('position')
             ->defaultPaginationPageOption(50)
+            ->modifyQueryUsing(
+                fn (Builder $query) => ActionRepository::findByDepartmentWithOosAndActions(
+                    UserRepository::departmentSelected()
+                )
+            )
             ->persistFiltersInSession()
             ->recordUrl(fn (Action $record) => ActionPstResource::getUrl('view', [$record]))
             ->columns(self::getColumns())
