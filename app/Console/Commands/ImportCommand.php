@@ -121,48 +121,10 @@ final class ImportCommand extends Command
         if ($csvFile === 'Interne.csv') {
             $this->scope = ActionScopeEnum::INTERNAL;
         }
-        //$this->importO();
         $this->importCsv($csvFile);
         $this->info('Update');
 
         return SfCommand::SUCCESS;
-    }
-
-    public function importO(): void
-    {
-        $osIds = [];
-
-        // Import Strategic Objectives (OS)
-        foreach ($this->os as $position => $name) {
-            $name = mb_substr($name, 0, 255);
-            $os = StrategicObjective::create([
-                'name' => $name,
-                'department' => $this->department,
-                'position' => $position + 1,
-            ]);
-            $osIds[$position + 1] = $os->id;
-            $this->info("Created OS {$os->id}: {$name}");
-        }
-
-        // Import Operational Objectives (OO)
-        foreach ($this->oos as $position => $oo) {
-            $strategicObjectiveId = $osIds[$oo['os']] ?? null;
-
-            if (!$strategicObjectiveId) {
-                $this->warn("OS {$oo['os']} not found for OO: {$oo['name']}");
-
-                continue;
-            }
-
-            $name = mb_substr($oo['name'], 0, 255);
-            $operationalObjective = OperationalObjective::create([
-                'name' => $name,
-                'department' => $this->department,
-                'strategic_objective_id' => $strategicObjectiveId,
-                'position' => $position + 1,
-            ]);
-            $this->info("Created OO {$operationalObjective->id}: {$name}");
-        }
     }
 
     public function importCsv($csvFile, $delimiter = '|'): void
@@ -184,7 +146,7 @@ final class ImportCommand extends Command
                 }
             }
 
-            $actionNum = (int)$row[0];
+            $actionNum = (int) $row[0];
             $actionName = mb_trim($row[1]);
             if ($actionNum === 0 && $actionName === '') {
                 $oo = OperationalObjective::where('name', $row[0])->first();
@@ -194,7 +156,7 @@ final class ImportCommand extends Command
                     continue;
                 }
             }
-            if (!$actionName) {
+            if (! $actionName) {
                 $this->error('no action name '.$actionNum);
 
                 continue;
@@ -215,10 +177,10 @@ final class ImportCommand extends Command
                 $actionType = ActionTypeEnum::PST;
                 $actionState = $this->findState($row[6]);
             }
-            $evolutionPercentage = (int)$row[7];
+            $evolutionPercentage = (int) $row[7];
 
             $dueDate = Carbon::createFromFormat('d/m/Y', $row[8]);
-            if (!$dueDate) {
+            if (! $dueDate) {
                 $this->error('no due date '.$actionName);
             }
             $responsable = null;
@@ -265,7 +227,7 @@ final class ImportCommand extends Command
     }
 
     /**
-     * @param array<int,Odd> $odds
+     * @param  array<int,Odd>  $odds
      */
     public function addExtraData(
         Action $action,
@@ -280,7 +242,7 @@ final class ImportCommand extends Command
         $action->odds()->sync($odds, false);
         $action->leaderServices()->sync($services, false);
         $action->partners()->sync($partners, false);
-        if ($responsable && !$responsable->hasRole(RoleEnum::RESPONSIBLE->value)) {
+        if ($responsable && ! $responsable->hasRole(RoleEnum::RESPONSIBLE->value)) {
             $responsable->addRole(Role::where('name', RoleEnum::RESPONSIBLE->value)->first());
         }
         if ($responsable) {
@@ -364,7 +326,7 @@ final class ImportCommand extends Command
             $oddName = mb_trim(mb_substr($oddName, mb_strpos($oddName, '.') + 1));
             $odd = Odd::whereRaw('LOWER(name) = ?', [mb_strtolower($oddName)])->first();
 
-            if (!$odd) {
+            if (! $odd) {
                 $this->error('not found odd '.$oddName);
 
                 continue;
@@ -388,7 +350,7 @@ final class ImportCommand extends Command
                 continue;
             }
             $partner = Partner::where('name', $name)->orWhere('initials', $name)->first();
-            if (!$partner) {
+            if (! $partner) {
                 $partner = Partner::create(['name' => $name]);
             }
             $data['partners'][] = $partner;
@@ -402,7 +364,7 @@ final class ImportCommand extends Command
      */
     private function findAgent(?string $name): ?User
     {
-        if (!$name) {
+        if (! $name) {
             return null;
         }
 
