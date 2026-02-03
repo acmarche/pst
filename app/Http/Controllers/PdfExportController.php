@@ -4,12 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Filament\Exports\PdfExport;
 use App\Models\Action;
-use App\Notifications\PdfExportReadyNotification;
 use Filament\Actions\Action as FilamentAction;
 use Filament\Notifications\Notification;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 final class PdfExportController extends Controller
 {
@@ -17,7 +16,7 @@ final class PdfExportController extends Controller
     {
         $relativePath = PdfExport::exportAction($action);
 
-        $downloadUrl = Storage::disk('public')->url($relativePath);
+        $downloadUrl = route('pdf.download', ['path' => $relativePath]);
 
         $recipient = auth()->user();
 
@@ -32,8 +31,13 @@ final class PdfExportController extends Controller
             ])
             ->send();
 
-        Auth::user()->notify(new PdfExportReadyNotification($action, $downloadUrl));
-
         return redirect()->back()->with('success', 'PDF exported successfully');
+    }
+
+    public function download(string $path): StreamedResponse
+    {
+        return Storage::disk('public')->download($path, basename($path), [
+            'Content-Type' => 'application/pdf',
+        ]);
     }
 }
