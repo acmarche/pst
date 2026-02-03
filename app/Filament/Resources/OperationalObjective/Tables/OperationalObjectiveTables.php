@@ -100,8 +100,6 @@ final class OperationalObjectiveTables
             ->recordActions([
                 EditAction::make()
                     ->icon('tabler-edit'),
-                DeleteAction::make()
-                    ->icon('tabler-trash'),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
