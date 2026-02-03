@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Enums\ActionScopeEnum;
 use App\Enums\RoleEnum;
 use App\Filament\Resources\StrategicObjective\Pages\CreateStrategicObjective;
 use App\Filament\Resources\StrategicObjective\Pages\EditStrategicObjective;
@@ -63,48 +64,36 @@ describe('page rendering', function () {
     });
 });
 
-describe('table columns', function () {
-    it('has column', function (string $column) {
-        Livewire::test(ListStrategicObjectives::class)
-            ->assertTableColumnExists($column);
-    })->with(['position', 'name', 'oos_count', 'department', 'created_at']);
-
-    it('can render column', function (string $column) {
-        StrategicObjective::factory()->create();
+describe('list view', function () {
+    it('displays record position and name', function () {
+        $record = StrategicObjective::factory()->create();
 
         Livewire::test(ListStrategicObjectives::class)
-            ->loadTable()
-            ->assertCanRenderTableColumn($column);
-    })->with(['position', 'name', 'oos_count']);
-
-    it('can sort by position', function () {
-        $records = StrategicObjective::factory(3)->create();
-
-        Livewire::test(ListStrategicObjectives::class)
-            ->loadTable()
-            ->sortTable('position')
-            ->assertCanSeeTableRecords($records->sortBy('position'), inOrder: true)
-            ->sortTable('position', 'desc')
-            ->assertCanSeeTableRecords($records->sortByDesc('position'), inOrder: true);
+            ->assertSeeHtml("{$record->position}. {$record->name}");
     });
 
-    it('can sort by name', function () {
-        $records = StrategicObjective::factory(3)->create();
+    it('displays operational objectives count badge', function () {
+        $record = StrategicObjective::factory()->create();
+        OperationalObjective::factory(3)->create([
+            'strategic_objective_id' => $record->id,
+        ]);
 
         Livewire::test(ListStrategicObjectives::class)
-            ->loadTable()
-            ->sortTable('name')
-            ->assertCanSeeTableRecords($records->sortBy('name'), inOrder: true);
+            ->assertSeeHtml('3 Oos');
     });
 
-    it('can search by name', function () {
-        $records = StrategicObjective::factory(3)->create();
-        $searchRecord = $records->first();
+    it('displays internal badge for internal records', function () {
+        StrategicObjective::factory()->create(['scope' => ActionScopeEnum::INTERNAL]);
 
         Livewire::test(ListStrategicObjectives::class)
-            ->loadTable()
-            ->searchTable($searchRecord->name)
-            ->assertCanSeeTableRecords($records->where('name', $searchRecord->name));
+            ->assertSeeHtml('Interne');
+    });
+
+    it('does not display internal badge for external records', function () {
+        StrategicObjective::factory()->create(['scope' => ActionScopeEnum::EXTERNAL]);
+
+        Livewire::test(ListStrategicObjectives::class)
+            ->assertDontSeeHtml('>Interne</span>');
     });
 });
 
@@ -153,7 +142,7 @@ describe('crud operations', function () {
     it('can delete a strategic objective', function () {
         $record = StrategicObjective::factory()->create();
 
-        Livewire::test(EditStrategicObjective::class, [
+        Livewire::test(ViewStrategicObjective::class, [
             'record' => $record->id,
         ])
             ->callAction(DeleteAction::class)
