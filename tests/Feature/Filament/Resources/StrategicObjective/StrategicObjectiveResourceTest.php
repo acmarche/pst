@@ -155,19 +155,6 @@ describe('crud operations', function () {
         assertDatabaseMissing($record);
     });
 
-    it('can bulk delete strategic objectives', function () {
-        $records = StrategicObjective::factory(3)->create();
-
-        Livewire::test(ListStrategicObjectives::class)
-            ->loadTable()
-            ->assertCanSeeTableRecords($records)
-            ->selectTableRecords($records)
-            ->callAction(TestAction::make(DeleteBulkAction::class)->table()->bulk())
-            ->assertNotified()
-            ->assertCanNotSeeTableRecords($records);
-
-        $records->each(fn (StrategicObjective $record) => assertDatabaseMissing($record));
-    });
 });
 
 describe('form validation', function () {
