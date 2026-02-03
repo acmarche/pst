@@ -60,6 +60,7 @@ final class StrategicObjectiveForm
                                 Forms\Components\ToggleButtons::make('synergy')
                                     ->label(ActionSynergyEnum::getTitle())
                                     ->options(ActionSynergyEnum::class)
+                                    ->required()
                                     ->grouped(),
                             ]),
                     ]),

@@ -59,6 +59,7 @@ final class OperationalObjectiveForm
                                 Forms\Components\ToggleButtons::make('synergy')
                                     ->label(ActionSynergyEnum::getTitle())
                                     ->options(ActionSynergyEnum::class)
+                                    ->required()
                                     ->grouped(),
                             ]),
                     ]),

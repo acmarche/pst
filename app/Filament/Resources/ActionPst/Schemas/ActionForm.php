@@ -197,6 +197,7 @@ final class ActionForm
                         ->label(ActionSynergyEnum::getTitle())
                         ->helperText(ActionSynergyEnum::getDescription())
                         ->options(ActionSynergyEnum::class)
+                        ->required()
                         ->inline(),
                     Forms\Components\DatePicker::make('due_date')
                         ->label('Date d\'échéance')
