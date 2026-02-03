@@ -4,16 +4,16 @@ declare(strict_types=1);
 
 use App\Filament\Resources\Users\Pages\EditUser;
 use App\Filament\Resources\Users\Pages\ListUsers;
+use App\Filament\Resources\Users\Pages\ViewUser;
 use App\Models\User;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\Testing\TestAction;
 use Illuminate\Support\Str;
-use old\CreateUser;
+use Livewire\Livewire;
 
 use function Pest\Laravel\assertDatabaseHas;
 use function Pest\Laravel\assertDatabaseMissing;
-use function Pest\Livewire\livewire;
 
 beforeEach(function () {
     /* The TestCase setup generates a user before each test, so we need to clear the table to make sure we have a clean slate. */
@@ -21,19 +21,14 @@ beforeEach(function () {
 });
 
 it('can render the index page', function () {
-    livewire(ListUsers::class)
-        ->assertOk();
-});
-
-it('can render the create page', function () {
-    livewire(CreateUser::class)
+    Livewire::test(ListUsers::class)
         ->assertOk();
 });
 
 it('can render the edit page', function () {
     $user = User::factory()->create();
 
-    livewire(EditUser::class, [
+    Livewire::test(EditUser::class, [
         'record' => $user->id,
     ])
         ->assertOk()
@@ -44,19 +39,19 @@ it('can render the edit page', function () {
 });
 
 it('has column', function (string $column) {
-    livewire(ListUsers::class)
+    Livewire::test(ListUsers::class)
         ->assertTableColumnExists($column);
 })->with(['name', 'email', 'created_at', 'updated_at']);
 
 it('can render column', function (string $column) {
-    livewire(ListUsers::class)
+    Livewire::test(ListUsers::class)
         ->assertCanRenderTableColumn($column);
 })->with(['name', 'email', 'created_at', 'updated_at']);
 
 it('can sort column', function (string $column) {
     $records = User::factory(5)->create();
 
-    livewire(ListUsers::class)
+    Livewire::test(ListUsers::class)
         ->loadTable()
         ->sortTable($column)
         ->assertCanSeeTableRecords($records->sortBy($column), inOrder: true)
@@ -69,36 +64,18 @@ it('can search column', function (string $column) {
 
     $value = $records->first()->{$column};
 
-    livewire(ListUsers::class)
+    Livewire::test(ListUsers::class)
         ->loadTable()
         ->searchTable($value)
         ->assertCanSeeTableRecords($records->where($column, $value))
         ->assertCanNotSeeTableRecords($records->where($column, '!=', $value));
 })->with(['name']);
 
-it('can create a user', function () {
-    $user = User::factory()->make();
-
-    livewire(CreateUser::class)
-        ->fillForm([
-            'name' => $user->name,
-            'email' => $user->email,
-            'password' => $user->password,
-        ])
-        ->call('create')
-        ->assertNotified();
-
-    assertDatabaseHas(User::class, [
-        'name' => $user->name,
-        'email' => $user->email,
-    ]);
-});
-
 it('can update a user', function () {
     $user = User::factory()->create();
     $newUserData = User::factory()->make();
 
-    livewire(EditUser::class, [
+    Livewire::test(EditUser::class, [
         'record' => $user->id,
     ])
         ->fillForm([
@@ -118,7 +95,7 @@ it('can update a user', function () {
 it('can delete a user', function () {
     $user = User::factory()->create();
 
-    livewire(EditUser::class, [
+    Livewire::test(ViewUser::class, [
         'record' => $user->id,
     ])
         ->callAction(DeleteAction::class)
@@ -131,7 +108,7 @@ it('can delete a user', function () {
 it('can bulk delete users', function () {
     $users = User::factory()->count(5)->create();
 
-    livewire(ListUsers::class)
+    Livewire::test(ListUsers::class)
         ->loadTable()
         ->assertCanSeeTableRecords($users)
         ->selectTableRecords($users)
@@ -142,20 +119,11 @@ it('can bulk delete users', function () {
     $users->each(fn (User $user) => assertDatabaseMissing($user));
 });
 
-it('can validate unique', function (string $column) {
-    $record = User::factory()->create();
-
-    livewire(CreateUser::class)
-        ->fillForm(['email' => $record->email])
-        ->call('create')
-        ->assertHasFormErrors([$column => ['unique']]);
-})->with(['email']);
-
 it('validates the form data', function (array $data, array $errors) {
     $user = User::factory()->create();
     $newUserData = User::factory()->make();
 
-    livewire(EditUser::class, [
+    Livewire::test(EditUser::class, [
         'record' => $user->id,
     ])
         ->fillForm([
