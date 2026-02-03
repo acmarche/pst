@@ -5,8 +5,6 @@ namespace App\Filament\Resources\Service\Tables;
 use App\Filament\Resources\Service\ServiceResource;
 use App\Models\Service;
 use Filament\Actions\BulkActionGroup;
-use Filament\Actions\CreateAction;
-use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Tables\Columns\TextColumn;
@@ -41,38 +39,6 @@ final class ServiceTables
                 BulkActionGroup::make([
                     DeleteBulkAction::make(),
                 ]),
-            ]);
-    }
-
-    public static function actionsInline(Table $table, int $limit = 120): Table
-    {
-        return $table
-            ->defaultSort('name')
-            ->defaultPaginationPageOption(50)
-            ->recordUrl(fn (Service $record) => ServiceResource::getUrl('view', [$record]))
-            ->columns([
-                TextColumn::make('name')
-                    ->label('Intitulé')
-                    ->limit($limit)
-                    ->sortable(),
-            ])
-            ->filters([
-                //
-            ])
-            ->headerActions([
-                CreateAction::make(), CreateAction::make()
-                    ->label('Ajouter un Oo')
-                    ->icon('tabler-plus')
-                    ->before(function (array $data): array {
-                        // va pas
-
-                        return $data;
-                    }),
-
-            ])
-            ->recordActions([
-                EditAction::make(),
-                DeleteAction::make(),
             ]);
     }
 }

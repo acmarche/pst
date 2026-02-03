@@ -33,13 +33,6 @@ final class PartnerTables
             ->recordActions([
                 ViewAction::make(),
                 EditAction::make(),
-                /*   Action::make('edit_modal')
-                       ->label('Modifier rapide')
-                       ->modal(true)
-                       ->form(fn(Form $form, Partner $record) => PartnerForm::createForm($form, $record))
-                       ->action(function (array $data, Partner $record): void {
-                           $record->save();
-                       }),*/
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
