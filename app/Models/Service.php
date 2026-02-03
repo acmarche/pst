@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Database\Factories\ServiceFactory;
 use Illuminate\Database\Eloquent\Attributes\UseFactory;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -66,5 +67,22 @@ final class Service extends Model
     public function partneringActionsForDepartment(): BelongsToMany
     {
         return $this->partneringActions()->forSelectedDepartment();
+    }
+
+    /**
+     * Get all actions (leading + partnering) filtered by selected department.
+     *
+     * @return Builder<Action>
+     */
+    public function actionsForDepartment(): Builder
+    {
+        $serviceId = $this->id;
+
+        return Action::query()
+            ->forSelectedDepartment()
+            ->where(function ($query) use ($serviceId): void {
+                $query->whereHas('leaderServices', fn ($q) => $q->where('services.id', $serviceId))
+                    ->orWhereHas('partnerServices', fn ($q) => $q->where('services.id', $serviceId));
+            });
     }
 }

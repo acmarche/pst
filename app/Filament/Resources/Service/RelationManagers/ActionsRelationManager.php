@@ -4,6 +4,7 @@ namespace App\Filament\Resources\Service\RelationManagers;
 
 use App\Filament\Resources\ActionPst\Tables\ActionTables;
 use App\Models\Action;
+use App\Models\Service;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
@@ -15,7 +16,8 @@ final class ActionsRelationManager extends RelationManager
 
     public static function getTitle(Model $ownerRecord, string $pageClass): string
     {
-        return ' Actions';
+        /** @var Service $ownerRecord */
+        return $ownerRecord->actionsForDepartment()->count().' Actions liées';
     }
 
     public function isReadOnly(): bool
@@ -34,14 +36,9 @@ final class ActionsRelationManager extends RelationManager
      */
     private function getActionsQuery(): Builder
     {
-        $serviceId = $this->ownerRecord->getKey();
+        /** @var Service $service */
+        $service = $this->ownerRecord;
 
-        /** @var Builder<Action> $query */
-        $query = Action::query()->forSelectedDepartment();
-
-        return $query->where(function (Builder $q) use ($serviceId): void {
-            $q->whereHas('leaderServices', fn (Builder $q) => $q->where('services.id', $serviceId))
-                ->orWhereHas('partnerServices', fn (Builder $q) => $q->where('services.id', $serviceId));
-        });
+        return $service->actionsForDepartment();
     }
 }
