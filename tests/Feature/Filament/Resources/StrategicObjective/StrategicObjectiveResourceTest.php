@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use App\Enums\ActionScopeEnum;
+use App\Enums\ActionSynergyEnum;
 use App\Enums\RoleEnum;
 use App\Filament\Resources\StrategicObjective\Pages\CreateStrategicObjective;
 use App\Filament\Resources\StrategicObjective\Pages\EditStrategicObjective;
@@ -64,14 +65,18 @@ describe('page rendering', function () {
 
 describe('list view', function () {
     it('displays record position and name', function () {
-        $record = StrategicObjective::factory()->create();
+        $record = StrategicObjective::factory()->create([
+            'scope' => ActionScopeEnum::EXTERNAL,
+        ]);
 
         Livewire::test(ListStrategicObjectives::class)
             ->assertSeeHtml("{$record->position}. {$record->name}");
     });
 
     it('displays operational objectives count badge', function () {
-        $record = StrategicObjective::factory()->create();
+        $record = StrategicObjective::factory()->create([
+            'scope' => ActionScopeEnum::EXTERNAL,
+        ]);
         OperationalObjective::factory(3)->create([
             'strategic_objective_id' => $record->id,
         ]);
@@ -81,7 +86,10 @@ describe('list view', function () {
     });
 
     it('displays internal badge for internal records', function () {
-        StrategicObjective::factory()->create(['scope' => ActionScopeEnum::INTERNAL]);
+        StrategicObjective::factory()->create([
+            'scope' => ActionScopeEnum::INTERNAL,
+            'synergy' => ActionSynergyEnum::YES,
+        ]);
 
         Livewire::test(ListStrategicObjectives::class)
             ->assertSeeHtml('Interne');
