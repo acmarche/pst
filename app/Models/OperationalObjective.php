@@ -10,7 +10,7 @@ use App\Models\Traits\HasDepartmentScope;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Scout\Searchable;
 
@@ -73,17 +73,17 @@ final class OperationalObjective extends Model
     }
 
     /**
-     * @return BelongsToMany<Action>
+     * @return HasMany<Action>
      */
-    public function actions(): BelongsToMany
+    public function actions(): HasMany
     {
-        return $this->belongsToMany(Action::class);
+        return $this->hasMany(Action::class);
     }
 
     /**
-     * @return BelongsToMany<Action>
+     * @return HasMany<Action>
      */
-    public function actionsForDepartment(): BelongsToMany
+    public function actionsForDepartment(): HasMany
     {
         return $this->actions()->forSelectedDepartment();
     }
