@@ -136,7 +136,7 @@ describe('crud operations', function () {
     it('can delete a partner', function () {
         $record = Partner::factory()->create();
 
-        Livewire::test(EditPartner::class, [
+        Livewire::test(ViewPartner::class, [
             'record' => $record->id,
         ])
             ->callAction(DeleteAction::class)
