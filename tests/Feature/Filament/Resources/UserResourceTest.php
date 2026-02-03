@@ -2,9 +2,11 @@
 
 declare(strict_types=1);
 
+use App\Enums\RoleEnum;
 use App\Filament\Resources\Users\Pages\EditUser;
 use App\Filament\Resources\Users\Pages\ListUsers;
 use App\Filament\Resources\Users\Pages\ViewUser;
+use App\Models\Role;
 use App\Models\User;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
@@ -16,8 +18,11 @@ use function Pest\Laravel\assertDatabaseHas;
 use function Pest\Laravel\assertDatabaseMissing;
 
 beforeEach(function () {
-    /* The TestCase setup generates a user before each test, so we need to clear the table to make sure we have a clean slate. */
-    User::truncate();
+    $adminRole = Role::factory()->create(['name' => RoleEnum::ADMIN->value]);
+    $this->adminUser = User::factory()->create();
+    $this->adminUser->roles()->attach($adminRole);
+
+    $this->actingAs($this->adminUser);
 });
 
 it('can render the index page', function () {
@@ -41,12 +46,12 @@ it('can render the edit page', function () {
 it('has column', function (string $column) {
     Livewire::test(ListUsers::class)
         ->assertTableColumnExists($column);
-})->with(['name', 'email', 'created_at', 'updated_at']);
+})->with(['first_name', 'last_name', 'email', 'created_at']);
 
 it('can render column', function (string $column) {
     Livewire::test(ListUsers::class)
         ->assertCanRenderTableColumn($column);
-})->with(['name', 'email', 'created_at', 'updated_at']);
+})->with(['first_name', 'last_name', 'email', 'created_at']);
 
 it('can sort column', function (string $column) {
     $records = User::factory(5)->create();
@@ -57,7 +62,7 @@ it('can sort column', function (string $column) {
         ->assertCanSeeTableRecords($records->sortBy($column), inOrder: true)
         ->sortTable($column, 'desc')
         ->assertCanSeeTableRecords($records->sortByDesc($column), inOrder: true);
-})->with(['name']);
+})->with(['last_name']);
 
 it('can search column', function (string $column) {
     $records = User::factory(5)->create();
@@ -116,7 +121,7 @@ it('can bulk delete users', function () {
         ->assertNotified()
         ->assertCanNotSeeTableRecords($users);
 
-    $users->each(fn (User $user) => assertDatabaseMissing($user));
+    $users->each(fn(User $user) => assertDatabaseMissing($user));
 });
 
 it('validates the form data', function (array $data, array $errors) {
