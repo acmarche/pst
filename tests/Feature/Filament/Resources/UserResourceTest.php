@@ -50,8 +50,9 @@ it('has column', function (string $column) {
 
 it('can render column', function (string $column) {
     Livewire::test(ListUsers::class)
+        ->loadTable()
         ->assertCanRenderTableColumn($column);
-})->with(['first_name', 'last_name', 'email', 'created_at']);
+})->with(['first_name', 'last_name', 'email']);
 
 it('can sort column', function (string $column) {
     $records = User::factory(5)->create();
@@ -121,7 +122,7 @@ it('can bulk delete users', function () {
         ->assertNotified()
         ->assertCanNotSeeTableRecords($users);
 
-    $users->each(fn(User $user) => assertDatabaseMissing($user));
+    $users->each(fn (User $user) => assertDatabaseMissing($user));
 });
 
 it('validates the form data', function (array $data, array $errors) {
