@@ -58,7 +58,7 @@ final class ViewAction extends ViewRecord
                 ActionAction::make('rapport')
                     ->label('Export en pdf')
                     ->icon('tabler-pdf')
-                    ->url(fn (ActionModel $record) => route('download.action', $record))
+                    ->url(fn (ActionModel $record) => route('export.action', $record))
                     ->action(function () {
                         Notification::make()
                             ->title('Pdf exporté')
