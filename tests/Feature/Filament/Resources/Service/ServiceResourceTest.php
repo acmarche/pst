@@ -152,7 +152,7 @@ describe('crud operations', function () {
     it('can delete a service', function () {
         $record = Service::factory()->create();
 
-        Livewire::test(EditService::class, [
+        Livewire::test(ViewService::class, [
             'record' => $record->id,
         ])
             ->callAction(DeleteAction::class)
