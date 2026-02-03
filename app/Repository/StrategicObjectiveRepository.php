@@ -26,7 +26,7 @@ final class StrategicObjectiveRepository
     {
         return StrategicObjective::query()
             ->where(function (Builder $query) use ($department): void {
-                $query->where('department', 'LIKE', $department)
+                $query->where('department', '=', $department)
                     ->orWhere('synergy', ActionSynergyEnum::YES)
                     ->orWhere(function (Builder $q): void {
                         $q->whereNull('department')
