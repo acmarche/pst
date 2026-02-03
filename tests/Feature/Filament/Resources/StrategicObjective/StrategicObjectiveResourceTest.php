@@ -14,8 +14,6 @@ use App\Models\Role;
 use App\Models\StrategicObjective;
 use App\Models\User;
 use Filament\Actions\DeleteAction;
-use Filament\Actions\DeleteBulkAction;
-use Filament\Actions\Testing\TestAction;
 use Illuminate\Support\Str;
 use Livewire\Livewire;
 
@@ -244,6 +242,7 @@ describe('relation manager', function () {
             'ownerRecord' => $record,
             'pageClass' => ViewStrategicObjective::class,
         ])
+            ->loadTable()
             ->assertCanSeeTableRecords($oos);
     });
 });
