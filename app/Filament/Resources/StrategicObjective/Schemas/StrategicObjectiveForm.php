@@ -58,7 +58,7 @@ final class StrategicObjectiveForm
                                     ->options(ActionScopeEnum::class)
                                     ->grouped(),
                                 Forms\Components\ToggleButtons::make('synergy')
-                                    ->label('Synergie CPAS / Ville')
+                                    ->label(ActionSynergyEnum::getTitle())
                                     ->options(ActionSynergyEnum::class)
                                     ->grouped(),
                             ]),

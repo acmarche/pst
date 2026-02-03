@@ -14,6 +14,16 @@ enum ActionSynergyEnum: string implements HasColor, HasIcon, HasLabel
     case YES = 'YES';
     case NO = 'NO';
 
+    public static function getTitle(): string
+    {
+        return 'Synergie Ville/Cpas';
+    }
+
+    public static function getDescription(): string
+    {
+        return 'Les données sont mises en commun';
+    }
+
     public static function toArray(): array
     {
         $values = [];
@@ -44,7 +54,7 @@ enum ActionSynergyEnum: string implements HasColor, HasIcon, HasLabel
     public function getIcon(): string|BackedEnum|Htmlable|null
     {
         return match ($this) {
-            self::YES => Heroicon::Check,
+            self::YES => Heroicon::Heart,
             self::NO => Heroicon::XMark,
         };
     }

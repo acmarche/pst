@@ -1,4 +1,4 @@
-@php use App\Filament\Resources\StrategicObjective\StrategicObjectiveResource; @endphp
+@php use App\Enums\ActionSynergyEnum;use App\Filament\Resources\OperationalObjective\OperationalObjectiveResource;use App\Filament\Resources\StrategicObjective\StrategicObjectiveResource; @endphp
 <x-filament-panels::page
     @class([
         'fi-resource-list-records-page',
@@ -28,12 +28,17 @@
                                 Interne
                             </x-filament::badge>
                         @endif
+                        @if($os->synergy == ActionSynergyEnum::YES)
+                            <x-filament::badge size="lg" color="secondary" icon="tabler-heart">
+                                {{ ActionSynergyEnum::getTitle() }}
+                            </x-filament::badge>
+                        @endif
                     </div>
                 </x-slot>
                 <div class="flex flex-col gap-y-3">
                     @foreach ($os->oos as $oo)
                         <div class="flex items-center justify-start flex-row gap-2">
-                            <a href="{{ \App\Filament\Resources\OperationalObjective\OperationalObjectiveResource::getUrl('view', ['record' => $oo]) }}"
+                            <a href="{{ OperationalObjectiveResource::getUrl('view', ['record' => $oo]) }}"
                                title="Voir" class="flex items-center justify-start flex-row gap-2">
                                 <span>{{$os->position}}.{{$oo->position}}</span>
                                 <span>{{$oo->name}}</span>
