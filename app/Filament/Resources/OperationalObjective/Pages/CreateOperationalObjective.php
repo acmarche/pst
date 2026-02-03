@@ -3,8 +3,6 @@
 namespace App\Filament\Resources\OperationalObjective\Pages;
 
 use App\Filament\Resources\OperationalObjective\OperationalObjectiveResource;
-use App\Filament\Resources\StrategicObjective\StrategicObjectiveResource;
-use Filament\Notifications\Notification;
 use Filament\Resources\Pages\CreateRecord;
 
 final class CreateOperationalObjective extends CreateRecord
