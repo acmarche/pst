@@ -54,4 +54,12 @@ final class Odd extends Model
     {
         return $this->belongsToMany(Action::class);
     }
+
+    /**
+     * @return BelongsToMany<Action>
+     */
+    public function actionsForDepartment(): BelongsToMany
+    {
+        return $this->actions()->forSelectedDepartment();
+    }
 }

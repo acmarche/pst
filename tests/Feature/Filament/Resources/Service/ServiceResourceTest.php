@@ -2,14 +2,20 @@
 
 declare(strict_types=1);
 
+use App\Enums\ActionSynergyEnum;
+use App\Enums\DepartmentEnum;
 use App\Enums\RoleEnum;
 use App\Filament\Resources\Service\Pages\CreateService;
 use App\Filament\Resources\Service\Pages\EditService;
 use App\Filament\Resources\Service\Pages\ListServices;
 use App\Filament\Resources\Service\Pages\ViewService;
+use App\Models\Action;
+use App\Models\OperationalObjective;
 use App\Models\Role;
 use App\Models\Service;
+use App\Models\StrategicObjective;
 use App\Models\User;
+use App\Repository\UserRepository;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\Testing\TestAction;
@@ -237,5 +243,85 @@ describe('form fields', function () {
     it('has users field', function () {
         Livewire::test(CreateService::class)
             ->assertFormFieldExists('users');
+    });
+});
+
+describe('department-filtered action counts', function () {
+    it('counts only actions matching selected department or synergy', function () {
+        $service = Service::factory()->create();
+        $strategicObjective = StrategicObjective::factory()->create();
+        $operationalObjective = OperationalObjective::factory()->create([
+            'strategic_objective_id' => $strategicObjective->id,
+        ]);
+
+        // Set selected department to VILLE
+        session([UserRepository::$department_selected_key => DepartmentEnum::VILLE->value]);
+
+        // Action in VILLE department (should be counted)
+        $villeAction = Action::factory()->create([
+            'department' => DepartmentEnum::VILLE->value,
+            'synergy' => ActionSynergyEnum::NO,
+            'operational_objective_id' => $operationalObjective->id,
+        ]);
+        $service->leadingActions()->attach($villeAction);
+
+        // Action in CPAS department without synergy (should NOT be counted)
+        $cpasAction = Action::factory()->create([
+            'department' => DepartmentEnum::CPAS->value,
+            'synergy' => ActionSynergyEnum::NO,
+            'operational_objective_id' => $operationalObjective->id,
+        ]);
+        $service->leadingActions()->attach($cpasAction);
+
+        // Action in CPAS department with synergy (should be counted)
+        $synergyAction = Action::factory()->create([
+            'department' => DepartmentEnum::CPAS->value,
+            'synergy' => ActionSynergyEnum::YES,
+            'operational_objective_id' => $operationalObjective->id,
+        ]);
+        $service->leadingActions()->attach($synergyAction);
+
+        // Should count 2: villeAction + synergyAction
+        expect($service->leadingActionsForDepartment()->count())->toBe(2);
+    });
+
+    it('includes synergy actions in filtered counts for CPAS department', function () {
+        $service = Service::factory()->create();
+        $strategicObjective = StrategicObjective::factory()->create();
+        $operationalObjective = OperationalObjective::factory()->create([
+            'strategic_objective_id' => $strategicObjective->id,
+        ]);
+
+        // Set selected department to CPAS
+        session([UserRepository::$department_selected_key => DepartmentEnum::CPAS->value]);
+
+        // Action in CPAS department (should be counted)
+        $cpasAction = Action::factory()->create([
+            'department' => DepartmentEnum::CPAS->value,
+            'synergy' => ActionSynergyEnum::NO,
+            'operational_objective_id' => $operationalObjective->id,
+        ]);
+        $service->leadingActions()->attach($cpasAction);
+
+        // Action in VILLE department without synergy (should NOT be counted)
+        $villeAction = Action::factory()->create([
+            'department' => DepartmentEnum::VILLE->value,
+            'synergy' => ActionSynergyEnum::NO,
+            'operational_objective_id' => $operationalObjective->id,
+        ]);
+        $service->leadingActions()->attach($villeAction);
+
+        // Action in VILLE department with synergy (should be counted)
+        $synergyAction = Action::factory()->create([
+            'department' => DepartmentEnum::VILLE->value,
+            'synergy' => ActionSynergyEnum::YES,
+            'operational_objective_id' => $operationalObjective->id,
+        ]);
+        $service->partneringActions()->attach($synergyAction);
+
+        // Should count 1 for CPAS: cpasAction only
+        expect($service->leadingActionsForDepartment()->count())->toBe(1);
+        // Should count 1 for synergy action from VILLE
+        expect($service->partneringActionsForDepartment()->count())->toBe(1);
     });
 });

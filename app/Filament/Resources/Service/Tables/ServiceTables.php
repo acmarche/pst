@@ -30,13 +30,13 @@ final class ServiceTables
                     ->label('Agents')
                     ->counts('users')
                     ->toggleable(isToggledHiddenByDefault: true),
-                TextColumn::make('leading_actions_count')
+                TextColumn::make('leading_actions_for_department_count')
                     ->label('Actions pilotées')
-                    ->counts('leadingActions')
+                    ->counts('leadingActionsForDepartment')
                     ->sortable(),
-                TextColumn::make('partnering_actions_count')
+                TextColumn::make('partnering_actions_for_department_count')
                     ->label('Actions partenaires')
-                    ->counts('partneringActions')
+                    ->counts('partneringActionsForDepartment')
                     ->sortable(),
             ])
             ->filters([

@@ -3,7 +3,6 @@
 namespace App\Repository;
 
 use App\Enums\ActionStateEnum;
-use App\Enums\ActionSynergyEnum;
 use App\Models\Action;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
@@ -62,10 +61,7 @@ final class ActionRepository
     public static function findByDepartmentWithOosAndActions(string $department): Builder
     {
         return Action::query()
-            ->where(function (Builder $query) use ($department): void {
-                $query->where('department', '=', $department)
-                    ->orWhere('synergy', ActionSynergyEnum::YES);
-            })
+            ->forDepartment($department)
             ->with('operationalObjective')
             ->with('leaderServices')
             ->with('partnerServices')

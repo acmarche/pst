@@ -57,4 +57,14 @@ final class Service extends Model
     {
         return $this->belongsToMany(Action::class, 'action_service_partner');
     }
+
+    public function leadingActionsForDepartment(): BelongsToMany
+    {
+        return $this->leadingActions()->forSelectedDepartment();
+    }
+
+    public function partneringActionsForDepartment(): BelongsToMany
+    {
+        return $this->partneringActions()->forSelectedDepartment();
+    }
 }

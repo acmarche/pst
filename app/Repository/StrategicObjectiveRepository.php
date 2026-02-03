@@ -2,7 +2,6 @@
 
 namespace App\Repository;
 
-use App\Enums\ActionSynergyEnum;
 use App\Models\StrategicObjective;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
@@ -25,10 +24,7 @@ final class StrategicObjectiveRepository
     public static function findByDepartmentWithOosAndActions(string $department): Builder
     {
         return StrategicObjective::query()
-            ->where(function (Builder $query) use ($department): void {
-                $query->where('department', '=', $department)
-                    ->orWhere('synergy', ActionSynergyEnum::YES);
-            })
+            ->forDepartment($department)
             ->with('oos')
             ->with('oos.actions')
             ->with('oos.actions.leaderServices')

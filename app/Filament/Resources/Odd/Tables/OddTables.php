@@ -48,8 +48,8 @@ final class OddTables
                         ->color('gray')
                         ->size(TextSize::Small)
                         ->extraAttributes(['class' => 'mt-1']),
-                    Tables\Columns\TextColumn::make('actions_count')
-                        ->counts('actions')
+                    Tables\Columns\TextColumn::make('actions_for_department_count')
+                        ->counts('actionsForDepartment')
                         ->badge()
                         ->color('success')
                         ->formatStateUsing(fn (int $state): string => $state.' '.trans_choice('action|actions', $state))

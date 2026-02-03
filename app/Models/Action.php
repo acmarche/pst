@@ -10,8 +10,8 @@ use App\Enums\ActionTypeEnum;
 use App\Enums\DepartmentEnum;
 use App\Enums\RoleEnum;
 use App\Enums\YesOrNoEnum;
+use App\Models\Traits\HasDepartmentScope;
 use App\Observers\ActionObserver;
-use App\Repository\UserRepository;
 use Database\Factories\ActionFactory;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Attributes\Scope;
@@ -30,7 +30,7 @@ use Laravel\Scout\Searchable;
 #[UseFactory(ActionFactory::class)]
 final class Action extends Model
 {
-    use HasFactory, Notifiable;
+    use HasDepartmentScope, HasFactory, Notifiable;
     use Searchable;
 
     protected $fillable = [
@@ -208,12 +208,6 @@ final class Action extends Model
     public function histories(): HasMany
     {
         return $this->hasMany(History::class);
-    }
-
-    #[Scope]
-    public function departmentSelected(Builder $query): void
-    {
-        $query->where('department', UserRepository::departmentSelected());
     }
 
     protected static function booted(): void

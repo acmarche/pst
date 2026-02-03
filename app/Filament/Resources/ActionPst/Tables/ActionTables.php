@@ -9,23 +9,17 @@ use App\Enums\ActionStateEnum;
 use App\Enums\ActionSynergyEnum;
 use App\Enums\ActionTypeEnum;
 use App\Filament\Resources\ActionPst\ActionPstResource;
-use App\Filament\Resources\ActionPst\Schemas\ActionForm;
 use App\Models\Action;
-use App\Models\OperationalObjective;
 use App\Models\Service;
 use App\Repository\ActionRepository;
 use App\Repository\UserRepository;
 use Filament\Actions\BulkActionGroup;
-use Filament\Actions\CreateAction;
 use Filament\Actions\DeleteBulkAction;
-use Filament\Actions\ViewAction;
-use Filament\Schemas\Schema;
 use Filament\Support\Enums\Width;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Model;
 
 final class ActionTables
 {
@@ -60,58 +54,9 @@ final class ActionTables
             ->defaultSort('name')
             ->defaultPaginationPageOption(50)
             ->recordUrl(fn (Action $record) => ActionPstResource::getUrl('view', [$record]))
-            ->columns([
-                TextColumn::make('name')
-                    ->label('Intitulé')
-                    ->limit($limit)
-                    ->sortable(),
-            ])
+            ->columns(self::getColumns())
             ->filters([
                 //
-            ])
-            ->recordActions([
-                ViewAction::make()
-                    ->url(
-                        fn (Action $record): string => ActionPstResource::getUrl(
-                            'view',
-                            ['record' => $record]
-                        )
-                    ),
-            ]);
-    }
-
-    public static function tableRelation(Table $table, Model|OperationalObjective $owner): Table
-    {
-        return $table
-            ->defaultPaginationPageOption(50)
-            ->defaultSort('name')
-            ->reorderable('position')
-            ->recordUrl(fn (Action $record) => ActionPstResource::getUrl('view', [$record]))
-            ->columns([
-                TextColumn::make('name')
-                    ->label('Intitulé')
-                    ->limit(120)
-                    ->sortable()
-                    ->searchable(),
-                TextColumn::make('position')
-                    ->label('Numérotation')
-                    ->sortable(),
-            ])
-            ->filters([
-
-            ])
-            ->headerActions([
-                CreateAction::make()
-                    ->label('Ajouter une action')
-                    ->icon('tabler-plus')
-                    ->schema(fn (Schema $schema): Schema => ActionForm::configure($schema, $owner))
-                    ->before(function (array $data) use ($owner): array {
-                        // va pas
-                        $department = $owner->department;
-                        $data['department'] = $department;
-
-                        return $data;
-                    }),
             ]);
     }
 

@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Enums\ActionScopeEnum;
 use App\Enums\ActionSynergyEnum;
 use App\Enums\DepartmentEnum;
+use App\Models\Traits\HasDepartmentScope;
 use Database\Factories\StrategicObjectiveFactory;
 use Illuminate\Database\Eloquent\Attributes\UseFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -16,7 +17,7 @@ use Laravel\Scout\Searchable;
 #[UseFactory(StrategicObjectiveFactory::class)]
 final class StrategicObjective extends Model
 {
-    use HasFactory, Notifiable, Searchable;
+    use HasDepartmentScope, HasFactory, Notifiable, Searchable;
 
     protected $fillable = [
         'name',

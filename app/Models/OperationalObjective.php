@@ -6,18 +6,17 @@ use App\Enums\ActionScopeEnum;
 use App\Enums\ActionSynergyEnum;
 use App\Enums\DepartmentEnum;
 use App\Models\Scopes\DepartmentScope;
-use Illuminate\Database\Eloquent\Attributes\Scope;
-use Illuminate\Database\Eloquent\Builder;
+use App\Models\Traits\HasDepartmentScope;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Scout\Searchable;
 
 final class OperationalObjective extends Model
 {
-    use HasFactory, Notifiable, Searchable;
+    use HasDepartmentScope, HasFactory, Notifiable, Searchable;
 
     protected $fillable = [
         'name',
@@ -74,19 +73,19 @@ final class OperationalObjective extends Model
     }
 
     /**
-     * Get the actions for the Operational Objective.
-     *
-     * @return HasMany<Action>
+     * @return BelongsToMany<Action>
      */
-    public function actions(): HasMany
+    public function actions(): BelongsToMany
     {
-        return $this->hasMany(Action::class);
+        return $this->belongsToMany(Action::class);
     }
 
-    #[Scope]
-    public function byDepartment(Builder $builder, string $department): void
+    /**
+     * @return BelongsToMany<Action>
+     */
+    public function actionsForDepartment(): BelongsToMany
     {
-        $builder->where('department', $department);
+        return $this->actions()->forSelectedDepartment();
     }
 
     protected static function booted(): void

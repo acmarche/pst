@@ -9,11 +9,11 @@ use Illuminate\Database\Eloquent\Model;
 
 final class ActionsRelationManager extends RelationManager
 {
-    protected static string $relationship = 'actions';
+    protected static string $relationship = 'actionsForDepartment';
 
     public static function getTitle(Model $ownerRecord, string $pageClass): string
     {
-        return $ownerRecord->actions()->count().' Actions';
+        return $ownerRecord->actionsForDepartment()->count().' Actions liées';
     }
 
     public function isReadOnly(): bool
@@ -23,6 +23,6 @@ final class ActionsRelationManager extends RelationManager
 
     public function table(Table $table): Table
     {
-        return ActionTables::tableRelation($table, $this->ownerRecord);
+        return ActionTables::actionsInline($table);
     }
 }
