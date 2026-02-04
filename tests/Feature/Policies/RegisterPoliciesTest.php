@@ -20,16 +20,25 @@ final class RegisterPoliciesTest extends TestCase
 
     private User $regularUser;
 
+    private User $mandataireUser;
+
     private Role $adminRole;
+
+    private Role $mandataireRole;
 
     protected function setUp(): void
     {
         parent::setUp();
 
         $this->adminRole = Role::factory()->create(['name' => RoleEnum::ADMIN->value]);
+        $this->mandataireRole = Role::factory()->create(['name' => RoleEnum::MANDATAIRE->value]);
 
         $this->adminUser = User::factory()->create();
         $this->adminUser->roles()->attach($this->adminRole);
+
+        $this->mandataireUser = User::factory()->create();
+        $this->mandataireUser->roles()->attach($this->mandataireRole);
+
         $this->regularUser = User::factory()->create();
     }
 
@@ -62,6 +71,186 @@ final class RegisterPoliciesTest extends TestCase
         $this->actingAs($this->regularUser);
 
         $result = Gate::check('teams-edit', [$action, 'edit']);
+
+        $this->assertFalse($result);
+    }
+
+    // ActionPolicy: viewAny
+    public function test_action_policy_view_any_allows_any_user(): void
+    {
+        $this->actingAs($this->regularUser);
+
+        $result = Gate::check('viewAny', Action::class);
+
+        $this->assertTrue($result);
+    }
+
+    // ActionPolicy: view
+    public function test_action_policy_view_allows_any_user(): void
+    {
+        $action = $this->createAction();
+
+        $this->actingAs($this->regularUser);
+
+        $result = Gate::check('view', $action);
+
+        $this->assertTrue($result);
+    }
+
+    // ActionPolicy: create
+    public function test_action_policy_create_allows_regular_user(): void
+    {
+        $this->actingAs($this->regularUser);
+
+        $result = Gate::check('create', Action::class);
+
+        $this->assertTrue($result);
+    }
+
+    public function test_action_policy_create_allows_admin(): void
+    {
+        $this->actingAs($this->adminUser);
+
+        $result = Gate::check('create', Action::class);
+
+        $this->assertTrue($result);
+    }
+
+    public function test_action_policy_create_denies_mandataire(): void
+    {
+        $this->actingAs($this->mandataireUser);
+
+        $result = Gate::check('create', Action::class);
+
+        $this->assertFalse($result);
+    }
+
+    // ActionPolicy: update
+    public function test_action_policy_update_allows_admin(): void
+    {
+        $action = $this->createAction();
+
+        $this->actingAs($this->adminUser);
+
+        $result = Gate::check('update', $action);
+
+        $this->assertTrue($result);
+    }
+
+    public function test_action_policy_update_denies_mandataire(): void
+    {
+        $action = $this->createAction();
+
+        $this->actingAs($this->mandataireUser);
+
+        $result = Gate::check('update', $action);
+
+        $this->assertFalse($result);
+    }
+
+    public function test_action_policy_update_allows_user_directly_linked_to_action(): void
+    {
+        $action = $this->createAction();
+        $action->users()->attach($this->regularUser);
+
+        $this->actingAs($this->regularUser);
+
+        $result = Gate::check('update', $action);
+
+        $this->assertTrue($result);
+    }
+
+    public function test_action_policy_update_allows_user_in_leader_service(): void
+    {
+        $action = $this->createAction();
+        $service = Service::factory()->create();
+        $service->users()->attach($this->regularUser);
+        $action->leaderServices()->attach($service);
+
+        $this->actingAs($this->regularUser);
+
+        $result = Gate::check('update', $action);
+
+        $this->assertTrue($result);
+    }
+
+    public function test_action_policy_update_denies_unlinked_regular_user(): void
+    {
+        $action = $this->createAction();
+
+        $this->actingAs($this->regularUser);
+
+        $result = Gate::check('update', $action);
+
+        $this->assertFalse($result);
+    }
+
+    // ActionPolicy: delete
+    public function test_action_policy_delete_allows_admin(): void
+    {
+        $action = $this->createAction();
+
+        $this->actingAs($this->adminUser);
+
+        $result = Gate::check('delete', $action);
+
+        $this->assertTrue($result);
+    }
+
+    public function test_action_policy_delete_denies_mandataire(): void
+    {
+        $action = $this->createAction();
+
+        $this->actingAs($this->mandataireUser);
+
+        $result = Gate::check('delete', $action);
+
+        $this->assertFalse($result);
+    }
+
+    public function test_action_policy_delete_allows_user_directly_linked_to_action(): void
+    {
+        $action = $this->createAction();
+        $action->users()->attach($this->regularUser);
+
+        $this->actingAs($this->regularUser);
+
+        $result = Gate::check('delete', $action);
+
+        $this->assertTrue($result);
+    }
+
+    public function test_action_policy_delete_denies_unlinked_regular_user(): void
+    {
+        $action = $this->createAction();
+
+        $this->actingAs($this->regularUser);
+
+        $result = Gate::check('delete', $action);
+
+        $this->assertFalse($result);
+    }
+
+    // ActionPolicy: restore
+    public function test_action_policy_restore_denies_all_users(): void
+    {
+        $action = $this->createAction();
+
+        $this->actingAs($this->adminUser);
+
+        $result = Gate::check('restore', $action);
+
+        $this->assertFalse($result);
+    }
+
+    // ActionPolicy: forceDelete
+    public function test_action_policy_force_delete_denies_all_users(): void
+    {
+        $action = $this->createAction();
+
+        $this->actingAs($this->adminUser);
+
+        $result = Gate::check('forceDelete', $action);
 
         $this->assertFalse($result);
     }
