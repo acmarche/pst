@@ -235,7 +235,7 @@ final class ActionForm
                         ->helperText('Les agents pilotes ont le droit de modifier l\'action.')
                         ->relationship(
                             name: 'users',
-                            modifyQueryUsing: fn (Builder $query) => $query->orderBy('last_name')
+                            modifyQueryUsing: fn (Builder $query) => $query->forSelectedDepartment()->orderBy('last_name')
                                 ->orderBy('first_name'),
                         )
                         ->getOptionLabelFromRecordUsing(

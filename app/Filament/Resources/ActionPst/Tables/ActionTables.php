@@ -11,7 +11,6 @@ use App\Enums\ActionTypeEnum;
 use App\Filament\Resources\ActionPst\ActionPstResource;
 use App\Models\Action;
 use App\Models\Service;
-use App\Repository\ActionRepository;
 use App\Repository\UserRepository;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
@@ -28,11 +27,6 @@ final class ActionTables
         return $table
             ->defaultSort('position')
             ->defaultPaginationPageOption(50)
-            ->modifyQueryUsing(
-                fn (Builder $query) => ActionRepository::findByDepartmentWithOosAndActions(
-                    UserRepository::departmentSelected()
-                )
-            )
             ->persistFiltersInSession()
             ->recordUrl(fn (Action $record) => ActionPstResource::getUrl('view', [$record]))
             ->columns(self::getColumns())

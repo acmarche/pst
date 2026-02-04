@@ -6,7 +6,6 @@ use App\Enums\ActionStateEnum;
 use App\Enums\RoleEnum;
 use App\Filament\Resources\ActionPst\ActionPstResource;
 use App\Models\Action;
-use App\Repository\UserRepository;
 use Filament\Actions;
 use Filament\Resources\Pages\ListRecords;
 use Filament\Schemas\Components\Tabs\Tab;
@@ -30,52 +29,25 @@ final class ListActions extends ListRecords
     public function getTabs(): array
     {
         $filters = $this->tableFilters ?? [];
-        $department = UserRepository::departmentSelected();
-        if (isset($filters['department']['value']) && $filters['department']['value'] !== null) {
-            $department = $filters['department']['value'];
-        }
 
         $tabs = [
             0 => Tab::make('All')
                 ->label('Toutes')
-                ->badge(
-                    fn () => Action::query()->where(
-                        'department',
-                        $department
-                    )->count()
-                )
-                ->modifyQueryUsing(
-                    fn (Builder $query) => $query
-                        ->with('operationalObjective')
-                        ->with('leaderServices')
-                        ->with('partnerServices')
-                        ->with('mandataries')
-                        ->with('users')
-                        ->with('partners')
-                        ->with('odds')
-                ),
+                ->badge(fn () => Action::query()->count()),
         ];
         if (auth()->user()->hasRole(RoleEnum::ADMIN->value)) {
             $tabs[1] = Tab::make('NotValidated')
                 ->label('Non validées')
                 ->badgeColor('warning')
                 ->icon('heroicon-m-exclamation-circle')
-                ->badge(
-                    fn () => Action::query()
-                        ->where('department', $department)
-                        ->notValidated()->count()
-                )
-                ->modifyQueryUsing(
-                    fn (Builder $query) => $query
-                        ->notValidated()
-                );
+                ->badge(fn () => Action::query()->notValidated()->count())
+                ->modifyQueryUsing(fn (Builder $query) => $query->notValidated());
         }
         foreach (ActionStateEnum::cases() as $actionStateEnum) {
             $tabs[] =
                 Tab::make($actionStateEnum->value)
                     ->badge(
                         fn () => Action::query()
-                            ->where('department', $department)
                             ->where('state', $actionStateEnum->value)
                             ->validated()
                             ->count()
@@ -104,27 +76,5 @@ final class ListActions extends ListRecords
                 ->icon('tabler-list')
                 ->url(ActionPstResource::getUrl('asGoogleSheet')),
         ];
-    }
-
-    private function debugQuery(): void
-    {
-        // Get the query builder
-        $builder = $this->getFilteredTableQuery();
-        $sql = $builder->toSql();
-        $bindings = $builder->getBindings();
-
-        // Replace bindings in SQL
-        $fullQuery = $sql;
-        foreach ($bindings as $binding) {
-            dump('bind: '.$binding);
-            $value = is_numeric($binding) ? $binding : "'".$binding."'";
-            $fullQuery = preg_replace('/\?/', $value, $fullQuery, 1);
-        }
-
-        dump([
-            'sql' => $sql,
-            'bindings' => implode(',', $bindings),
-            'full_query' => $fullQuery,
-        ]);
     }
 }
