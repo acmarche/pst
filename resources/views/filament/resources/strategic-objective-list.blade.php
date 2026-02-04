@@ -28,11 +28,6 @@
                                 Interne
                             </x-filament::badge>
                         @endif
-                        @if($os->synergy == ActionSynergyEnum::YES)
-                            <x-filament::badge size="lg" color="secondary" icon="tabler-heart">
-                                {{ ActionSynergyEnum::getTitle() }}
-                            </x-filament::badge>
-                        @endif
                     </div>
                 </x-slot>
                 <div class="flex flex-col gap-y-3">

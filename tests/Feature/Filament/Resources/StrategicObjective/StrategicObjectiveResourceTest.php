@@ -88,7 +88,6 @@ describe('list view', function () {
     it('displays internal badge for internal records', function () {
         StrategicObjective::factory()->create([
             'scope' => ActionScopeEnum::INTERNAL,
-            'synergy' => ActionSynergyEnum::YES,
         ]);
 
         Livewire::test(ListStrategicObjectives::class)
@@ -113,7 +112,6 @@ describe('crud operations', function () {
                 'department' => $newData->department,
                 'scope' => $newData->scope,
                 'position' => $newData->position,
-                'synergy' => ActionSynergyEnum::NO,
             ])
             ->call('create')
             ->assertNotified()
