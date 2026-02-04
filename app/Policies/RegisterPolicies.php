@@ -2,13 +2,14 @@
 
 namespace App\Policies;
 
-use App\Enums\RoleEnum;
 use App\Models\Action;
 use App\Models\User;
 use Illuminate\Support\Facades\Gate;
 
 final class RegisterPolicies
 {
+    use actionEditPolicyTrait;
+
     public static function register(): void
     {
         Gate::define('teams-edit', function (User $user, Action $action, string $operation) {
@@ -17,15 +18,8 @@ final class RegisterPolicies
                 return true;
             }
 
-            if ($user->hasOneOfThisRoles([RoleEnum::ADMIN->value])) {
-                return true;
-            }
+            return $this->isUserLinkedToAction($user, $action);
 
-            return $action->leaderServices()
-                ->whereHas('users', function ($query) use ($user) {
-                    $query->where('user_id', $user->id);
-                })
-                ->exists();
         });
     }
 }

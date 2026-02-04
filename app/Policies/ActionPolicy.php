@@ -9,6 +9,8 @@ use App\Models\User;
 // https://laravel.com/docs/12.x/authorization#creating-policies
 final class ActionPolicy
 {
+    use actionEditPolicyTrait;
+
     /**
      * Determine whether the user can view any models.
      */
@@ -67,29 +69,5 @@ final class ActionPolicy
     public function forceDelete(User $user, Action $action): bool
     {
         return false;
-    }
-
-    /**
-     * Check if user is linked to the action either directly or through services
-     */
-    private function isUserLinkedToAction(User $user, Action $action): bool
-    {
-        if ($user->hasOneOfThisRoles([RoleEnum::MANDATAIRE->value])) {
-            return false;
-        }
-        if ($user->hasOneOfThisRoles([RoleEnum::ADMIN->value])) {
-            return true;
-        }
-
-        // Check if user is directly linked to the action
-        if ($action->users()->where('user_id', $user->id)->exists()) {
-            return true;
-        }
-
-        return $action->leaderServices()
-            ->whereHas('users', function ($query) use ($user) {
-                $query->where('user_id', $user->id);
-            })
-            ->exists();
     }
 }
