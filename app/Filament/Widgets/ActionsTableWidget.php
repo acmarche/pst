@@ -9,6 +9,10 @@ use Filament\Widgets\TableWidget as BaseWidget;
 
 final class ActionsTableWidget extends BaseWidget
 {
+    protected int|string|array $columnSpan = 'full';
+
+    protected static ?int $sort = 1;
+
     public function table(Table $table): Table
     {
         $user = auth()->user();
