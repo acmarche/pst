@@ -5,20 +5,20 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Ldap\User as UserLdap;
+use App\Repository\UserRepository;
 use Database\Factories\UserFactory;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Models\Contracts\HasName;
 use Filament\Panel;
+use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Attributes\UseFactory;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Lab404\Impersonate\Models\Impersonate;
 use Laravel\Scout\Searchable;
-use App\Repository\UserRepository;
-use Illuminate\Database\Eloquent\Attributes\Scope;
-use Illuminate\Database\Eloquent\Builder;
 
 #[UseFactory(UserFactory::class)]
 final class User extends Authenticatable implements FilamentUser, HasName
@@ -177,7 +177,7 @@ final class User extends Authenticatable implements FilamentUser, HasName
     public function forSelectedDepartment(Builder $query): void
     {
         $department = UserRepository::departmentSelected();
-        $query->where('departments', 'IN', [$department]);
+        $query->whereJsonContains('departments', $department);
     }
 
     protected static function boot(): void
