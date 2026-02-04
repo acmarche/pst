@@ -28,8 +28,6 @@ final class ListActions extends ListRecords
      */
     public function getTabs(): array
     {
-        $filters = $this->tableFilters ?? [];
-
         $tabs = [
             0 => Tab::make('All')
                 ->label('Toutes')
