@@ -9,7 +9,7 @@ use App\Models\User;
 // https://laravel.com/docs/12.x/authorization#creating-policies
 final class ActionPolicy
 {
-    use actionEditPolicyTrait;
+    use ActionEditPolicyTrait;
 
     /**
      * Determine whether the user can view any models.
@@ -44,7 +44,7 @@ final class ActionPolicy
      */
     public function update(User $user, Action $action): bool
     {
-        return $this->isUserLinkedToAction($user, $action);
+        return self::isUserLinkedToAction($user, $action);
     }
 
     /**
@@ -52,7 +52,7 @@ final class ActionPolicy
      */
     public function delete(User $user, Action $action): bool
     {
-        return $this->isUserLinkedToAction($user, $action);
+        return self::isUserLinkedToAction($user, $action);
     }
 
     /**

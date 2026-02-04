@@ -4,9 +4,9 @@ namespace App\Policies;
 
 use App\Enums\RoleEnum;
 
-trait actionEditPolicyTrait
+trait ActionEditPolicyTrait
 {
-    public function isUserLinkedToAction($user, $action): bool
+    public static function isUserLinkedToAction($user, $action): bool
     {
         if ($user->hasOneOfThisRoles([RoleEnum::MANDATAIRE->value])) {
             return false;

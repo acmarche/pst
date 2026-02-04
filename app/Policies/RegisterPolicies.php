@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Gate;
 
 final class RegisterPolicies
 {
-    use actionEditPolicyTrait;
+    use ActionEditPolicyTrait;
 
     public static function register(): void
     {
@@ -18,7 +18,7 @@ final class RegisterPolicies
                 return true;
             }
 
-            return $this->isUserLinkedToAction($user, $action);
+            return self::isUserLinkedToAction($user, $action);
 
         });
     }
