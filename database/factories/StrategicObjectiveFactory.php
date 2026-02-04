@@ -19,7 +19,6 @@ final class StrategicObjectiveFactory extends Factory
             'position' => fake()->numberBetween(1, 100),
             'department' => DepartmentEnum::VILLE->value,
             'scope' => fake()->randomElement(ActionScopeEnum::cases())->value,
-            'synergy' => ActionSynergyEnum::NO,
         ];
     }
 }
