@@ -54,6 +54,37 @@ final class ActionTables
             ]);
     }
 
+    public static function actionsForWidget(Table $table, int $limit = 120): Table
+    {
+        return $table
+            ->defaultSort('name')
+            ->defaultPaginationPageOption(50)
+            ->recordUrl(fn (Action $record) => ActionPstResource::getUrl('view', [$record]))
+            ->columns([
+                TextColumn::make('id')
+                    ->sortable()
+                    ->numeric()
+                    ->label('Id'),
+                TextColumn::make('name')
+                    ->sortable()
+                    ->label('Intitulé')
+                    ->limit(95)
+                    ->url(fn (Action $record) => ActionPstResource::getUrl('view', ['record' => $record->id]))
+                    ->tooltip(function (TextColumn $column): ?string {
+                        $state = $column->getState();
+
+                        if (mb_strlen($state) <= $column->getCharacterLimit()) {
+                            return null;
+                        }
+
+                        return $state;
+                    }),
+            ])
+            ->filters([
+                //
+            ]);
+    }
+
     public static function full(Table $table): Table
     {
         $columns = self::getColumns();

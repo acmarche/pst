@@ -19,6 +19,6 @@ final class ActionsTableWidget extends BaseWidget
                 ActionRepository::findByUser($user->id)
             );
 
-        return ActionTables::actionsInline($table, limit: 60);
+        return ActionTables::actionsForWidget($table, limit: 60);
     }
 }
