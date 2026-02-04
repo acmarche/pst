@@ -15,8 +15,10 @@ use App\Models\Scopes\HasDepartmentScope;
 use App\Observers\ActionObserver;
 use Database\Factories\ActionFactory;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
+use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Attributes\ScopedBy;
 use Illuminate\Database\Eloquent\Attributes\UseFactory;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -69,6 +71,24 @@ final class Action extends Model
     ];
 
     /**
+     * @see ListActions::class
+     */
+    #[Scope]
+    public static function validated(Builder $query): void
+    {
+        $query->where('validated', true);
+    }
+
+    /**
+     * @see ListActions::class
+     */
+    #[Scope]
+    public static function notValidated(Builder $query): void
+    {
+        $query->where('validated', false);
+    }
+
+    /**
      * Get the indexable data array for the model.
      *
      * @return array<string, mixed>
@@ -107,7 +127,6 @@ final class Action extends Model
 
     /**
      * @see ActionForm::class
-     * @return BelongsToMany
      */
     public function linkedActions(): BelongsToMany
     {
