@@ -13,10 +13,6 @@ final class ActionRepository
     {
         return Action::query()->whereHas('users', function ($query) use ($userId) {
             $query->where('users.id', $userId);
-        })->orWhereHas('leaderServices', function ($query) use ($userId) {
-            $query->whereHas('users', function ($query) use ($userId) {
-                $query->where('users.id', $userId);
-            });
         });
     }
 
@@ -79,5 +75,12 @@ final class ActionRepository
     public static function byDepartmentBuilder(string $department): Builder
     {
         return Action::query()->where('department', $department);
+    }
+
+    public static function findByUserServices(int $userId): Builder
+    {
+        return Action::query()
+            ->whereHas('leaderServices.users', fn ($query) => $query->where('users.id', $userId))
+            ->orWhereHas('partnerServices.users', fn ($query) => $query->where('users.id', $userId));
     }
 }
