@@ -15,7 +15,7 @@ return new class() extends Migration
             $table->enum('synergy', ActionSynergyEnum::toArray())->nullable(false)->default(ActionSynergyEnum::NO)->change();
         });
 
-        Schema::table('strategic_objectives', function (Blueprint $table) {
+        Schema::table('operational_objectives', function (Blueprint $table) {
             $table->enum('synergy', ActionSynergyEnum::toArray())->nullable(false)->default(ActionSynergyEnum::NO)->change();
         });
         Schema::table('actions', function (Blueprint $table) {
