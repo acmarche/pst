@@ -66,13 +66,4 @@ final class StrategicObjective extends Model
     {
         return $this->hasMany(OperationalObjective::class);
     }
-
-    protected static function booted(): void
-    {
-        self::saving(function (StrategicObjective $model) {
-            if ($model->scope === ActionScopeEnum::INTERNAL) {
-                $model->department = null;
-            }
-        });
-    }
 }
