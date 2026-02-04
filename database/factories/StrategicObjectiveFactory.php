@@ -3,7 +3,6 @@
 namespace Database\Factories;
 
 use App\Enums\ActionScopeEnum;
-use App\Enums\ActionSynergyEnum;
 use App\Enums\DepartmentEnum;
 use App\Models\StrategicObjective;
 use Illuminate\Database\Eloquent\Factories\Factory;
