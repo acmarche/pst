@@ -3,7 +3,6 @@
 declare(strict_types=1);
 
 use App\Enums\ActionScopeEnum;
-use App\Enums\ActionSynergyEnum;
 use App\Enums\RoleEnum;
 use App\Filament\Resources\StrategicObjective\Pages\CreateStrategicObjective;
 use App\Filament\Resources\StrategicObjective\Pages\EditStrategicObjective;

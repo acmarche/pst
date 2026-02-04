@@ -55,21 +55,21 @@ final class ViewAction extends ViewRecord
             //  PreviousAction::make(),
             //  NextAction::make(),
             ActionGroup::make([
-                    ActionAction::make('rapport')
-                        ->label('Export en pdf')
-                        ->icon('tabler-pdf')
-                        ->url(fn(ActionModel $record) => route('export.action', $record))
-                        ->action(function () {
-                            Notification::make()
-                                ->title('Pdf exporté')
-                                ->success()
-                                ->send();
-                        }),
-                    ReminderAction::createAction($this->record),
-                    Actions\DeleteAction::make()
-                        ->label('Supprimer l\'action')
-                        ->icon('tabler-trash'),
-                ]
+                ActionAction::make('rapport')
+                    ->label('Export en pdf')
+                    ->icon('tabler-pdf')
+                    ->url(fn (ActionModel $record) => route('export.action', $record))
+                    ->action(function () {
+                        Notification::make()
+                            ->title('Pdf exporté')
+                            ->success()
+                            ->send();
+                    }),
+                ReminderAction::createAction($this->record),
+                Actions\DeleteAction::make()
+                    ->label('Supprimer l\'action')
+                    ->icon('tabler-trash'),
+            ]
             )
                 ->label('Autres actions')
                 ->button()
