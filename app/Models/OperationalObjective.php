@@ -3,10 +3,8 @@
 namespace App\Models;
 
 use App\Enums\ActionScopeEnum;
-use App\Enums\ActionSynergyEnum;
 use App\Enums\DepartmentEnum;
-use App\Models\Scopes\DepartmentScope;
-use App\Models\Traits\HasDepartmentScope;
+use App\Models\Scopes\HasDepartmentScope;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -24,7 +22,6 @@ final class OperationalObjective extends Model
         'strategic_objective_id',
         'department',
         'scope',
-        'synergy',
     ];
 
     /**
@@ -38,6 +35,7 @@ final class OperationalObjective extends Model
             'id' => $this->id,
             'name' => $this->name,
             'department' => $this->department,
+            'scope' => $this->scope,
         ];
     }
 
@@ -51,7 +49,7 @@ final class OperationalObjective extends Model
 
     public function isInternal(): bool
     {
-        return $this->strategicObjective()->first()->isInternal();
+        return $this->scope === ActionScopeEnum::INTERNAL;
     }
 
     /**
@@ -60,24 +58,6 @@ final class OperationalObjective extends Model
     public function strategicObjective(): BelongsTo
     {
         return $this->belongsTo(StrategicObjective::class);
-    }
-
-    /**
-     * not use
-     */
-    public function strategicObjectiveWithoutScope(): ?StrategicObjective
-    {
-        return $this->strategicObjective()
-            ->withoutGlobalScope(DepartmentScope::class)
-            ->first();
-    }
-
-    /**
-     * @return HasMany<Action>
-     */
-    public function actions(): HasMany
-    {
-        return $this->hasMany(Action::class);
     }
 
     /**
@@ -105,7 +85,6 @@ final class OperationalObjective extends Model
         return [
             'scope' => ActionScopeEnum::class,
             'department' => DepartmentEnum::class,
-            'synergy' => ActionSynergyEnum::class,
         ];
     }
 }

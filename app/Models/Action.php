@@ -10,13 +10,13 @@ use App\Enums\ActionTypeEnum;
 use App\Enums\DepartmentEnum;
 use App\Enums\RoleEnum;
 use App\Enums\YesOrNoEnum;
-use App\Models\Traits\HasDepartmentScope;
+use App\Models\Scopes\DepartmentScope;
+use App\Models\Scopes\HasDepartmentScope;
 use App\Observers\ActionObserver;
 use Database\Factories\ActionFactory;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
-use Illuminate\Database\Eloquent\Attributes\Scope;
+use Illuminate\Database\Eloquent\Attributes\ScopedBy;
 use Illuminate\Database\Eloquent\Attributes\UseFactory;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -28,6 +28,7 @@ use Laravel\Scout\Searchable;
 
 #[ObservedBy([ActionObserver::class])]
 #[UseFactory(ActionFactory::class)]
+#[ScopedBy([DepartmentScope::class])]
 final class Action extends Model
 {
     use HasDepartmentScope, HasFactory, Notifiable;
@@ -67,24 +68,6 @@ final class Action extends Model
         'scope' => ActionScopeEnum::class,
     ];
 
-    #[Scope]
-    public static function byState(Builder $query, string $state): void
-    {
-        $query->where('state', $state);
-    }
-
-    #[Scope]
-    public static function validated(Builder $query): void
-    {
-        $query->where('validated', true);
-    }
-
-    #[Scope]
-    public static function notValidated(Builder $query): void
-    {
-        $query->where('validated', false);
-    }
-
     /**
      * Get the indexable data array for the model.
      *
@@ -122,6 +105,10 @@ final class Action extends Model
         return $this->belongsTo(OperationalObjective::class);
     }
 
+    /**
+     * @see ActionForm::class
+     * @return BelongsToMany
+     */
     public function linkedActions(): BelongsToMany
     {
         return $this->belongsToMany(

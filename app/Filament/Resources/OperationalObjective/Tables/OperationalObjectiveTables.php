@@ -2,7 +2,6 @@
 
 namespace App\Filament\Resources\OperationalObjective\Tables;
 
-use App\Enums\ActionSynergyEnum;
 use App\Filament\Resources\OperationalObjective\OperationalObjectiveResource;
 use App\Models\OperationalObjective;
 use App\Models\StrategicObjective;
@@ -76,11 +75,6 @@ final class OperationalObjectiveTables
                     ->label('Interne')
                     ->state(fn (OperationalObjective $record) => $record->isInternal() ? 'Oui' : 'Non')
                     ->toggleable(),
-                TextColumn::make('synergy')
-                    ->label(ActionSynergyEnum::getTitle())
-                    ->formatStateUsing(fn ($state) => $state?->getLabel() ?? '-')
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('department')
                     ->label('Département')
                     ->sortable()

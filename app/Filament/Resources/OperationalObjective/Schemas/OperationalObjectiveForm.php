@@ -3,7 +3,6 @@
 namespace App\Filament\Resources\OperationalObjective\Schemas;
 
 use App\Enums\ActionScopeEnum;
-use App\Enums\ActionSynergyEnum;
 use App\Enums\DepartmentEnum;
 use App\Repository\UserRepository;
 use Filament\Forms;
@@ -55,11 +54,6 @@ final class OperationalObjectiveForm
                                     ->label('Volet')
                                     ->required()
                                     ->options(ActionScopeEnum::class)
-                                    ->grouped(),
-                                Forms\Components\ToggleButtons::make('synergy')
-                                    ->label(ActionSynergyEnum::getTitle())
-                                    ->options(ActionSynergyEnum::class)
-                                    ->required()
                                     ->grouped(),
                             ]),
                     ]),
