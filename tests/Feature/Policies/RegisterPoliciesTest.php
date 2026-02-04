@@ -24,20 +24,16 @@ final class RegisterPoliciesTest extends TestCase
 
     private Role $adminRole;
 
-    private Role $responsibleRole;
-
     protected function setUp(): void
     {
         parent::setUp();
 
         $this->adminRole = Role::factory()->create(['name' => RoleEnum::ADMIN->value]);
-        $this->responsibleRole = Role::factory()->create(['name' => RoleEnum::RESPONSIBLE->value]);
 
         $this->adminUser = User::factory()->create();
         $this->adminUser->roles()->attach($this->adminRole);
 
         $this->responsibleUser = User::factory()->create();
-        $this->responsibleUser->roles()->attach($this->responsibleRole);
 
         $this->regularUser = User::factory()->create();
     }

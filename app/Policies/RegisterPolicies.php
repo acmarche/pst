@@ -21,15 +21,11 @@ final class RegisterPolicies
                 return true;
             }
 
-            if ($user->hasOneOfThisRoles([RoleEnum::RESPONSIBLE->value])) {
-                return $action->leaderServices()
-                    ->whereHas('users', function ($query) use ($user) {
-                        $query->where('user_id', $user->id);
-                    })
-                    ->exists();
-            }
-
-            return false;
+            return $action->leaderServices()
+                ->whereHas('users', function ($query) use ($user) {
+                    $query->where('user_id', $user->id);
+                })
+                ->exists();
         });
     }
 }
