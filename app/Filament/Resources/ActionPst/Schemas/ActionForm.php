@@ -249,7 +249,7 @@ final class ActionForm
                 ->schema([
                     Forms\Components\Select::make('action_service_leader')
                         ->label('Services porteurs')
-                        ->helperText('L\'agent membre du service, avec un rôle "Responsable" peut modifier l\'action.')
+                        ->helperText('L\'agent membre des services porteurs, peut modifier l\'action.')
                         ->relationship(name: 'leaderServices', titleAttribute: 'name')
                         ->preload()
                         ->multiple()

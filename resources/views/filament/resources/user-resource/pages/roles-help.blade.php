@@ -56,7 +56,7 @@
             </li>
             <li class="flex items-start gap-2 text-gray-600">
                 <span class="text-orange-500 mt-1">•</span>
-                <span>Agents avec le rôle responsable et membre d'un des services porteurs liés à l'action</span>
+                <span>Agents appartenant à l’un des services porteurs de l’action</span>
             </li>
         </ul>
     </div>
