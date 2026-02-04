@@ -16,6 +16,9 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Lab404\Impersonate\Models\Impersonate;
 use Laravel\Scout\Searchable;
+use App\Repository\UserRepository;
+use Illuminate\Database\Eloquent\Attributes\Scope;
+use Illuminate\Database\Eloquent\Builder;
 
 #[UseFactory(UserFactory::class)]
 final class User extends Authenticatable implements FilamentUser, HasName
@@ -168,6 +171,13 @@ final class User extends Authenticatable implements FilamentUser, HasName
     public function actions(): BelongsToMany
     {
         return $this->belongsToMany(Action::class);
+    }
+
+    #[Scope]
+    public function forSelectedDepartment(Builder $query): void
+    {
+        $department = UserRepository::departmentSelected();
+        $query->where('departments', 'IN', [$department]);
     }
 
     protected static function boot(): void
