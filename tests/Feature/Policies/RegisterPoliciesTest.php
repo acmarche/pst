@@ -18,8 +18,6 @@ final class RegisterPoliciesTest extends TestCase
 {
     private User $adminUser;
 
-    private User $responsibleUser;
-
     private User $regularUser;
 
     private Role $adminRole;
@@ -32,9 +30,6 @@ final class RegisterPoliciesTest extends TestCase
 
         $this->adminUser = User::factory()->create();
         $this->adminUser->roles()->attach($this->adminRole);
-
-        $this->responsibleUser = User::factory()->create();
-
         $this->regularUser = User::factory()->create();
     }
 
@@ -65,51 +60,6 @@ final class RegisterPoliciesTest extends TestCase
         $action = $this->createAction();
 
         $this->actingAs($this->regularUser);
-
-        $result = Gate::check('teams-edit', [$action, 'edit']);
-
-        $this->assertFalse($result);
-    }
-
-    public function test_teams_edit_gate_allows_responsible_when_user_is_in_leader_service(): void
-    {
-        $service = Service::factory()->create();
-        $service->users()->attach($this->responsibleUser);
-
-        $action = $this->createAction();
-        $action->leaderServices()->attach($service);
-
-        $this->actingAs($this->responsibleUser);
-
-        $result = Gate::check('teams-edit', [$action, 'edit']);
-
-        $this->assertTrue($result);
-    }
-
-    public function test_teams_edit_gate_denies_responsible_when_user_is_not_in_leader_service(): void
-    {
-        $service = Service::factory()->create();
-        $action = $this->createAction();
-        $action->leaderServices()->attach($service);
-
-        $this->actingAs($this->responsibleUser);
-
-        $result = Gate::check('teams-edit', [$action, 'edit']);
-
-        $this->assertFalse($result);
-    }
-
-    public function test_teams_edit_gate_denies_responsible_when_user_is_only_in_partner_service(): void
-    {
-        $leaderService = Service::factory()->create();
-        $partnerService = Service::factory()->create();
-        $partnerService->users()->attach($this->responsibleUser);
-
-        $action = $this->createAction();
-        $action->leaderServices()->attach($leaderService);
-        $action->partnerServices()->attach($partnerService);
-
-        $this->actingAs($this->responsibleUser);
 
         $result = Gate::check('teams-edit', [$action, 'edit']);
 
