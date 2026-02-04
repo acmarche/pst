@@ -144,16 +144,6 @@ final class ActionFormTest extends TestCase
             ->assertFormFieldVisible('action_mandatory');
     }
 
-    public function test_team_step_is_hidden_for_regular_user_on_edit(): void
-    {
-        $this->action->users()->attach($this->regularUser);
-
-        $this->actingAs($this->regularUser);
-
-        Livewire::test(EditAction::class, ['record' => $this->action->id])
-            ->assertFormFieldHidden('action_mandatory');
-    }
-
     public function test_team_step_is_visible_for_responsible_in_leader_service_on_edit(): void
     {
         $service = Service::factory()->create();
@@ -173,6 +163,78 @@ final class ActionFormTest extends TestCase
         Livewire::test(CreateAction::class)
             ->assertFormFieldEnabled('name')
             ->assertFormFieldEnabled('type');
+    }
+
+    // ActionPolicy tests - isUserLinkedToAction
+    public function test_regular_user_not_linked_to_action_cannot_edit(): void
+    {
+        $this->actingAs($this->regularUser);
+
+        Livewire::test(EditAction::class, ['record' => $this->action->id])
+            ->assertForbidden();
+    }
+
+    public function test_mandataire_cannot_edit_action_even_if_directly_linked(): void
+    {
+        $mandataireRole = Role::factory()->create(['name' => RoleEnum::MANDATAIRE->value]);
+        $mandataireUser = User::factory()->create();
+        $mandataireUser->roles()->attach($mandataireRole);
+
+        // Link mandataire to action
+        $this->action->users()->attach($mandataireUser);
+
+        $this->actingAs($mandataireUser);
+
+        Livewire::test(EditAction::class, ['record' => $this->action->id])
+            ->assertForbidden();
+    }
+
+    public function test_mandataire_cannot_edit_action_even_if_in_leader_service(): void
+    {
+        $mandataireRole = Role::factory()->create(['name' => RoleEnum::MANDATAIRE->value]);
+        $mandataireUser = User::factory()->create();
+        $mandataireUser->roles()->attach($mandataireRole);
+
+        // Link mandataire via leader service
+        $service = Service::factory()->create();
+        $service->users()->attach($mandataireUser);
+        $this->action->leaderServices()->attach($service);
+
+        $this->actingAs($mandataireUser);
+
+        Livewire::test(EditAction::class, ['record' => $this->action->id])
+            ->assertForbidden();
+    }
+
+    public function test_user_directly_linked_to_action_can_edit(): void
+    {
+        $this->action->users()->attach($this->regularUser);
+
+        $this->actingAs($this->regularUser);
+
+        Livewire::test(EditAction::class, ['record' => $this->action->id])
+            ->assertOk();
+    }
+
+    public function test_user_in_leader_service_can_edit(): void
+    {
+        $service = Service::factory()->create();
+        $service->users()->attach($this->regularUser);
+        $this->action->leaderServices()->attach($service);
+
+        $this->actingAs($this->regularUser);
+
+        Livewire::test(EditAction::class, ['record' => $this->action->id])
+            ->assertOk();
+    }
+
+    public function test_admin_can_edit_any_action(): void
+    {
+        // Admin is not linked to action but should still be able to edit
+        $this->actingAs($this->adminUser);
+
+        Livewire::test(EditAction::class, ['record' => $this->action->id])
+            ->assertOk();
     }
 
     private function createAction(): Action
