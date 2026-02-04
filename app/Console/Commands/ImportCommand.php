@@ -44,78 +44,11 @@ final class ImportCommand extends Command
 
     private int $lastOo = 0;
 
-    private int $lastSo;
-
-    private string $department;
-
-    private array $os = [
-        "Être un CPAS favorisant l'autonomie et l'inclusion dans la société des personnes fragilisées ou exclues socialement pour qu'elles puissent mener une vie conforme à la dignité humaine et renforcer leur résilience",
-        'Être un CPAS qui intègre le vieillissement de la population au centre de ses préocupations, par une offre adaptée, digne et diversifiée.',
-        'Être un CPAS performant et impliqué dirigé par un management proactif et empathique',
-    ];
-
-    private array $oos = [
-        [
-            'os' => 1,
-            'name' => "Développer l'accès au logement décent et salubre et accompagner les bénéficiaires dans leurs démarches logement (recherche - maintien - déménagement). Diversifier l'offre de logement.",
-        ],
-        [
-            'os' => 1,
-            'name' => 'Lutter contre les violences conjugales ou intrafamiliales, faites essentiellement aux femmes et à leurs enfants',
-        ],
-        [
-            'os' => 1,
-            'name' => 'Développer des actions spécifiques en soutien aux familles et plus particulièrement aux mamans solos',
-        ],
-        [
-            'os' => 1,
-            'name' => "Développer des actions d'accompagnements spécifiques aux 18-25 ans et plus particulièrement aux NEET's tout en encourageant une participation active dans leur parcours social.",
-        ],
-        [
-            'os' => 1,
-            'name' => "Veiller à l'inclusion des personnes étrangères lors de leur passage ou de leur installation sur Marche-en-Famenne et maintenir l'offre d'hébergement en initiatives locales d'Accueil.",
-        ],
-        [
-            'os' => 1,
-            'name' => "Intensifier l'accompagnement socioprofessionnel pour une recherche ou reprise d'autonomie visant un emploi durable, vecteur d'émancipation, plus spécifiquement dans le cadre de la réforme régionale sur le dispositif d'insertion socioprofessionnelle des articles 60-61",
-        ],
-        [
-            'os' => 1,
-            'name' => "Mettre en oeuvre l'accompagnement social dans le cadre de la réforme sur le chômage de longue durée qui induit de nouveaux enjeux sociaux et très probablement, de nouveaux profils de bénéficiaires (classe moyenne)",
-        ],
-        ['os' => 2, 'name' => 'Favoriser le maintien à domicile'],
-        ['os' => 2, 'name' => 'Maintenir et développer des projets intergénérationnels sur le site du Quartier Libert'],
-        [
-            'os' => 2,
-            'name' => 'Moderniser et développer les services du Quartier Libert afin de garantir un cadre de vie agréable pour ses résidents',
-        ],
-        ['os' => 2, 'name' => 'Développer le caractère inclusif du Quartier Libert'],
-        [
-            'os' => 3,
-            'name' => "Proximité : Lutter contre la stigmatisation de l'aide sociale et la fracture numérique, et être proche du citoyen, usager ou pas, par une communication moderne, adpatée et diversifée en vue d'optimiser leur accueil",
-        ],
-        [
-            'os' => 3,
-            'name' => "Répondre aux objectifs de développement durables définis par l'ONU et être responsable en termes de transition énergétique et numérique",
-        ],
-        [
-            'os' => 3,
-            'name' => "Réduire l'empreinte carbone, en lien notamment avec les objectifs de la ville dans le cadre de la Convention des Maires (rénovation et amélioration du patrimoine bâti)",
-        ],
-        ['os' => 3, 'name' => "Synergie : transversalité optimale entre l'administration communale et le CPAS"],
-        ['os' => 3, 'name' => 'Continuer les démarches de bonne gouvernance entreprise depuis plusieurs années'],
-        [
-            'os' => 3,
-            'name' => "Veiller au bien-être au travail des agents via la valorisation du travail, leur évolution de carrière et l'amélioration de la communication",
-        ],
-    ];
-
     private ActionScopeEnum $scope = ActionScopeEnum::EXTERNAL;
 
     public function handle(): int
     {
         $csvFile = $this->dir.$this->argument('filename');
-        $this->department = DepartmentEnum::CPAS->value;
         if ($csvFile === 'Interne.csv') {
             $this->scope = ActionScopeEnum::INTERNAL;
         }
@@ -138,13 +71,11 @@ final class ImportCommand extends Command
                 $firstLine = false;
                 $so = StrategicObjective::where('name', $row[0])->first();
                 if ($so) {
-                    $this->lastSo = $so->id;
-
                     continue;
                 }
             }
 
-            $actionNum = (int)$row[0];
+            $actionNum = (int) $row[0];
             $actionName = mb_trim($row[1]);
             if ($actionNum === 0 && $actionName === '') {
                 $oo = OperationalObjective::where('name', $row[0])->first();
@@ -154,7 +85,7 @@ final class ImportCommand extends Command
                     continue;
                 }
             }
-            if (!$actionName) {
+            if (! $actionName) {
                 $this->error('no action name '.$actionNum);
 
                 continue;
@@ -175,10 +106,10 @@ final class ImportCommand extends Command
                 $actionType = ActionTypeEnum::PST;
                 $actionState = $this->findState($row[6]);
             }
-            $evolutionPercentage = (int)$row[7];
+            $evolutionPercentage = (int) $row[7];
 
             $dueDate = Carbon::createFromFormat('d/m/Y', $row[8]);
-            if (!$dueDate) {
+            if (! $dueDate) {
                 $this->error('no due date '.$actionName);
             }
             $responsable = null;
@@ -225,7 +156,7 @@ final class ImportCommand extends Command
     }
 
     /**
-     * @param array<int,Odd> $odds
+     * @param  array<int,Odd>  $odds
      */
     public function addExtraData(
         Action $action,
@@ -321,7 +252,7 @@ final class ImportCommand extends Command
             $oddName = mb_trim(mb_substr($oddName, mb_strpos($oddName, '.') + 1));
             $odd = Odd::whereRaw('LOWER(name) = ?', [mb_strtolower($oddName)])->first();
 
-            if (!$odd) {
+            if (! $odd) {
                 $this->error('not found odd '.$oddName);
 
                 continue;
@@ -345,7 +276,7 @@ final class ImportCommand extends Command
                 continue;
             }
             $partner = Partner::where('name', $name)->orWhere('initials', $name)->first();
-            if (!$partner) {
+            if (! $partner) {
                 $partner = Partner::create(['name' => $name]);
             }
             $data['partners'][] = $partner;
@@ -359,7 +290,7 @@ final class ImportCommand extends Command
      */
     private function findAgent(?string $name): ?User
     {
-        if (!$name) {
+        if (! $name) {
             return null;
         }
 
