@@ -62,17 +62,13 @@
     </div>
     <!-- En-tête -->
     <div class="text-xl font-semibold text-gray-800 border-b border-gray-200 pb-3">
-        Quelles sont les données communes
+        Quelles sont les données en commun
     </div>
 
     <!-- Section Création -->
     <div class="space-y-2">
 
         <div class="flex items-start flex-col gap-2 text-gray-600">
-            <div class="flex items-start gap-2">
-                <span class="text-green-500 mt-0.5">✓</span>
-                <span>Les actions, objectifs stratégiques et objectifs opérationnels <br/>avec <strong>synergie CPAS / Ville mis à oui.</strong></span>
-            </div>
             <div class="flex items-start gap-2">
                 <span class="text-green-500 mt-0.5">✓</span>
                 <span>La liste des services.</span>
