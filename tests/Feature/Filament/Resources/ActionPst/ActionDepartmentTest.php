@@ -18,7 +18,6 @@ use Livewire\Livewire;
 use Tests\TestCase;
 
 /**
- *
  * Department filtering tests:
  * - test_user_with_ville_department_sees_only_ville_actions - User with VILLE sees only VILLE actions
  * - test_user_with_cpas_department_sees_cpas_actions - User with CPAS sees only CPAS actions

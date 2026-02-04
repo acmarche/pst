@@ -8,6 +8,7 @@ use App\Models\Scopes\HasDepartmentScope;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Scout\Searchable;
@@ -58,6 +59,11 @@ final class OperationalObjective extends Model
     public function strategicObjective(): BelongsTo
     {
         return $this->belongsTo(StrategicObjective::class);
+    }
+
+    public function actions(): HasMany
+    {
+        return $this->hasMany(Action::class);
     }
 
     /**
