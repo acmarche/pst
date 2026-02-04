@@ -80,15 +80,16 @@ final class ActionPolicy
         if ($user->hasOneOfThisRoles([RoleEnum::ADMIN->value])) {
             return true;
         }
-        if ($user->hasOneOfThisRoles([RoleEnum::RESPONSIBLE->value])) {
-            return $action->leaderServices()
-                ->whereHas('users', function ($query) use ($user) {
-                    $query->where('user_id', $user->id);
-                })
-                ->exists();
-        }
 
         // Check if user is directly linked to the action
-        return $action->users()->where('user_id', $user->id)->exists();
+        if ($action->users()->where('user_id', $user->id)->exists()) {
+            return true;
+        }
+
+        return $action->leaderServices()
+            ->whereHas('users', function ($query) use ($user) {
+                $query->where('user_id', $user->id);
+            })
+            ->exists();
     }
 }
