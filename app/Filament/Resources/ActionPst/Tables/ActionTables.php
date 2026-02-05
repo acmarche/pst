@@ -317,6 +317,17 @@ final class ActionTables
                 ->limitList(2)
                 ->expandableLimitedList()
                 ->toggleable(isToggledHiddenByDefault: true),
+            TextColumn::make('users.last_name')
+                ->label('Agents pilotes')
+                ->listWithLineBreaks()
+                ->limitList(2)
+                ->expandableLimitedList()
+                ->formatStateUsing(
+                    fn ($state, Action $record) => $record->users->map(
+                        fn ($user) => $user->first_name.' '.$user->last_name
+                    )->join(', ')
+                )
+                ->toggleable(isToggledHiddenByDefault: true),
             TextColumn::make('due_date')
                 ->label('Date échéance')
                 ->date()
