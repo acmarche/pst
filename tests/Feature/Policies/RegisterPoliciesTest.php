@@ -232,15 +232,52 @@ final class RegisterPoliciesTest extends TestCase
     }
 
     // ActionPolicy: restore
-    public function test_action_policy_restore_denies_all_users(): void
+    public function test_action_policy_restore_allows_admin(): void
     {
         $action = $this->createAction();
+        $action->delete();
 
         $this->actingAs($this->adminUser);
 
         $result = Gate::check('restore', $action);
 
+        $this->assertTrue($result);
+    }
+
+    public function test_action_policy_restore_denies_regular_user(): void
+    {
+        $action = $this->createAction();
+        $action->delete();
+
+        $this->actingAs($this->regularUser);
+
+        $result = Gate::check('restore', $action);
+
         $this->assertFalse($result);
+    }
+
+    public function test_action_policy_restore_denies_mandataire(): void
+    {
+        $action = $this->createAction();
+        $action->delete();
+
+        $this->actingAs($this->mandataireUser);
+
+        $result = Gate::check('restore', $action);
+
+        $this->assertFalse($result);
+    }
+
+    public function test_soft_deleted_action_remains_in_database(): void
+    {
+        $action = $this->createAction();
+        $actionId = $action->id;
+
+        $action->delete();
+
+        $this->assertSoftDeleted('actions', ['id' => $actionId]);
+        $this->assertNotNull(Action::withTrashed()->find($actionId));
+        $this->assertNull(Action::find($actionId));
     }
 
     // ActionPolicy: forceDelete

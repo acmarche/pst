@@ -8,6 +8,7 @@ use App\Enums\ActionScopeEnum;
 use App\Enums\ActionStateEnum;
 use App\Enums\ActionSynergyEnum;
 use App\Enums\ActionTypeEnum;
+use App\Enums\RoleEnum;
 use App\Filament\Resources\ActionPst\ActionPstResource;
 use App\Models\Action;
 use App\Models\Service;
@@ -17,6 +18,7 @@ use Filament\Actions\DeleteBulkAction;
 use Filament\Support\Enums\Width;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
+use Filament\Tables\Filters\TrashedFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 
@@ -238,6 +240,9 @@ final class ActionTables
                         )
                     );
                 }),
+            TrashedFilter::make()
+                ->label('Supprimées')
+                ->visible(fn (): bool => auth()->user()?->hasOneOfThisRoles([RoleEnum::ADMIN->value]) ?? false),
         ];
     }
 
@@ -318,10 +323,12 @@ final class ActionTables
                 ->sortable()
                 ->toggleable(isToggledHiddenByDefault: true),
             TextColumn::make('created_at')
+                ->label('Créé le')
                 ->dateTime()
                 ->sortable()
                 ->toggleable(isToggledHiddenByDefault: true),
             TextColumn::make('updated_at')
+                ->label('Mis à jour le')
                 ->dateTime()
                 ->sortable()
                 ->toggleable(isToggledHiddenByDefault: true),

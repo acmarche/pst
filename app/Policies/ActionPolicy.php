@@ -60,6 +60,10 @@ final class ActionPolicy
      */
     public function restore(User $user, Action $action): bool
     {
+        if ($user->hasOneOfThisRoles([RoleEnum::ADMIN->value])) {
+            return true;
+        }
+
         return false;
     }
 

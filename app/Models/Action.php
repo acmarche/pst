@@ -24,6 +24,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Scout\Searchable;
@@ -33,8 +34,7 @@ use Laravel\Scout\Searchable;
 #[ScopedBy([DepartmentScope::class])]
 final class Action extends Model
 {
-    use HasDepartmentScope, HasFactory, Notifiable;
-    use Searchable;
+    use HasDepartmentScope, HasFactory, Notifiable, Searchable, SoftDeletes;
 
     protected $fillable = [
         'name',
