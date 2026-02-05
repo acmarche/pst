@@ -37,6 +37,9 @@ final class UsersTable
                     ->label('Extension')
                     ->icon('tabler-device-landline-phone'),
                 TextColumn::make('roles.label'),
+                TextColumn::make('services_count')
+                    ->label('Services')
+                    ->counts('services'),
                 TextColumn::make('departments')
                     ->label('Départements')
                     ->toggleable(isToggledHiddenByDefault: true),
