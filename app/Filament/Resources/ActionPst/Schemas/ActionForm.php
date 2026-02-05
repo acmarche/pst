@@ -317,7 +317,10 @@ final class ActionForm
         return [
             Forms\Components\Select::make('odds')
                 ->label('Odds')
-                ->relationship(name: 'odds', titleAttribute: 'name')
+                ->relationship(name: 'odds')
+                ->getOptionLabelFromRecordUsing(
+                    fn (Model $record) => "{$record->id}. {$record->name}"
+                )
                 ->multiple()
                 ->preload(),
         ];
