@@ -54,19 +54,6 @@ final class ActionRepository
         return Action::all()->count();
     }
 
-    public static function findByDepartmentWithOosAndActions(string $department): Builder
-    {
-        return Action::query()
-            ->forDepartment($department)
-            ->with('operationalObjective')
-            ->with('leaderServices')
-            ->with('partnerServices')
-            ->with('mandataries')
-            ->with('users')
-            ->with('partners')
-            ->with('odds');
-    }
-
     public static function byDepartment(string $department): Collection
     {
         return Action::query()->where('department', $department)->get();

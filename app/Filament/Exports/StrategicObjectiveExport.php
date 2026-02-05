@@ -7,7 +7,6 @@ use App\Models\Partner;
 use App\Models\Service;
 use App\Models\StrategicObjective;
 use App\Models\User;
-use App\Repository\StrategicObjectiveRepository;
 use Filament\Actions\Exports\Models\Export;
 use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\FromCollection;
@@ -55,7 +54,19 @@ final class StrategicObjectiveExport implements FromCollection, ShouldAutoSize, 
     public function collection(): Collection
     {
         $data = collect();
-        $strategicObjectives = StrategicObjectiveRepository::findByDepartmentWithOosAndActions($this->department)->get();
+        $strategicObjectives = StrategicObjective::query()
+            ->forDepartment($this->department)
+            ->with([
+                'oos',
+                'oos.actions',
+                'oos.actions.leaderServices',
+                'oos.actions.partnerServices',
+                'oos.actions.mandataries',
+                'oos.actions.users',
+                'oos.actions.partners',
+                'oos.actions.odds',
+            ])
+            ->get();
 
         $data->push($this->titles);
         $ligne = 2;

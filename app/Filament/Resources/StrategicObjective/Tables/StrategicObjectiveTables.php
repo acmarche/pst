@@ -6,8 +6,6 @@ namespace App\Filament\Resources\StrategicObjective\Tables;
 
 use App\Filament\Resources\StrategicObjective\StrategicObjectiveResource;
 use App\Models\StrategicObjective;
-use App\Repository\StrategicObjectiveRepository;
-use App\Repository\UserRepository;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
@@ -22,9 +20,18 @@ final class StrategicObjectiveTables
         return $table
             ->defaultPaginationPageOption(50)
             ->modifyQueryUsing(
-                fn (Builder $query) => StrategicObjectiveRepository::findByDepartmentWithOosAndActions(
-                    UserRepository::departmentSelected()
-                )
+                fn (Builder $query) => $query
+                    ->forSelectedDepartment()
+                    ->with([
+                        'oos',
+                        'oos.actions',
+                        'oos.actions.leaderServices',
+                        'oos.actions.partnerServices',
+                        'oos.actions.mandataries',
+                        'oos.actions.users',
+                        'oos.actions.partners',
+                        'oos.actions.odds',
+                    ])
             )
             ->recordTitleAttribute('name')
             ->recordUrl(fn (StrategicObjective $record) => StrategicObjectiveResource::getUrl('view', [$record]))
