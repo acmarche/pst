@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 use App\Enums\ActionScopeEnum;
 use App\Enums\ActionSynergyEnum;
-use App\Enums\DepartmentEnum;
 use App\Enums\RoleEnum;
 use App\Filament\Resources\OperationalObjective\Pages\CreateOperationalObjective;
 use App\Filament\Resources\OperationalObjective\Pages\EditOperationalObjective;
@@ -76,7 +75,7 @@ describe('table columns', function () {
     it('has column', function (string $column) {
         Livewire::test(ListOperationalObjectives::class)
             ->assertTableColumnExists($column);
-    })->with(['position', 'name', 'actions_count', 'department', 'created_at', 'updated_at']);
+    })->with(['position', 'name', 'actions_count', 'created_at', 'updated_at']);
 
     it('can render column', function (string $column) {
         OperationalObjective::factory()->create([
@@ -120,7 +119,6 @@ describe('crud operations', function () {
             ->fillForm([
                 'name' => $newData->name,
                 'strategic_objective_id' => $this->strategicObjective->id,
-                'department' => DepartmentEnum::VILLE,
                 'scope' => ActionScopeEnum::INTERNAL,
                 'synergy' => ActionSynergyEnum::NO,
             ])

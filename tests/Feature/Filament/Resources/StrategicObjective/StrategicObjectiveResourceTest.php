@@ -108,7 +108,6 @@ describe('crud operations', function () {
         Livewire::test(CreateStrategicObjective::class)
             ->fillForm([
                 'name' => $newData->name,
-                'department' => $newData->department,
                 'scope' => $newData->scope,
                 'position' => $newData->position,
             ])
@@ -132,7 +131,6 @@ describe('crud operations', function () {
             ->fillForm([
                 'name' => $newData->name,
                 'position' => $newData->position,
-                'department' => $newData->department,
                 'scope' => $newData->scope,
             ])
             ->call('save')
@@ -168,7 +166,6 @@ describe('form validation', function () {
         Livewire::test(CreateStrategicObjective::class)
             ->fillForm([
                 'name' => $newData->name,
-                'department' => $newData->department,
                 'position' => $newData->position,
                 ...$data,
             ])
@@ -204,20 +201,6 @@ describe('form validation', function () {
 });
 
 describe('form fields', function () {
-    it('has department field visible on create', function () {
-        Livewire::test(CreateStrategicObjective::class)
-            ->assertFormFieldVisible('department');
-    });
-
-    it('has department field visible on edit', function () {
-        $record = StrategicObjective::factory()->create();
-
-        Livewire::test(EditStrategicObjective::class, [
-            'record' => $record->id,
-        ])
-            ->assertFormFieldVisible('department');
-    });
-
     it('has scope field', function () {
         Livewire::test(CreateStrategicObjective::class)
             ->assertFormFieldExists('scope');
