@@ -192,6 +192,7 @@ final class ActionForm
                     Forms\Components\ToggleButtons::make('scope')
                         ->label('Volet')
                         ->options(ActionScopeEnum::class)
+                        ->required()
                         ->inline(),
                     Forms\Components\ToggleButtons::make('synergy')
                         ->label(ActionSynergyEnum::getTitle())
