@@ -11,13 +11,13 @@ final class UserRepository
 
     public static function departmentSelected(): string
     {
-        $department = session(self::$department_selected_key, null);
-        if (! $department) {
-            if (auth()->user()) {
-                if (count(auth()->user()->departments) > 0) {
-                    return auth()->user()->departments[0];
-                }
-            }
+        $department = session(self::$department_selected_key);
+        if ($department) {
+            return $department;
+        }
+
+        if (auth()->user() && count(auth()->user()->departments) > 0) {
+            return auth()->user()->departments[0];
         }
 
         return DepartmentEnum::VILLE->value;
