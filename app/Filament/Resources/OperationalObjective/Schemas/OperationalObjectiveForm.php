@@ -9,6 +9,7 @@ use Filament\Forms;
 use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
+use Illuminate\Database\Eloquent\Builder;
 
 final class OperationalObjectiveForm
 {
@@ -29,7 +30,16 @@ final class OperationalObjectiveForm
                             ->prefixIcon('tabler-file-text')
                             ->maxLength(255),
                         Forms\Components\Select::make('strategic_objective_id')
-                            ->relationship('strategicObjective', 'name')
+                            ->relationship(
+                                'strategicObjective',
+                                'name',
+                                modifyQueryUsing: fn (Builder $query) => $query
+                                    ->where(function (Builder $query) {
+                                        $query->forSelectedDepartment()
+                                            ->orWhereNull('department');
+                                    })
+                                    ->orderBy('name')
+                            )
                             ->label('Objectif Stratégique')
                             ->prefixIcon('tabler-hierarchy')
                             ->searchable()

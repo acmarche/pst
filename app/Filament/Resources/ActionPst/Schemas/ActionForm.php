@@ -105,14 +105,6 @@ final class ActionForm
             ];
     }
 
-    public static function fieldsExportPdf(): array
-    {
-        return
-            [
-
-            ];
-    }
-
     private static function fieldsProject(Model|OperationalObjective|null $owner): array
     {
         return [
@@ -144,7 +136,12 @@ final class ActionForm
                         ->relationship(
                             name: 'operationalObjective',
                             titleAttribute: 'name',
-                            modifyQueryUsing: fn (Builder $query) => $query->orderBy('name', 'asc')
+                            modifyQueryUsing: fn (Builder $query) => $query
+                                ->where(function (Builder $query) {
+                                    $query->forSelectedDepartment()
+                                        ->orWhereNull('department');
+                                })
+                                ->orderBy('name', 'asc')
                         )
                         ->searchable(['name'])
                         ->disabled(

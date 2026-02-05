@@ -12,7 +12,6 @@ use App\Enums\RoleEnum;
 use App\Filament\Resources\ActionPst\ActionPstResource;
 use App\Models\Action;
 use App\Models\Service;
-use App\Repository\UserRepository;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Support\Enums\Width;
@@ -188,7 +187,16 @@ final class ActionTables
         return [
             SelectFilter::make('operational_objectives')
                 ->label('Objectif opérationel')
-                ->relationship('operationalObjective', 'name')
+                ->relationship(
+                    'operationalObjective',
+                    'name',
+                    modifyQueryUsing: fn (Builder $query) => $query
+                        ->where(function (Builder $query) {
+                            $query->forSelectedDepartment()
+                                ->orWhereNull('department');
+                        })
+                        ->orderBy('name')
+                )
                 ->searchable(['name']),
             SelectFilter::make('state')
                 ->label('État d\'avancement')
