@@ -210,15 +210,6 @@ final class ActionTables
             SelectFilter::make('synergy')
                 ->label(ActionSynergyEnum::getTitle())
                 ->options(ActionSynergyEnum::class),
-            SelectFilter::make('department')
-                ->label('Département')
-                ->options(UserRepository::listDepartmentOfCurrentUser())
-                ->visible(fn (): bool => count(auth()->user()->departments ?? []) > 1)
-                ->default(
-                    count(
-                        UserRepository::listDepartmentOfCurrentUser()
-                    ) > 0 ? array_values(UserRepository::listDepartmentOfCurrentUser())[0] : null
-                ),
             SelectFilter::make('users')
                 ->label('Agents')
                 ->relationship('users', 'last_name')
@@ -299,10 +290,6 @@ final class ActionTables
             TextColumn::make('synergy')
                 ->label(ActionSynergyEnum::getTitle())
                 ->formatStateUsing(fn ($state) => $state?->getLabel() ?? '-')
-                ->sortable()
-                ->toggleable(isToggledHiddenByDefault: true),
-            TextColumn::make('department')
-                ->label('Département')
                 ->sortable()
                 ->toggleable(isToggledHiddenByDefault: true),
             TextColumn::make('leaderServices.name')
