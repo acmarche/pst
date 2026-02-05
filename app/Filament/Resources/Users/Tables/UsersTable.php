@@ -32,13 +32,16 @@ final class UsersTable
                 TextColumn::make('email'),
                 TextColumn::make('phone')
                     ->label('Téléphone')
-                    ->icon('tabler-phone'),
+                    ->icon('tabler-phone')->toggleable(),
                 TextColumn::make('extension')
                     ->label('Extension')
-                    ->icon('tabler-device-landline-phone'),
-                TextColumn::make('roles.label'),
-                TextColumn::make('services_count')
+                    ->icon('tabler-device-landline-phone')->toggleable(),
+                TextColumn::make('roles.label')->toggleable(),
+                TextColumn::make('services.name')
                     ->label('Services')
+                    ->badge()
+                    ->toggleable(isToggledHiddenByDefault: true), TextColumn::make('services_count')
+                    ->label('Nbre de services')
                     ->counts('services')
                     ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('departments')
