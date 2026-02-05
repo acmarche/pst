@@ -10,9 +10,20 @@ use Filament\Facades\Filament;
 use Filament\Forms\Components\TextInput;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Schemas\Components\Component;
+use Illuminate\Contracts\Support\Htmlable;
 
 final class Login extends BasePage
 {
+    public function getHeading(): string|Htmlable|null
+    {
+        return 'Programme Stratégique Transversal';
+    }
+
+    public function getSubheading(): string|Htmlable|null
+    {
+        return 'Courage 🐤';
+    }
+
     public function authenticate(): ?LoginResponse
     {
         try {
@@ -25,7 +36,7 @@ final class Login extends BasePage
 
         $data = $this->form->getState();
 
-        if (! $user = LdapAuthService::checkPassword($data['email'], $data['password'])) {
+        if (!$user = LdapAuthService::checkPassword($data['email'], $data['password'])) {
             $this->throwFailureValidationException();
         } else {
             Filament::auth()->login($user, true);
@@ -41,7 +52,7 @@ final class Login extends BasePage
 
         if (
             ($user instanceof FilamentUser) &&
-            (! $user->canAccessPanel(Filament::getCurrentPanel()))
+            (!$user->canAccessPanel(Filament::getCurrentPanel()))
         ) {
             Filament::auth()->logout();
 
