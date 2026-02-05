@@ -5,12 +5,13 @@ namespace App\Models;
 use BackedEnum;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Str;
 
 // https://medium.com/sammich-shop/simple-record-history-tracking-with-laravel-observers-48a2e3c5698b
 // https://laravel.com/docs/12.x/eloquent#examining-attribute-changes
 trait TracksHistoryTrait
 {
-    protected function track(Model $model, ?callable $func = null, $table = null, $id = null)
+    protected function track(Model $model, ?callable $func = null, $table = null, $id = null): void
     {
         $id = $id ?: $model->id;
         // Allow for customization of the history record if needed
@@ -31,12 +32,55 @@ trait TracksHistoryTrait
             });
     }
 
+    /**
+     * Track changes to BelongsToMany relationships.
+     *
+     * @param  array<string, array{old: array<int>, new: array<int>, label: string, getDisplayName: callable}>  $relationships
+     */
+    protected function trackRelationships(Model $model, array $relationships): void
+    {
+        foreach ($relationships as $relationName => $config) {
+            $oldIds = collect($config['old']);
+            $newIds = collect($config['new']);
+            $label = $config['label'];
+            $getDisplayName = $config['getDisplayName'];
+
+            $attached = $newIds->diff($oldIds);
+            $detached = $oldIds->diff($newIds);
+
+            foreach ($attached as $id) {
+                $displayName = $getDisplayName($id);
+                $body = Str::limit("Ajouté $label: $displayName", 150);
+                History::create([
+                    'action_id' => $model->id,
+                    'user_add' => auth()->user()?->username ?? 'import',
+                    'body' => $body,
+                    'property' => $relationName,
+                    'new_value' => $displayName,
+                ]);
+            }
+
+            foreach ($detached as $id) {
+                $displayName = $getDisplayName($id);
+                $body = Str::limit("Retiré $label: $displayName", 150);
+                History::create([
+                    'action_id' => $model->id,
+                    'user_add' => auth()->user()?->username ?? 'import',
+                    'body' => $body,
+                    'property' => $relationName,
+                    'old_value' => $displayName,
+                ]);
+            }
+        }
+    }
+
     protected function getHistoryBody($value, $field): array
     {
         $displayValue = $value instanceof BackedEnum ? $value->value : $value;
+        $body = Str::limit("Mis à jour $field to $displayValue", 150);
 
         return [
-            'body' => "Updated {$field} to {$displayValue}",
+            'body' => $body,
             'property' => $field,
             'new_value' => $displayValue,
         ];
