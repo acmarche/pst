@@ -39,7 +39,8 @@ final class UsersTable
                 TextColumn::make('roles.label'),
                 TextColumn::make('services_count')
                     ->label('Services')
-                    ->counts('services'),
+                    ->counts('services')
+                    ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('departments')
                     ->label('Départements')
                     ->toggleable(isToggledHiddenByDefault: true),
