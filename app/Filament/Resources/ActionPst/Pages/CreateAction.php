@@ -4,7 +4,7 @@ namespace App\Filament\Resources\ActionPst\Pages;
 
 use App\Events\ActionProcessed;
 use App\Filament\Resources\ActionPst\ActionPstResource;
-use App\Models\OperationalObjective;
+use App\Repository\UserRepository;
 use Filament\Facades\Filament;
 use Filament\Resources\Pages\CreateRecord;
 use Illuminate\Database\Eloquent\Model;
@@ -28,8 +28,7 @@ final class CreateAction extends CreateRecord
             return $this->associateRecordWithTenant($record, $tenant);
         }
 
-        $operationalObjective = OperationalObjective::find($record->operational_objective_id);
-        $record->department = $operationalObjective?->department;
+        $record->department = UserRepository::departmentSelected();
         $record->save();
 
         return $record;

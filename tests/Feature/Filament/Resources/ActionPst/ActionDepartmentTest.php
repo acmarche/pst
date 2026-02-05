@@ -4,9 +4,12 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Filament\Resources\ActionPst;
 
+use App\Enums\ActionScopeEnum;
 use App\Enums\ActionStateEnum;
+use App\Enums\ActionSynergyEnum;
 use App\Enums\DepartmentEnum;
 use App\Enums\RoleEnum;
+use App\Filament\Resources\ActionPst\Pages\CreateAction;
 use App\Filament\Resources\ActionPst\Pages\ListActions;
 use App\Models\Action;
 use App\Models\OperationalObjective;
@@ -361,6 +364,36 @@ final class ActionDepartmentTest extends TestCase
         // All tab should count everything
         $allTabBadge = $tabs[0]->getBadge();
         expect($allTabBadge)->toBe(5);
+    }
+
+    public function test_user_with_both_departments_creates_action_with_cpas_department_when_cpas_selected(): void
+    {
+        $userWithBoth = User::factory()->create([
+            'departments' => [DepartmentEnum::VILLE->value, DepartmentEnum::CPAS->value],
+        ]);
+        $userWithBoth->roles()->attach($this->adminRole);
+
+        $this->actingAs($userWithBoth);
+        session([UserRepository::$department_selected_key => DepartmentEnum::CPAS->value]);
+
+        $cpasObjective = $this->createOperationalObjective(DepartmentEnum::CPAS->value);
+
+        Livewire::test(CreateAction::class)
+            ->fillForm([
+                'name' => 'Test Action for CPAS',
+                'operational_objective_id' => $cpasObjective->id,
+                'state' => ActionStateEnum::START->value,
+                'scope' => ActionScopeEnum::EXTERNAL->value,
+                'synergy' => ActionSynergyEnum::YES->value,
+            ])
+            ->call('create')
+            ->assertNotified()
+            ->assertRedirect();
+
+        $action = Action::withoutGlobalScopes()->where('name', 'Test Action for CPAS')->first();
+
+        expect($action)->not->toBeNull()
+            ->and($action->department->value)->toBe(DepartmentEnum::CPAS->value);
     }
 
     private function createOperationalObjective(string $department): OperationalObjective
