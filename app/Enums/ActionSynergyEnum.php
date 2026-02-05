@@ -47,7 +47,7 @@ enum ActionSynergyEnum: string implements HasColor, HasIcon, HasLabel
     {
         return match ($this) {
             self::YES => 'success',
-            self::NO => 'primary',
+            self::NO => 'warning',
         };
     }
 
@@ -55,7 +55,7 @@ enum ActionSynergyEnum: string implements HasColor, HasIcon, HasLabel
     {
         return match ($this) {
             self::YES => Heroicon::Heart,
-            self::NO => Heroicon::XMark,
+            self::NO => 'tabler-heart-off',
         };
     }
 }
