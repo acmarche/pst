@@ -7,10 +7,12 @@ use App\Enums\ActionScopeEnum;
 use App\Enums\ActionStateEnum;
 use App\Enums\ActionSynergyEnum;
 use App\Enums\ActionTypeEnum;
+use App\Enums\DepartmentEnum;
 use App\Enums\RoleEnum;
 use App\Enums\YesOrNoEnum;
 use App\Models\OperationalObjective;
 use App\Models\User;
+use App\Repository\UserRepository;
 use Filament\Actions\Action;
 use Filament\Forms;
 use Filament\Schemas\Components\Fieldset;
@@ -29,8 +31,6 @@ final class ActionForm
         return $schema
             ->columns(1)
             ->schema([
-                Forms\Components\Hidden::make('department')
-                    ->default($owner?->department),
                 Wizard::make([
                     Wizard\Step::make('project')
                         ->label('Projet')
@@ -133,6 +133,7 @@ final class ActionForm
                             ->label('Validée')
                             ->options(YesOrNoEnum::class)
                             ->inline()
+                            ->default(fn (): ?int => UserRepository::departmentSelected() === DepartmentEnum::CPAS->value || auth()->user()->hasRole(RoleEnum::ADMIN->value) ? YesOrNoEnum::YES->value : null)
                             ->visible(fn () => auth()->user()->hasRole(RoleEnum::ADMIN->value))
                             ->grow(false),
                     ])
