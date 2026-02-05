@@ -3,8 +3,6 @@
 namespace App\Filament\Resources\StrategicObjective\Schemas;
 
 use App\Enums\ActionScopeEnum;
-use App\Enums\DepartmentEnum;
-use App\Repository\UserRepository;
 use Filament\Forms;
 use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Section;
@@ -35,22 +33,6 @@ final class StrategicObjectiveForm
                                     ->placeholder('Ordre d\'affichage')
                                     ->prefixIcon('tabler-list-numbers')
                                     ->numeric(),
-                            ]),
-                    ]),
-
-                Section::make('Configuration')
-                    ->icon('tabler-settings')
-                    ->columnSpanFull()
-                    ->schema([
-                        Grid::make(3)
-                            ->schema([
-                                Forms\Components\ToggleButtons::make('department')
-                                    ->label('Département')
-                                    ->required()
-                                    ->default(UserRepository::departmentSelected())
-                                    ->options(DepartmentEnum::class)
-                                    ->enum(DepartmentEnum::class)
-                                    ->grouped(),
                                 Forms\Components\ToggleButtons::make('scope')
                                     ->label('Volet')
                                     ->required()

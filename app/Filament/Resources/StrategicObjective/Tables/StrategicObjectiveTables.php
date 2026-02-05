@@ -72,10 +72,6 @@ final class StrategicObjectiveTables
                 ->label('Interne')
                 ->state(fn (StrategicObjective $record) => $record->isInternal() ? 'Oui' : 'Non')
                 ->toggleable(),
-            TextColumn::make('department')
-                ->label('Département')
-                ->sortable()
-                ->toggleable(isToggledHiddenByDefault: true),
             TextColumn::make('created_at')
                 ->dateTime()
                 ->sortable()
