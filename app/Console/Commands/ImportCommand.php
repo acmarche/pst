@@ -172,7 +172,6 @@ final class ImportCommand extends Command
         $action->leaderServices()->sync($services, false);
         $action->partners()->sync($partners, false);
         if ($responsable) {
-            $this->info($responsable->first_name);
             $action->users()->sync($responsable, false);
         }
         if ($agentPilote) {
