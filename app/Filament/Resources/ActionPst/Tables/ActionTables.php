@@ -14,6 +14,7 @@ use App\Models\Action;
 use App\Models\Service;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\ViewAction;
 use Filament\Support\Enums\Width;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
@@ -29,11 +30,11 @@ final class ActionTables
             ->defaultSort('position')
             ->defaultPaginationPageOption(50)
             ->persistFiltersInSession()
-            ->recordUrl(fn (Action $record) => ActionPstResource::getUrl('view', [$record]))
             ->columns(self::getColumns())
             ->filters(self::getFilters())
             ->filtersFormColumns(3)
             ->filtersFormWidth(Width::ThreeExtraLarge)
+            ->recordAction(ViewAction::class)
             ->recordActions([
             ])
             ->toolbarActions([
