@@ -18,12 +18,13 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Lab404\Impersonate\Models\Impersonate;
+use Laravel\Sanctum\HasApiTokens;
 use Laravel\Scout\Searchable;
 
 #[UseFactory(UserFactory::class)]
 final class User extends Authenticatable implements FilamentUser, HasName
 {
-    use HasFactory, Impersonate, Notifiable,Searchable;
+    use HasApiTokens, HasFactory, Impersonate, Notifiable, Searchable;
 
     protected $fillable = [
         'name',
