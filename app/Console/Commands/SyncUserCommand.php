@@ -7,7 +7,6 @@ namespace App\Console\Commands;
 use App\Ldap\User as UserLdap;
 use App\Models\User;
 use Illuminate\Console\Command;
-use Str;
 use Symfony\Component\Console\Command\Command as SfCommand;
 
 final class SyncUserCommand extends Command
@@ -31,8 +30,6 @@ final class SyncUserCommand extends Command
      */
     public function handle(): int
     {
-        // $this->agentRole = Role::where('name', RoleEnum::AGENT->value)->first();
-
         foreach (UserLdap::all() as $userLdap) {
             if (! $userLdap->getFirstAttribute('mail')) {
                 continue;
@@ -41,9 +38,7 @@ final class SyncUserCommand extends Command
                 continue;
             }
             $username = $userLdap->getFirstAttribute('samaccountname');
-            if (! $user = User::where('username', $username)->first()) {
-                //  $this->addUser($username, $userLdap);
-            } else {
+            if ($user = User::where('username', $username)->first()) {
                 $this->updateUser($user, $userLdap);
             }
         }
@@ -51,16 +46,6 @@ final class SyncUserCommand extends Command
         $this->removeOldUsers();
 
         return SfCommand::SUCCESS;
-    }
-
-    private function addUser(string $username, UserLdap $userLdap): void
-    {
-        $data = $this->data($userLdap, $username);
-        $data['username'] = $username;
-        $data['password'] = Str::password();
-        $user = User::create($data);
-        $user->addRole($this->agentRole);
-        $this->info('Add '.$user->first_name.' '.$user->last_name);
     }
 
     private function updateUser(User $user, mixed $userLdap): void
