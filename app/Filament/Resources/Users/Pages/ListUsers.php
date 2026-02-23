@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Users\Pages;
 
+use App\Enums\RoleEnum;
 use App\Filament\Resources\Users\Schemas\UserForm;
 use App\Filament\Resources\Users\UserResource;
 use App\Ldap\UserHandler;
@@ -29,6 +30,7 @@ final class ListUsers extends ListRecords
                 ->modal()
                 ->modalHeading('Importer un utilisateur de la LDAP')
                 ->schema(fn (Schema $schema) => UserForm::add($schema))
+                ->visible(fn (): bool => auth()->user()->hasOneOfThisRoles([RoleEnum::ADMIN->value]))
                 ->action(function (array $data) {
                     try {
                         $user = UserHandler::createUserFromLdap($data);
