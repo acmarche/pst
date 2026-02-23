@@ -55,11 +55,6 @@ final class UserResource extends Resource
         ];
     }
 
-    public static function canAccess(): bool
-    {
-        return Auth::getUser()->hasRole(RoleEnum::ADMIN->value);
-    }
-
     public static function getGlobalSearchResults(string $search): Collection
     {
         return self::getGlobalSearchEloquentQuery()
