@@ -313,6 +313,12 @@ final class ActionTables
                 ->limitList(2)
                 ->expandableLimitedList()
                 ->toggleable(isToggledHiddenByDefault: true),
+            TextColumn::make('odds.name')
+                ->label('ODD')
+                ->listWithLineBreaks()
+                ->limitList(2)
+                ->expandableLimitedList()
+                ->toggleable(isToggledHiddenByDefault: true),
             TextColumn::make('users.last_name')
                 ->label('Agents pilotes')
                 ->listWithLineBreaks()
