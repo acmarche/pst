@@ -17,6 +17,7 @@ use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\ViewAction;
 use Filament\Support\Enums\Width;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Filters\TrashedFilter;
 use Filament\Tables\Table;
@@ -216,6 +217,10 @@ final class ActionTables
             SelectFilter::make('scope')
                 ->label('Volet')
                 ->options(ActionScopeEnum::class),
+            Filter::make('without_odds')
+                ->label('Sans ODD')
+                ->toggle()
+                ->query(fn (Builder $query): Builder => $query->whereDoesntHave('odds')),
             SelectFilter::make('synergy')
                 ->label(ActionSynergyEnum::getTitle())
                 ->options(ActionSynergyEnum::class),
